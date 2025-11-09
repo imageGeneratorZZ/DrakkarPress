@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light-gray); color: var(--dark-gray); }
+        
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px 0; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 20px; text-align: center; }
+        .logo { font-size: 28px; font-weight: bold; color: var(--viking-blue); }
+        .steps { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+        .step { display: flex; align-items: center; gap: 10px; color: #999; }
+        .step.active { color: var(--viking-blue); font-weight: 600; }
+        .step-number { width: 30px; height: 30px; border-radius: 50%; background: #E0E6ED; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .step.active .step-number { background: var(--viking-blue); color: white; }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 400px; gap: 30px; }
+        .checkout-form { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .section-title { font-size: 24px; margin-bottom: 25px; color: var(--viking-blue); padding-bottom: 15px; border-bottom: 2px solid #E0E6ED; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #E0E6ED; border-radius: 8px; font-size: 15px; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--viking-blue); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .payment-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .payment-method { padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .payment-method:hover, .payment-method.active { border-color: var(--viking-blue); background: #e8f4fd; }
+        .payment-method img { height: 30px; margin-bottom: 10px; }
+        
+        .order-summary { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 20px; }
+        .summary-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #E0E6ED; }
+        .summary-item:last-child { border-bottom: none; }
+        .item-image { width: 60px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 15px; }
+        .item-details { flex: 1; }
+        .item-title { font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+        .item-format { font-size: 12px; color: #666; }
+        
+        .summary-totals { margin-top: 20px; padding-top: 20px; border-top: 2px solid #E0E6ED; }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
+        .total-row.final { font-size: 24px; font-weight: 700; color: var(--viking-blue); margin-top: 15px; padding-top: 15px; border-top: 2px solid #E0E6ED; }
+        
+        .btn-place-order { width: 100%; padding: 18px; background: var(--nordic-gold); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: all 0.3s; }
+        .btn-place-order:hover { background: var(--viking-blue); transform: translateY(-2px); }
+        
+        .security-badges { display: flex; justify-content: center; gap: 15px; margin-top: 20px; font-size: 12px; color: #666; }
+        
+        @media (max-width: 968px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🛡️ DrakkarPress - Checkout Seguro</div>
+            <div class="steps">
+                <div class="step active">
+                    <span class="step-number">1</span>
+                    <span>Envío</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <span>Pago</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <span>Confirmación</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="checkout-form">
+            <h2 class="section-title">📍 Información de Envío</h2>
+            <form id="checkoutForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre *</label>
+                        <input type="text" required placeholder="Juan">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido *</label>
+                        <input type="text" required placeholder="Pérez">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" required placeholder="tu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono *</label>
+                    <input type="tel" required placeholder="+52 55 1234 5678">
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección *</label>
+                    <input type="text" required placeholder="Calle Principal 123">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ciudad *</label>
+                        <input type="text" required placeholder="Ciudad de México">
+                    </div>
+                    <div class="form-group">
+                        <label>Código Postal *</label>
+                        <input type="text" required placeholder="01234">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>País *</label>
+                    <select required>
+                        <option value="">Seleccionar país...</option>
+                        <option value="MX">🇲🇽 México</option>
+                        <option value="ES">🇪🇸 España</option>
+                        <option value="AR">🇦🇷 Argentina</option>
+                        <option value="CO">🇨🇴 Colombia</option>
+                        <option value="CL">🇨🇱 Chile</option>
+                        <option value="PE">🇵🇪 Perú</option>
+                        <option value="US">🇺🇸 Estados Unidos</option>
+                    </select>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 40px;">💳 Método de Pago</h2>
+
+                <div class="payment-methods">
+                    <div class="payment-method active" onclick="selectPayment('card')">
+                        <div style="font-size: 30px;">💳</div>
+                        <div>Tarjeta</div>
+                    </div>
+                    <div class="payment-method" onclick="selectPayment('paypal')">
+                        <div style="font-size: 30px;">🅿️</div>
+                        <div>PayPal</div>
+                    </div>
+                    <div class="payment-method" onclick="selectPayment('oxxo')">
+                        <div style="font-size: 30px;">🏪</div>
+                        <div>OXXO</div>
+                    </div>
+                </div>
+
+                <div id="cardForm">
+                    <div class="form-group">
+                        <label>Número de Tarjeta *</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha de Expiración *</label>
+                            <input type="text" placeholder="MM/AA" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV *</label>
+                            <input type="text" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre en la Tarjeta *</label>
+                        <input type="text" placeholder="JUAN PEREZ">
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; padding: 15px; background: #e8f4fd; border-radius: 8px; font-size: 14px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" required style="margin-right: 10px; width: auto;">
+                        Acepto los <a href="#" style="color: var(--viking-blue);">términos y condiciones</a> y la <a href="#" style="color: var(--viking-blue);">política de privacidad</a>
+                    </label>
+                </div>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h2 class="section-title">📦 Resumen del Pedido</h2>
+
+            <div class="summary-item">
+                <img src="https://via.placeholder.com/60x80/667eea/ffffff?text=Reino" alt="Reino" class="item-image">
+                <div class="item-details">
+                    <div class="item-title">El Reino de las Sombras</div>
+                    <div class="item-format">📱 eBook</div>
+                </div>
+                <div style="font-weight: 600;">$299</div>
+            </div>
+
+            <div class="summary-item">
+                <img src="https://via.placeholder.com/60x80/f093fb/ffffff?text=Amor" alt="Amor" class="item-image">
+                <div class="item-details">
+                    <div class="item-title">Amor en Tiempos Modernos</div>
+                    <div class="item-format">📖 Tapa Blanda</div>
+                </div>
+                <div style="font-weight: 600;">$349</div>
+            </div>
+
+            <div class="summary-item">
+                <img src="https://via.placeholder.com/60x80/4facfe/ffffff?text=Detective" alt="Detective" class="item-image">
+                <div class="item-details">
+                    <div class="item-title">El Último Detective</div>
+                    <div class="item-format">🎧 Audiolibro</div>
+                </div>
+                <div style="font-weight: 600;">$399</div>
+            </div>
+
+            <div class="summary-totals">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span>$1,047</span>
+                </div>
+                <div class="total-row">
+                    <span>Envío</span>
+                    <span style="color: #27AE60;">GRATIS</span>
+                </div>
+                <div class="total-row">
+                    <span>Impuestos</span>
+                    <span>$168</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total</span>
+                    <span>$1,215</span>
+                </div>
+            </div>
+
+            <button class="btn-place-order" onclick="placeOrder()">
+                🔒 Realizar Pedido
+            </button>
+
+            <div class="security-badges">
+                <span>🔒 SSL Seguro</span>
+                <span>✓ Cifrado 256-bit</span>
+                <span>💳 PCI Compliant</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectPayment(method) {
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+            event.target.closest('.payment-method').classList.add('active');
+        }
+
+        function placeOrder() {
+            alert('¡Pedido realizado con éxito! Redirigiendo a confirmación...');
+            // window.location.href = 'order-confirmation.html';
+        }
+    </script>
+</body>
+</html>

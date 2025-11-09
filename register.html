@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - DrakkarPress</title>
+    <style>
+        :root {
+            --primary-dark: #0A2540;
+            --primary: #1A4D7A;
+            --primary-light: #2E6BA0;
+            --secondary: #D4AF37;
+            --secondary-light: #E8C968;
+            --writer: #3498DB;
+            --reseller: #27AE60;
+            --printer: #E67E22;
+            --reader: #9B59B6;
+            --text-dark: #1A1A1A;
+            --white: #FFFFFF;
+            --background: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .register-header p {
+            opacity: 0.9;
+        }
+
+        .register-body {
+            padding: 2rem;
+        }
+
+        .role-selection {
+            margin-bottom: 2rem;
+        }
+
+        .role-selection h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .role-option {
+            border: 3px solid #E0E0E0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(26, 77, 122, 0.05) 0%, rgba(46, 107, 160, 0.05) 100%);
+        }
+
+        .role-option.writer.selected {
+            border-color: var(--writer);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(52, 152, 219, 0.1) 100%);
+        }
+
+        .role-option.reseller.selected {
+            border-color: var(--reseller);
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.05) 0%, rgba(39, 174, 96, 0.1) 100%);
+        }
+
+        .role-option.printer.selected {
+            border-color: var(--printer);
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.05) 0%, rgba(230, 126, 34, 0.1) 100%);
+        }
+
+        .role-option.reader.selected {
+            border-color: var(--reader);
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.05) 0%, rgba(155, 89, 182, 0.1) 100%);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .role-benefit {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group label .required {
+            color: #E74C3C;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 77, 122, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 0.3rem;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+
+        .oauth-section {
+            margin: 2rem 0;
+        }
+
+        .oauth-divider {
+            text-align: center;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .oauth-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #E0E0E0;
+        }
+
+        .oauth-divider span {
+            background: var(--white);
+            padding: 0 1rem;
+            color: #666;
+            position: relative;
+            z-index: 1;
+        }
+
+        .oauth-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .oauth-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .oauth-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 77, 122, 0.3);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-info {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            color: #1565C0;
+        }
+
+        @media (max-width: 768px) {
+            .role-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>⚓ Únete a DrakkarPress</h1>
+            <p>Comienza tu viaje en la flota editorial digital</p>
+        </div>
+
+        <div class="register-body">
+            <!-- Selección de Rol -->
+            <div class="role-selection">
+                <h2>1. ¿Cómo quieres participar?</h2>
+                <div class="role-grid">
+                    <div class="role-option writer" data-role="writer" onclick="selectRole('writer')">
+                        <div class="role-icon">✍️</div>
+                        <div class="role-name">Escritor</div>
+                        <div class="role-benefit">90% de regalías</div>
+                    </div>
+
+                    <div class="role-option reseller" data-role="reseller" onclick="selectRole('reseller')">
+                        <div class="role-icon">💼</div>
+                        <div class="role-name">Revendedor</div>
+                        <div class="role-benefit">30% de comisión</div>
+                    </div>
+
+                    <div class="role-option printer" data-role="printer" onclick="selectRole('printer')">
+                        <div class="role-icon">🏭</div>
+                        <div class="role-name">Imprenta</div>
+                        <div class="role-benefit">Pedidos constantes</div>
+                    </div>
+
+                    <div class="role-option reader" data-role="reader" onclick="selectRole('reader')">
+                        <div class="role-icon">📚</div>
+                        <div class="role-name">Lector</div>
+                        <div class="role-benefit">Biblioteca digital</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registro Rápido con OAuth -->
+            <div class="oauth-section">
+                <h2 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.3rem;">2. Registro Rápido</h2>
+                <div class="oauth-buttons">
+                    <button class="oauth-btn" onclick="oauthRegister('google')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        Google
+                    </button>
+
+                    <button class="oauth-btn" onclick="oauthRegister('facebook')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                    </button>
+
+                    <button class="oauth-btn" onclick="oauthRegister('github')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.840 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        GitHub
+                    </button>
+
+                    <button class="oauth-btn" onclick="oauthRegister('linkedin')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        LinkedIn
+                    </button>
+
+                    <button class="oauth-btn" onclick="oauthRegister('apple')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        Apple
+                    </button>
+
+                    <button class="oauth-btn" onclick="oauthRegister('twitter')">
+                        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Twitter/X
+                    </button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="oauth-divider">
+                <span>O regístrate con email</span>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <form id="registerForm">
+                <input type="hidden" id="selectedRole" name="role" value="">
+
+                <!-- Datos Personales -->
+                <div class="form-section">
+                    <h3>3. Datos Personales</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre <span class="required">*</span></label>
+                            <input type="text" name="firstName" required placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label>Apellido <span class="required">*</span></label>
+                            <input type="text" name="lastName" required placeholder="Tu apellido">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" name="email" required placeholder="tu@email.com">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contraseña <span class="required">*</span></label>
+                            <input type="password" name="password" required placeholder="Mínimo 8 caracteres">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmar Contraseña <span class="required">*</span></label>
+                            <input type="password" name="confirmPassword" required placeholder="Repetir contraseña">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>País <span class="required">*</span></label>
+                            <select name="country" required>
+                                <option value="">Selecciona tu país</option>
+                                <option value="MX">México</option>
+                                <option value="ES">España</option>
+                                <option value="AR">Argentina</option>
+                                <option value="CO">Colombia</option>
+                                <option value="CL">Chile</option>
+                                <option value="PE">Perú</option>
+                                <option value="US">Estados Unidos</option>
+                                <option value="BR">Brasil</option>
+                                <option value="OTHER">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono (opcional)</label>
+                            <input type="tel" name="phone" placeholder="+52 123 456 7890">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campos adicionales según rol (se mostrarán dinámicamente) -->
+                <div id="writerFields" class="form-section" style="display: none;">
+                    <h3>Información de Escritor</h3>
+                    <div class="form-group">
+                        <label>Seudónimo / Nombre de Autor (opcional)</label>
+                        <input type="text" name="penName" placeholder="Nombre con el que publicarás">
+                    </div>
+                    <div class="form-group">
+                        <label>¿En qué géneros escribes?</label>
+                        <input type="text" name="genres" placeholder="Ej: Romance, Thriller, Fantasía">
+                    </div>
+                    <div class="form-group">
+                        <label>Biografía breve (opcional)</label>
+                        <textarea name="bio" placeholder="Cuéntanos sobre ti y tu experiencia escribiendo"></textarea>
+                    </div>
+                </div>
+
+                <div id="resellerFields" class="form-section" style="display: none;">
+                    <h3>Información de Revendedor</h3>
+                    <div class="form-group">
+                        <label>Nombre de tu negocio/marca (opcional)</label>
+                        <input type="text" name="businessName" placeholder="Nombre de tu tienda o marca">
+                    </div>
+                    <div class="form-group">
+                        <label>¿Dónde promocionarás los libros?</label>
+                        <input type="text" name="platforms" placeholder="Ej: Instagram, Facebook, TikTok, Blog">
+                    </div>
+                    <div class="form-group">
+                        <label>¿Tienes audiencia existente? (opcional)</label>
+                        <input type="text" name="audience" placeholder="Ej: 5000 seguidores en Instagram">
+                    </div>
+                </div>
+
+                <div id="printerFields" class="form-section" style="display: none;">
+                    <h3>Información de Imprenta</h3>
+                    <div class="form-group">
+                        <label>Nombre de la Imprenta <span class="required">*</span></label>
+                        <input type="text" name="printerName" placeholder="Nombre comercial de tu imprenta">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ciudad <span class="required">*</span></label>
+                            <input type="text" name="city" placeholder="Ciudad donde operas">
+                        </div>
+                        <div class="form-group">
+                            <label>Código Postal</label>
+                            <input type="text" name="postalCode" placeholder="Código postal">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacidad mensual aproximada</label>
+                        <select name="capacity">
+                            <option value="">Selecciona capacidad</option>
+                            <option value="50">Hasta 50 libros/mes</option>
+                            <option value="100">50-100 libros/mes</option>
+                            <option value="250">100-250 libros/mes</option>
+                            <option value="500">250-500 libros/mes</option>
+                            <option value="500+">Más de 500 libros/mes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Términos y Condiciones -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            Acepto los <a href="#" style="color: var(--primary);">Términos y Condiciones</a> 
+                            y la <a href="#" style="color: var(--primary);">Política de Privacidad</a>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">
+                            Quiero recibir novedades, tips y ofertas de DrakkarPress
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Botón de Registro -->
+                <button type="submit" class="btn-primary">
+                    🚀 Crear mi Cuenta
+                </button>
+            </form>
+
+            <!-- Link a Login -->
+            <div class="login-link">
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = '';
+
+        function selectRole(role) {
+            // Remover selección previa
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Seleccionar nuevo rol
+            document.querySelector(`.role-option[data-role="${role}"]`).classList.add('selected');
+            selectedRole = role;
+            document.getElementById('selectedRole').value = role;
+
+            // Mostrar/ocultar campos específicos del rol
+            document.getElementById('writerFields').style.display = role === 'writer' ? 'block' : 'none';
+            document.getElementById('resellerFields').style.display = role === 'reseller' ? 'block' : 'none';
+            document.getElementById('printerFields').style.display = role === 'printer' ? 'block' : 'none';
+        }
+
+        function oauthRegister(provider) {
+            if (!selectedRole) {
+                alert('Por favor selecciona primero cómo quieres participar');
+                return;
+            }
+            // Aquí iría la lógica de OAuth
+            window.location.href = `/api/auth/oauth/${provider}?role=${selectedRole}`;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!selectedRole) {
+                alert('Por favor selecciona cómo quieres participar en DrakkarPress');
+                return;
+            }
+
+            const password = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('La contraseña debe tener al menos 8 caracteres');
+                return;
+            }
+
+            // Aquí iría la lógica de envío al backend
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            console.log('Datos a enviar:', data);
+            alert('¡Registro exitoso! Te hemos enviado un email de verificación.');
+            
+            // Redirigir según el rol
+            const redirects = {
+                'writer': 'escritores.html',
+                'reseller': 'revendedores.html',
+                'printer': 'imprentas.html',
+                'reader': 'index.html'
+            };
+            
+            // window.location.href = redirects[selectedRole] || 'index.html';
+        });
+    </script>
+</body>
+</html>

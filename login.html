@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - DrakkarPress</title>
+    <style>
+        :root {
+            --primary-dark: #0A2540;
+            --primary: #1A4D7A;
+            --primary-light: #2E6BA0;
+            --secondary: #D4AF37;
+            --secondary-light: #E8C968;
+            --text-dark: #1A1A1A;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .logo-icon svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: #FFEBEE;
+            border-left: 4px solid #F44336;
+            color: #C62828;
+        }
+
+        .alert-success {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            color: #2E7D32;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 77, 122, 0.1);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 77, 122, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #E0E0E0;
+        }
+
+        .divider span {
+            background: var(--white);
+            padding: 0 1rem;
+            color: #666;
+            position: relative;
+            z-index: 1;
+            font-size: 0.9rem;
+        }
+
+        .oauth-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .oauth-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .oauth-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .benefits {
+            background: linear-gradient(135deg, rgba(26, 77, 122, 0.05) 0%, rgba(46, 107, 160, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .benefits h3 {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 480px) {
+            .oauth-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 10 C4 8 6 8 8 8 L22 8 C22 8 24 8 24 10 L24 38 C24 38 22 36 20 36 L8 36 C6 36 4 36 4 38 Z" 
+                          fill="#0A2540" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <path d="M44 10 C44 8 42 8 40 8 L26 8 C26 8 24 8 24 10 L24 38 C24 38 26 36 28 36 L40 36 C42 36 44 36 44 38 Z" 
+                          fill="#0A2540" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <path d="M18 5 L20 3 L22 3 L23 4 L26 4 L28 3 L30 5 L24 8 Z" 
+                          fill="#FFFFFF" stroke="#0A2540" stroke-width="0.5"/>
+                    <circle cx="24" cy="24" r="3" fill="#FFFFFF" opacity="0.3"/>
+                </svg>
+            </div>
+            <h1>DrakkarPress</h1>
+            <p>La Flota Editorial Digital</p>
+        </div>
+
+        <div class="login-body">
+            <!-- Alertas -->
+            <div id="alertError" class="alert alert-error"></div>
+            <div id="alertSuccess" class="alert alert-success"></div>
+
+            <!-- Formulario de Login -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="tu@email.com" autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        <span>Recordarme</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="btnLogin">
+                    🚀 Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>O continuar con</span>
+            </div>
+
+            <!-- OAuth Buttons -->
+            <div class="oauth-buttons">
+                <button class="oauth-btn" onclick="oauthLogin('google')">
+                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Google
+                </button>
+
+                <button class="oauth-btn" onclick="oauthLogin('facebook')">
+                    <svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Facebook
+                </button>
+
+                <button class="oauth-btn" onclick="oauthLogin('github')">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.840 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </button>
+
+                <button class="oauth-btn" onclick="oauthLogin('linkedin')">
+                    <svg viewBox="0 0 24 24"><path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                </button>
+
+                <button class="oauth-btn" onclick="oauthLogin('apple')">
+                    <svg viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                    Apple
+                </button>
+
+                <button class="oauth-btn" onclick="oauthLogin('twitter')">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X
+                </button>
+            </div>
+
+            <!-- Register Link -->
+            <div class="register-link">
+                ¿No tienes cuenta? <a href="register.html">Regístrate gratis</a>
+            </div>
+
+            <!-- Benefits -->
+            <div class="benefits">
+                <h3>✨ Al unirte a DrakkarPress:</h3>
+                <ul>
+                    <li>📚 Acceso a miles de libros digitales</li>
+                    <li>✍️ Publica tus propios libros</li>
+                    <li>💼 Gana comisiones como afiliado</li>
+                    <li>🤖 Herramientas de IA para crear contenido</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function oauthLogin(provider) {
+            // Aquí iría la lógica de OAuth
+            window.location.href = `/api/auth/oauth/${provider}`;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btnLogin = document.getElementById('btnLogin');
+            const alertError = document.getElementById('alertError');
+            const alertSuccess = document.getElementById('alertSuccess');
+
+            // Ocultar alertas previas
+            alertError.style.display = 'none';
+            alertSuccess.style.display = 'none';
+
+            // Deshabilitar botón
+            btnLogin.disabled = true;
+            btnLogin.textContent = '🔄 Iniciando sesión...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.querySelector('input[name="remember"]').checked;
+
+            try {
+                // Simulación de llamada al backend
+                // En producción: const response = await fetch('/api/auth/login', {...})
+                
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Simular delay
+
+                // Simulación de éxito
+                alertSuccess.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
+                alertSuccess.style.display = 'block';
+
+                // Redirigir según el rol (esto vendría del backend)
+                setTimeout(() => {
+                    // Aquí normalmente leerías el rol del usuario desde la respuesta
+                    window.location.href = 'index.html'; // o el portal correspondiente
+                }, 1000);
+
+            } catch (error) {
+                // Manejo de errores
+                alertError.textContent = error.message || 'Email o contraseña incorrectos';
+                alertError.style.display = 'block';
+                
+                btnLogin.disabled = false;
+                btnLogin.textContent = '🚀 Iniciar Sesión';
+            }
+        });
+
+        // Verificar si hay mensaje de éxito en URL (ej: después de registro)
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        if (message === 'registered') {
+            const alertSuccess = document.getElementById('alertSuccess');
+            alertSuccess.textContent = '✅ Cuenta creada exitosamente. Por favor inicia sesión.';
+            alertSuccess.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

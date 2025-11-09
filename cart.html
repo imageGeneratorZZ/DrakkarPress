@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - DrakkarPress</title>
+    <style>
+        :root {
+            --viking-blue: #1A4D7A;
+            --nordic-gold: #D4AF37;
+            --light-gray: #F5F7FA;
+            --dark-gray: #2C3E50;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light-gray); color: var(--dark-gray); }
+        
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--viking-blue); text-decoration: none; }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        h1 { font-size: 32px; margin-bottom: 30px; color: var(--viking-blue); }
+        
+        .cart-layout { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+        .cart-items { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        .cart-item { display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; padding: 20px 0; border-bottom: 1px solid #E0E6ED; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-cover { width: 100px; height: 140px; object-fit: cover; border-radius: 8px; }
+        .item-info h3 { font-size: 18px; margin-bottom: 5px; }
+        .item-author { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .item-format { background: var(--light-gray); padding: 5px 10px; border-radius: 5px; font-size: 12px; display: inline-block; margin-bottom: 10px; }
+        .item-actions { display: flex; gap: 15px; align-items: center; flex-direction: column; }
+        .item-price { font-size: 24px; font-weight: 700; color: var(--viking-blue); }
+        .quantity-control { display: flex; align-items: center; gap: 10px; }
+        .quantity-btn { width: 30px; height: 30px; border: 1px solid #E0E6ED; background: white; cursor: pointer; border-radius: 5px; font-size: 16px; }
+        .quantity { font-size: 16px; font-weight: 600; min-width: 30px; text-align: center; }
+        .btn-remove { background: none; border: none; color: #E74C3C; cursor: pointer; font-size: 14px; text-decoration: underline; }
+        
+        .cart-summary { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 20px; }
+        .summary-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 16px; }
+        .summary-row.total { font-size: 24px; font-weight: 700; color: var(--viking-blue); padding-top: 15px; border-top: 2px solid #E0E6ED; margin-top: 15px; }
+        
+        .coupon-section { margin: 20px 0; padding: 20px; background: var(--light-gray); border-radius: 10px; }
+        .coupon-input { display: flex; gap: 10px; }
+        .coupon-input input { flex: 1; padding: 12px; border: 1px solid #E0E6ED; border-radius: 8px; }
+        .btn-apply { padding: 12px 20px; background: var(--viking-blue); color: white; border: none; border-radius: 8px; cursor: pointer; }
+        
+        .btn-checkout { width: 100%; padding: 18px; background: var(--nordic-gold); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: all 0.3s; }
+        .btn-checkout:hover { background: var(--viking-blue); transform: translateY(-2px); }
+        
+        .continue-shopping { text-align: center; margin-top: 20px; }
+        .continue-shopping a { color: var(--viking-blue); text-decoration: none; }
+        
+        .empty-cart { text-align: center; padding: 60px 20px; }
+        .empty-cart img { width: 200px; opacity: 0.5; margin-bottom: 20px; }
+        
+        @media (max-width: 768px) {
+            .cart-layout { grid-template-columns: 1fr; }
+            .cart-item { grid-template-columns: 80px 1fr; }
+            .item-actions { flex-direction: row; justify-content: space-between; grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DrakkarPress</a>
+            <nav>
+                <a href="catalogo.html" style="margin-right: 20px; text-decoration: none; color: #666;">← Seguir Comprando</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>🛒 Mi Carrito (3 items)</h1>
+
+        <div class="cart-layout">
+            <div class="cart-items">
+                <div class="cart-item">
+                    <img src="https://via.placeholder.com/100x140/667eea/ffffff?text=Reino" alt="El Reino de las Sombras" class="item-cover">
+                    <div class="item-info">
+                        <h3>El Reino de las Sombras</h3>
+                        <p class="item-author">María González</p>
+                        <span class="item-format">📱 eBook</span>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(1, -1)">-</button>
+                            <span class="quantity" id="qty1">1</span>
+                            <button class="quantity-btn" onclick="updateQuantity(1, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-price">$299</div>
+                        <button class="btn-remove" onclick="removeItem(1)">🗑️ Eliminar</button>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <img src="https://via.placeholder.com/100x140/f093fb/ffffff?text=Amor" alt="Amor en Tiempos Modernos" class="item-cover">
+                    <div class="item-info">
+                        <h3>Amor en Tiempos Modernos</h3>
+                        <p class="item-author">Carlos Ruiz</p>
+                        <span class="item-format">📖 Tapa Blanda</span>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(2, -1)">-</button>
+                            <span class="quantity" id="qty2">1</span>
+                            <button class="quantity-btn" onclick="updateQuantity(2, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-price">$349</div>
+                        <button class="btn-remove" onclick="removeItem(2)">🗑️ Eliminar</button>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <img src="https://via.placeholder.com/100x140/4facfe/ffffff?text=Detective" alt="El Último Detective" class="item-cover">
+                    <div class="item-info">
+                        <h3>El Último Detective</h3>
+                        <p class="item-author">Ana Martínez</p>
+                        <span class="item-format">🎧 Audiolibro</span>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(3, -1)">-</button>
+                            <span class="quantity" id="qty3">1</span>
+                            <button class="quantity-btn" onclick="updateQuantity(3, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-price">$399</div>
+                        <button class="btn-remove" onclick="removeItem(3)">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <h2 class="summary-title">Resumen del Pedido</h2>
+                
+                <div class="summary-row">
+                    <span>Subtotal (3 items)</span>
+                    <span id="subtotal">$1,047</span>
+                </div>
+                <div class="summary-row">
+                    <span>Descuento</span>
+                    <span id="discount" style="color: #27AE60;">-$0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Envío</span>
+                    <span id="shipping">GRATIS</span>
+                </div>
+
+                <div class="coupon-section">
+                    <p style="font-size: 14px; margin-bottom: 10px; font-weight: 600;">¿Tienes un cupón?</p>
+                    <div class="coupon-input">
+                        <input type="text" id="couponCode" placeholder="Código de cupón">
+                        <button class="btn-apply" onclick="applyCoupon()">Aplicar</button>
+                    </div>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">$1,047</span>
+                </div>
+
+                <button class="btn-checkout" onclick="goToCheckout()">
+                    Proceder al Pago →
+                </button>
+
+                <div class="continue-shopping">
+                    <a href="catalogo.html">← Continuar Comprando</a>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 8px; font-size: 13px;">
+                    <strong>✓ Compra 100% Segura</strong><br>
+                    ✓ Envío GRATIS en pedidos +$500<br>
+                    ✓ Entrega instantánea de eBooks<br>
+                    ✓ Garantía de devolución 30 días
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const items = {
+            1: { price: 299, qty: 1 },
+            2: { price: 349, qty: 1 },
+            3: { price: 399, qty: 1 }
+        };
+
+        function updateQuantity(itemId, change) {
+            const qtyElement = document.getElementById(`qty${itemId}`);
+            let currentQty = parseInt(qtyElement.textContent);
+            currentQty += change;
+            
+            if (currentQty < 1) currentQty = 1;
+            if (currentQty > 10) currentQty = 10;
+            
+            qtyElement.textContent = currentQty;
+            items[itemId].qty = currentQty;
+            updateSummary();
+        }
+
+        function removeItem(itemId) {
+            if (confirm('¿Eliminar este libro del carrito?')) {
+                delete items[itemId];
+                updateSummary();
+                // TODO: Remove from DOM
+            }
+        }
+
+        function updateSummary() {
+            let subtotal = 0;
+            Object.values(items).forEach(item => {
+                subtotal += item.price * item.qty;
+            });
+            
+            document.getElementById('subtotal').textContent = `$${subtotal}`;
+            document.getElementById('total').textContent = `$${subtotal}`;
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponCode').value.toUpperCase();
+            if (code === 'DRAKKAR10') {
+                alert('¡Cupón aplicado! 10% de descuento');
+                // TODO: Apply discount
+            } else if (code === 'NUEVOUSUARIO') {
+                alert('¡Cupón aplicado! 15% de descuento');
+            } else if (code) {
+                alert('Cupón inválido');
+            }
+        }
+
+        function goToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>

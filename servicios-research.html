@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigación Literaria - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --research-teal: #16A085; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: white; color: var(--dark-gray); }
+        
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        .logo { font-size: 28px; font-weight: 700; color: var(--viking-blue); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark-gray); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--viking-blue); }
+        
+        .hero { background: linear-gradient(135deg, #16A085 0%, #138D75 100%); color: white; padding: 100px 30px; text-align: center; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; }
+        .hero p { font-size: 24px; max-width: 800px; margin: 0 auto 40px; opacity: 0.95; }
+        .btn-primary { padding: 18px 40px; background: var(--nordic-gold); color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 30px; }
+        .section-title { font-size: 42px; color: var(--viking-blue); text-align: center; margin-bottom: 60px; }
+        
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; margin-bottom: 80px; }
+        .service-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; transition: all 0.3s; }
+        .service-card:hover { border-color: var(--research-teal); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .service-icon { font-size: 56px; margin-bottom: 20px; }
+        .service-title { font-size: 28px; font-weight: 600; color: var(--viking-blue); margin-bottom: 15px; }
+        .service-desc { color: #666; line-height: 1.6; margin-bottom: 25px; font-size: 16px; }
+        .service-features { list-style: none; }
+        .service-features li { padding: 10px 0; padding-left: 30px; position: relative; color: #666; }
+        .service-features li:before { content: "✓"; position: absolute; left: 0; color: var(--nordic-gold); font-weight: 700; font-size: 20px; }
+        
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 80px; }
+        .pricing-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; text-align: center; transition: all 0.3s; }
+        .pricing-card.featured { border-color: var(--nordic-gold); border-width: 3px; transform: scale(1.05); }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .pricing-name { font-size: 24px; font-weight: 600; margin-bottom: 10px; color: var(--viking-blue); }
+        .pricing-price { font-size: 48px; font-weight: 700; color: var(--nordic-gold); margin-bottom: 10px; }
+        .pricing-period { color: #666; margin-bottom: 30px; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 30px; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid #F0F0F0; color: #666; }
+        
+        .process { background: var(--light-gray); padding: 80px 30px; }
+        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .step-card { background: white; border-radius: 15px; padding: 30px; text-align: center; position: relative; }
+        .step-number { width: 60px; height: 60px; background: var(--research-teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 20px; }
+        .step-title { font-size: 20px; font-weight: 600; color: var(--viking-blue); margin-bottom: 10px; }
+        .step-desc { color: #666; font-size: 14px; line-height: 1.6; }
+        
+        .case-studies { padding: 80px 30px; }
+        .case-study { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; margin-bottom: 30px; }
+        .case-header { display: flex; gap: 30px; align-items: center; margin-bottom: 25px; }
+        .case-icon { font-size: 64px; }
+        .case-info h3 { font-size: 28px; color: var(--viking-blue); margin-bottom: 10px; }
+        .case-info p { color: #666; line-height: 1.6; }
+        .case-details { background: var(--light-gray); padding: 20px; border-radius: 10px; margin-top: 20px; }
+        
+        .cta-section { background: linear-gradient(135deg, var(--viking-blue), #0d2a4a); color: white; padding: 80px 30px; text-align: center; }
+        .cta-section h2 { font-size: 42px; margin-bottom: 20px; }
+        .cta-section p { font-size: 20px; margin-bottom: 40px; opacity: 0.9; }
+        
+        @media (max-width: 768px) { .services-grid, .pricing-grid, .process-steps { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">⚔️ DrakkarPress</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="#servicios" style="color:var(--viking-blue)">Servicios</a>
+                <a href="contact.html">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>🔬 Research & Data Intelligence DrakkarPress</h1>
+        <p>Departamento de investigación y análisis de datos que impulsa decisiones estratégicas basadas en métricas del mercado editorial latinoamericano.</p>
+        <p class="subtitle">🔒 Área interna de inteligencia de DrakkarPress</p>
+        <button class="btn-primary" onclick="document.getElementById('capacidades').scrollIntoView({behavior:'smooth'})">Ver Capacidades</button>
+    </section>
+
+    <div class="container" id="capacidades">
+        <h2 class="section-title">🎯 Áreas de Investigación</h2>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">�</div>
+                <h3 class="service-title">Análisis de Mercado Editorial</h3>
+                <p class="service-desc">Investigación continua de tendencias, géneros emergentes, pricing y comportamiento de lectores en LATAM.</p>
+                <ul class="service-features">
+                    <li>Tracking de bestsellers por género</li>
+                    <li>Análisis de pricing competitivo</li>
+                    <li>Tendencias de búsqueda (SEO)</li>
+                    <li>Estudios de demografía lectora</li>
+                    <li>Benchmarking vs competidores</li>
+                    <li>Predicciones de demanda</li>
+                    <li>Reportes trimestrales de mercado</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🔍</div>
+                <h3 class="service-title">Data Mining & User Behavior</h3>
+                <p class="service-desc">Extracción y análisis de patrones de comportamiento de 50,000+ usuarios registrados en la plataforma.</p>
+                <ul class="service-features">
+                    <li>Análisis de sesiones y journeys</li>
+                    <li>Heatmaps y click tracking</li>
+                    <li>Funnel de conversión detallado</li>
+                    <li>Cohort analysis por segmento</li>
+                    <li>Churn prediction con ML</li>
+                    <li>A/B testing y experimentación</li>
+                    <li>Dashboard en tiempo real</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🌍</div>
+                <h3 class="service-title">Inteligencia Competitiva</h3>
+                <p class="service-desc">Monitoreo estratégico de competidores (Amazon KDP, Lektu, Bubok, etc.) y análisis de posicionamiento.</p>
+                <ul class="service-features">
+                    <li>Web scraping de competidores</li>
+                    <li>Análisis de pricing dinámico</li>
+                    <li>Feature comparison matrices</li>
+                    <li>Social listening y sentiment</li>
+                    <li>Monitoreo de nuevos entrantes</li>
+                    <li>SWOT analysis trimestral</li>
+                    <li>Alertas de movimientos clave</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">⚖️</div>
+                <h3 class="service-title">Compliance & Legal Research</h3>
+                <p class="service-desc">Investigación de regulaciones editoriales, derechos de autor, contratos y cumplimiento legal en 6 países.</p>
+                <ul class="service-features">
+                    <li>Regulación editorial por país</li>
+                    <li>Copyright y propiedad intelectual</li>
+                    <li>Análisis de contratos tipo</li>
+                    <li>Normativa de protección de datos</li>
+                    <li>Fiscalidad y royalties</li>
+                    <li>Resolución de disputas</li>
+                    <li>Documentos legales actualizados</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🧬</div>
+                <h3 class="service-title">Machine Learning & Predictive Analytics</h3>
+                <p class="service-desc">Modelos de ML para predecir bestsellers, recomendar libros y optimizar precios dinámicos.</p>
+                <ul class="service-features">
+                    <li>Predicción de bestsellers (78% accuracy)</li>
+                    <li>Sistema de recomendaciones (collaborative filtering)</li>
+                    <li>Dynamic pricing optimization</li>
+                    <li>Sentiment analysis de reseñas</li>
+                    <li>NLP para clasificación de género</li>
+                    <li>Fraud detection en pagos</li>
+                    <li>Modelos entrenados con 2.8TB data</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">�</div>
+                <h3 class="service-title">Business Intelligence & Reporting</h3>
+                <p class="service-desc">Dashboards ejecutivos, KPIs estratégicos y reportes automatizados para la dirección de DrakkarPress.</p>
+                <ul class="service-features">
+                    <li>Dashboard C-level en Tableau</li>
+                    <li>KPIs de crecimiento (ARR, MRR, CAC, LTV)</li>
+                    <li>Reportes automatizados diarios</li>
+                    <li>Forecasting financiero trimestral</li>
+                    <li>Unit economics por canal</li>
+                    <li>Cohort retention analysis</li>
+                    <li>Executive summaries semanales</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="precios">
+            <h2 class="section-title">💰 Planes y Precios</h2>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">BÁSICO</div>
+                    <div class="pricing-price">$1,499</div>
+                    <div class="pricing-period">Por proyecto</div>
+                    <ul class="pricing-features">
+                        <li>✅ 1 área de investigación</li>
+                        <li>✅ Hasta 10 páginas</li>
+                        <li>✅ 5 fuentes verificadas</li>
+                        <li>✅ Informe en PDF</li>
+                        <li>✅ Bibliografía</li>
+                        <li>✅ 1 revisión incluida</li>
+                        <li>✅ Entrega: 7 días</li>
+                    </ul>
+                    <button class="btn-primary" style="width:100%;margin-top:20px;">Contratar</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div style="background:var(--nordic-gold);color:white;padding:8px;border-radius:8px;margin-bottom:15px;font-weight:600;">⭐ MÁS POPULAR</div>
+                    <div class="pricing-name">PROFESIONAL</div>
+                    <div class="pricing-price">$3,999</div>
+                    <div class="pricing-period">Por proyecto</div>
+                    <ul class="pricing-features">
+                        <li>✅ 2-3 áreas de investigación</li>
+                        <li>✅ Hasta 30 páginas</li>
+                        <li>✅ 15 fuentes verificadas</li>
+                        <li>✅ Informe detallado</li>
+                        <li>✅ Bibliografía anotada</li>
+                        <li>✅ 2 revisiones incluidas</li>
+                        <li>✅ Consulta telefónica (1 hora)</li>
+                        <li>✅ Entrega: 14 días</li>
+                    </ul>
+                    <button class="btn-primary" style="width:100%;margin-top:20px;background:var(--research-teal);">Contratar</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-name">COMPLETO</div>
+                    <div class="pricing-price">$8,999</div>
+                    <div class="pricing-period">Por proyecto</div>
+                    <ul class="pricing-features">
+                        <li>✅ Investigación exhaustiva</li>
+                        <li>✅ Páginas ilimitadas</li>
+                        <li>✅ 30+ fuentes verificadas</li>
+                        <li>✅ Informe profesional</li>
+                        <li>✅ Bibliografía completa</li>
+                        <li>✅ Revisiones ilimitadas</li>
+                        <li>✅ Consultas telefónicas (3 horas)</li>
+                        <li>✅ Fact-checking incluido</li>
+                        <li>✅ Revisión por experto</li>
+                        <li>✅ Entrega: 21 días</li>
+                    </ul>
+                    <button class="btn-primary" style="width:100%;margin-top:20px;">Contratar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="process">
+        <div class="container">
+            <h2 class="section-title">🛠️ Nuestro Proceso de Investigación</h2>
+            
+            <div class="process-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Briefing Inicial</div>
+                    <div class="step-desc">Reunión para entender tus necesidades específicas y el alcance del proyecto.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Investigación</div>
+                    <div class="step-desc">Búsqueda exhaustiva en fuentes primarias, secundarias y consulta con expertos.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Análisis</div>
+                    <div class="step-desc">Evaluación crítica de la información recopilada y verificación cruzada.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Entrega</div>
+                    <div class="step-desc">Informe completo con hallazgos, bibliografía y recomendaciones.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="case-studies">
+        <div class="container">
+            <h2 class="section-title">📖 Casos de Éxito</h2>
+            
+            <div class="case-study">
+                <div class="case-header">
+                    <div class="case-icon">🏛️</div>
+                    <div class="case-info">
+                        <h3>Novela Histórica: "Los Últimos Días de Roma"</h3>
+                        <p>Investigación exhaustiva del período de decadencia del Imperio Romano (376-476 d.C.) para novela histórica de ficción.</p>
+                    </div>
+                </div>
+                <div class="case-details">
+                    <strong>Alcance:</strong> 6 meses de investigación, 50+ fuentes primarias, consulta con 3 historiadores académicos.<br>
+                    <strong>Entregables:</strong> Informe de 120 páginas con línea temporal detallada, mapas de época, estructura social, vida cotidiana, eventos políticos clave.<br>
+                    <strong>Resultado:</strong> El autor publicó su novela con respaldo académico, recibió reseñas positivas por autenticidad histórica y fue finalista en premio literario.
+                </div>
+            </div>
+
+            <div class="case-study">
+                <div class="case-header">
+                    <div class="case-icon">⚖️</div>
+                    <div class="case-info">
+                        <h3>Thriller Legal: "Veredicto Final"</h3>
+                        <p>Investigación de procedimientos judiciales, sistema penal y protocolos forenses para thriller de tribunales.</p>
+                    </div>
+                </div>
+                <div class="case-details">
+                    <strong>Alcance:</strong> 3 meses, entrevistas con abogados litigantes y jueces, análisis de casos reales.<br>
+                    <strong>Entregables:</strong> Manual de 60 páginas con procedimientos, terminología legal, timeline de proceso judicial, protocolos de evidencia.<br>
+                    <strong>Resultado:</strong> Manuscrito técnicamente preciso, revisado por abogado experto. Novela publicada con endorsement de asociación de abogados.
+                </div>
+            </div>
+
+            <div class="case-study">
+                <div class="case-header">
+                    <div class="case-icon">🧬</div>
+                    <div class="case-info">
+                        <h3>Ciencia Ficción: "Código Genético"</h3>
+                        <p>Investigación científica sobre edición genética CRISPR, bioética y tecnologías emergentes para thriller científico.</p>
+                    </div>
+                </div>
+                <div class="case-details">
+                    <strong>Alcance:</strong> 4 meses, consulta con genetistas, revisión de papers científicos, análisis de implicaciones éticas.<br>
+                    <strong>Entregables:</strong> Informe de 80 páginas con fundamentos científicos, escenarios plausibles, terminología técnica, glosario.<br>
+                    <strong>Resultado:</strong> Novela de ciencia ficción "hard" con base científica sólida. Revisada por científico del MIT. Seleccionada para club de lectura de revista Nature.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>¿Necesitas Investigación para tu Libro?</h2>
+            <p>Agenda una consultoría gratuita de 30 minutos y te ayudaremos a definir el alcance de tu proyecto de investigación.</p>
+            <button class="btn-primary" style="background:var(--nordic-gold);font-size:20px;">📅 Agendar Consultoría Gratuita</button>
+        </div>
+    </section>
+
+    <footer style="background:var(--dark-gray);color:white;padding:40px 30px;text-align:center;">
+        <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

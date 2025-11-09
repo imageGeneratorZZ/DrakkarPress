@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desarrollo Web - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --tech-cyan: #00D9FF; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: white; color: var(--dark-gray); }
+        
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        .logo { font-size: 28px; font-weight: 700; color: var(--viking-blue); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark-gray); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--viking-blue); }
+        
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 100px 30px; text-align: center; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; }
+        .hero p { font-size: 24px; max-width: 800px; margin: 0 auto 40px; opacity: 0.95; }
+        .btn-primary { padding: 18px 40px; background: var(--nordic-gold); color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 30px; }
+        .section-title { font-size: 42px; color: var(--viking-blue); text-align: center; margin-bottom: 60px; }
+        
+        .tech-stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 80px; }
+        .tech-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 30px; text-align: center; transition: all 0.3s; }
+        .tech-card:hover { border-color: var(--tech-cyan); transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .tech-icon { font-size: 48px; margin-bottom: 15px; }
+        .tech-name { font-size: 20px; font-weight: 600; color: var(--viking-blue); margin-bottom: 10px; }
+        .tech-desc { color: #666; font-size: 14px; }
+        
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; margin-bottom: 80px; }
+        .service-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; transition: all 0.3s; }
+        .service-card:hover { border-color: var(--viking-blue); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .service-icon { font-size: 56px; margin-bottom: 20px; }
+        .service-title { font-size: 28px; font-weight: 600; color: var(--viking-blue); margin-bottom: 15px; }
+        .service-desc { color: #666; line-height: 1.6; margin-bottom: 25px; font-size: 16px; }
+        .service-features { list-style: none; }
+        .service-features li { padding: 10px 0; padding-left: 30px; position: relative; color: #666; }
+        .service-features li:before { content: "✓"; position: absolute; left: 0; color: var(--nordic-gold); font-weight: 700; font-size: 20px; }
+        
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 80px; }
+        .pricing-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; text-align: center; transition: all 0.3s; }
+        .pricing-card.featured { border-color: var(--nordic-gold); border-width: 3px; transform: scale(1.05); }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .pricing-name { font-size: 24px; font-weight: 600; margin-bottom: 10px; color: var(--viking-blue); }
+        .pricing-price { font-size: 48px; font-weight: 700; color: var(--nordic-gold); margin-bottom: 10px; }
+        .pricing-period { color: #666; margin-bottom: 30px; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 30px; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid #F0F0F0; color: #666; }
+        
+        .portfolio { background: var(--light-gray); padding: 80px 30px; }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .portfolio-item { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .portfolio-item:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .portfolio-img { width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 64px; }
+        .portfolio-info { padding: 25px; }
+        .portfolio-title { font-size: 20px; font-weight: 600; color: var(--viking-blue); margin-bottom: 10px; }
+        .portfolio-desc { color: #666; font-size: 14px; line-height: 1.6; }
+        
+        .cta-section { background: linear-gradient(135deg, var(--viking-blue), #0d2a4a); color: white; padding: 80px 30px; text-align: center; }
+        .cta-section h2 { font-size: 42px; margin-bottom: 20px; }
+        .cta-section p { font-size: 20px; margin-bottom: 40px; opacity: 0.9; }
+        
+        @media (max-width: 768px) { .tech-stack, .services-grid, .pricing-grid, .portfolio-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">⚔️ DrakkarPress</div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="#servicios" style="color:var(--viking-blue)">Servicios</a>
+                <a href="contact.html">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>💻 Tecnología DrakkarPress</h1>
+        <p>Stack tecnológico y arquitectura que impulsa la mayor plataforma de autopublicación en español. Infraestructura escalable para millones de usuarios.</p>
+        <p class="subtitle">🔒 Tecnología interna de la red DrakkarPress</p>
+        <button class="btn-primary" onclick="document.getElementById('stack').scrollIntoView({behavior:'smooth'})">Ver Nuestro Stack</button>
+    </section>
+
+    <div class="container" id="stack">
+        <h2 class="section-title">🚀 Nuestro Stack Tecnológico</h2>
+        
+        <div class="tech-stack">
+            <div class="tech-card">
+                <div class="tech-icon">⚛️</div>
+                <div class="tech-name">React / Next.js</div>
+                <div class="tech-desc">Frontend moderno y rápido con SSR</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">☕</div>
+                <div class="tech-name">Java Spring Boot</div>
+                <div class="tech-desc">Backend robusto y escalable</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🐘</div>
+                <div class="tech-name">PostgreSQL</div>
+                <div class="tech-desc">Base de datos relacional confiable</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">☁️</div>
+                <div class="tech-name">AWS / Azure</div>
+                <div class="tech-desc">Deploy en la nube</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🔐</div>
+                <div class="tech-name">OAuth 2.0</div>
+                <div class="tech-desc">Autenticación segura</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">💳</div>
+                <div class="tech-name">Stripe / PayPal</div>
+                <div class="tech-desc">Procesamiento de pagos</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">📱</div>
+                <div class="tech-name">Responsive Design</div>
+                <div class="tech-desc">Optimizado para móviles</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🤖</div>
+                <div class="tech-name">IA / ChatGPT</div>
+                <div class="tech-desc">Integración con APIs de IA</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🛠️ Componentes de la Plataforma</h2>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3 class="service-title">Frontend Web & Mobile</h3>
+                <p class="service-desc">Interfaz multi-plataforma responsive construida con React/Next.js que sirve a millones de usuarios mensuales.</p>
+                <ul class="service-features">
+                    <li>Next.js 14 con App Router y SSR</li>
+                    <li>React Query para state management</li>
+                    <li>Tailwind CSS + componentes custom</li>
+                    <li>Progressive Web App (PWA)</li>
+                    <li>Optimización Core Web Vitals</li>
+                    <li>i18n con 6 idiomas soportados</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📚</div>
+                <h3 class="service-title">Backend & APIs</h3>
+                <p class="service-desc">Arquitectura microservicios robusta con Java Spring Boot manejando transacciones de millones de dólares.</p>
+                <ul class="service-features">
+                    <li>Spring Boot 3.x con WebFlux</li>
+                    <li>RESTful APIs + GraphQL</li>
+                    <li>Redis para caching distribuido</li>
+                    <li>RabbitMQ para mensajería</li>
+                    <li>JWT + OAuth 2.0 authentication</li>
+                    <li>API Gateway con rate limiting</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🛒</div>
+                <h3 class="service-title">Motor de E-Commerce</h3>
+                <p class="service-desc">Sistema de ventas que procesa 15,000+ transacciones mensuales con integración de pagos multi-método.</p>
+                <ul class="service-features">
+                    <li>Carrito con persistencia de sesión</li>
+                    <li>Checkout optimizado (5 pasos)</li>
+                    <li>Stripe + PayPal + OXXO integrados</li>
+                    <li>Sistema de cupones y descuentos</li>
+                    <li>Facturación automática SAT</li>
+                    <li>Gestión de devoluciones</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📖</div>
+                <h3 class="service-title">Lector Digital EPUB</h3>
+                <p class="service-desc">Aplicación de lectura web responsive con sincronización cross-device y marcadores inteligentes.</p>
+                <ul class="service-features">
+                    <li>Renderizado EPUB/PDF en canvas</li>
+                    <li>Marcadores y highlights</li>
+                    <li>Sincronización en tiempo real</li>
+                    <li>Ajustes de fuente/tema/espaciado</li>
+                    <li>Modo offline con Service Workers</li>
+                    <li>Búsqueda full-text en libro</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🤖</div>
+                <h3 class="service-title">IA Generativa Integrada</h3>
+                <p class="service-desc">Suite de herramientas de IA para autores: generación de portadas, descripciones, y asistencia editorial.</p>
+                <ul class="service-features">
+                    <li>GPT-4 para descripciones SEO</li>
+                    <li>DALL-E 3 para concept art</li>
+                    <li>Whisper para transcripción</li>
+                    <li>Claude para edición de manuscritos</li>
+                    <li>Stability AI para portadas</li>
+                    <li>Fine-tuned models propios</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3 class="service-title">Dashboards y Analytics</h3>
+                <p class="service-desc">Paneles de control personalizados con métricas de ventas, lecturas y engagement.</p>
+                <ul class="service-features">
+                    <li>Dashboard de ventas en vivo</li>
+                    <li>Gráficos de royalties</li>
+                    <li>Reportes de afiliados</li>
+                    <li>Métricas de imprentas</li>
+                    <li>Exportación de datos</li>
+                    <li>KPIs de plataforma</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="infraestructura">
+            <h2 class="section-title">☁️ Infraestructura y Escalabilidad</h2>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">HOSTING</div>
+                    <div class="pricing-price">AWS</div>
+                    <div class="pricing-period">infraestructura cloud</div>
+                    <ul class="pricing-features">
+                        <li>✅ EC2 Auto Scaling Groups</li>
+                        <li>✅ Load Balancer (ALB)</li>
+                        <li>✅ RDS PostgreSQL Multi-AZ</li>
+                        <li>✅ S3 para archivos (300+ GB)</li>
+                        <li>✅ CloudFront CDN global</li>
+                        <li>✅ Route 53 DNS</li>
+                        <li>✅ CloudWatch monitoring</li>
+                        <li>✅ Uptime: 99.95%</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div style="background:var(--nordic-gold);color:white;padding:8px;border-radius:8px;margin-bottom:15px;font-weight:600;">⭐ ACTUAL</div>
+                    <div class="pricing-name">MÉTRICAS</div>
+                    <div class="pricing-price">2.5M</div>
+                    <div class="pricing-period">requests/día promedio</div>
+                    <ul class="pricing-features">
+                        <li>✅ Usuarios concurrentes: 5,000+</li>
+                        <li>✅ Latencia p95: 180ms</li>
+                        <li>✅ Latencia p99: 450ms</li>
+                        <li>✅ Database: 2.8 TB almacenados</li>
+                        <li>✅ Integración redes sociales</li>
+                        <li>✅ SEO avanzado</li>
+                        <li>✅ Analytics</li>
+                        <li>✅ Hosting 1 año</li>
+                        <li>✅ Soporte 3 meses</li>
+                        <li>✅ Entrega: 21 días</li>
+                    </ul>
+                    <button class="btn-primary" style="width:100%;margin-top:20px;background:var(--viking-blue);">Contratar</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-name">PLATAFORMA COMPLETA</div>
+                    <div class="pricing-price">$35,999</div>
+                    <div class="pricing-period">Pago único o cuotas</div>
+                    <ul class="pricing-features">
+                        <li>✅ Sistema multi-usuario</li>
+                        <li>✅ E-commerce completo</li>
+                        <li>✅ Dashboards avanzados</li>
+                        <li>✅ Integración pagos</li>
+                        <li>✅ Sistema de royalties</li>
+                        <li>✅ APIs personalizadas</li>
+                        <li>✅ Panel de administración</li>
+                        <li>✅ Hosting 1 año</li>
+                        <li>✅ Soporte 6 meses</li>
+                        <li>✅ Capacitación incluida</li>
+                        <li>✅ Entrega: 60-90 días</li>
+                    </ul>
+                    <button class="btn-primary" style="width:100%;margin-top:20px;">Contratar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="portfolio">
+        <div class="container">
+            <h2 class="section-title">💼 Proyectos Destacados</h2>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-img">🌐</div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">Sitio Web Autor Bestseller</div>
+                        <div class="portfolio-desc">Sitio web completo con blog, tienda integrada y sistema de newsletter. +50K visitantes/mes.</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-img">📚</div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">Editorial Digital "LeerMás"</div>
+                        <div class="portfolio-desc">Plataforma completa con 200+ autores, sistema de royalties y ventas en 15 países.</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-img">🛒</div>
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">E-Commerce "LibrosYa"</div>
+                        <div class="portfolio-desc">Tienda online con 5,000+ títulos, pagos internacionales y envío automático de ebooks.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>¿Tienes un Proyecto en Mente?</h2>
+            <p>Agenda una consultoría gratuita y te daremos una cotización personalizada sin compromiso.</p>
+            <button class="btn-primary" style="background:var(--nordic-gold);font-size:20px;">📅 Agendar Consultoría Gratuita</button>
+        </div>
+    </section>
+
+    <footer style="background:var(--dark-gray);color:white;padding:40px 30px;text-align:center;">
+        <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

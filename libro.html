@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Reino de las Sombras - DrakkarPress</title>
+    <style>
+        :root {
+            --viking-blue: #1A4D7A;
+            --nordic-gold: #D4AF37;
+            --light-gray: #F5F7FA;
+            --dark-gray: #2C3E50;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light-gray); color: var(--dark-gray); }
+        
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--viking-blue); text-decoration: none; }
+        .nav-links a { margin-left: 20px; color: var(--dark-gray); text-decoration: none; }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .breadcrumb { font-size: 14px; color: #666; margin-bottom: 20px; }
+        .breadcrumb a { color: var(--viking-blue); text-decoration: none; }
+        
+        .book-detail { display: grid; grid-template-columns: 350px 1fr; gap: 40px; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .book-cover-section { position: sticky; top: 20px; height: fit-content; }
+        .book-cover { width: 100%; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        
+        .book-info h1 { font-size: 36px; margin-bottom: 10px; color: var(--dark-gray); }
+        .book-author { font-size: 20px; color: #666; margin-bottom: 15px; }
+        .book-author a { color: var(--viking-blue); text-decoration: none; }
+        
+        .rating-section { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #E0E6ED; }
+        .stars { color: #FFA500; font-size: 24px; }
+        .rating-text { font-size: 18px; font-weight: 600; }
+        .reviews-count { color: #666; }
+        
+        .price-section { background: var(--light-gray); padding: 25px; border-radius: 10px; margin-bottom: 25px; }
+        .format-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .format-tab { padding: 10px 20px; border: 2px solid #E0E6ED; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .format-tab.active { border-color: var(--viking-blue); background: var(--viking-blue); color: white; }
+        .price { font-size: 42px; font-weight: 700; color: var(--viking-blue); margin-bottom: 15px; }
+        .price del { font-size: 24px; color: #999; margin-right: 10px; }
+        
+        .buy-buttons { display: flex; gap: 15px; margin-bottom: 15px; }
+        .btn-primary { flex: 1; padding: 16px; background: var(--viking-blue); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { background: var(--nordic-gold); transform: translateY(-2px); }
+        .btn-secondary { flex: 1; padding: 16px; background: white; color: var(--viking-blue); border: 2px solid var(--viking-blue); border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; }
+        
+        .book-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 25px 0; }
+        .detail-item { padding: 15px; background: var(--light-gray); border-radius: 8px; }
+        .detail-label { font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .detail-value { font-size: 16px; font-weight: 600; }
+        
+        .description { line-height: 1.8; font-size: 16px; margin-bottom: 30px; }
+        .description h3 { margin-top: 25px; margin-bottom: 15px; color: var(--viking-blue); }
+        
+        .reviews-section { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-top: 30px; }
+        .review-card { padding: 25px; border-bottom: 1px solid #E0E6ED; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .reviewer-name { font-weight: 600; font-size: 16px; }
+        .review-date { color: #999; font-size: 14px; }
+        .review-text { line-height: 1.6; color: #666; }
+        
+        @media (max-width: 768px) {
+            .book-detail { grid-template-columns: 1fr; }
+            .book-cover-section { position: relative; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">DrakkarPress</a>
+            <div class="nav-links">
+                <a href="catalogo.html">📚 Catálogo</a>
+                <a href="biblioteca.html">📖 Mi Biblioteca</a>
+                <a href="cart.html">🛒 Carrito (3)</a>
+                <a href="login.html">👤 Iniciar Sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Inicio</a> / 
+            <a href="catalogo.html">Catálogo</a> / 
+            <a href="catalogo.html?genre=fantasy">Fantasía</a> / 
+            El Reino de las Sombras
+        </div>
+
+        <div class="book-detail">
+            <div class="book-cover-section">
+                <img src="https://via.placeholder.com/350x500/667eea/ffffff?text=El+Reino+de+las+Sombras" alt="El Reino de las Sombras" class="book-cover">
+            </div>
+
+            <div class="book-info">
+                <h1>El Reino de las Sombras</h1>
+                <p class="book-author">por <a href="#">María González</a></p>
+
+                <div class="rating-section">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-text">4.8</span>
+                    <span class="reviews-count">(234 reseñas)</span>
+                </div>
+
+                <div class="price-section">
+                    <div class="format-tabs">
+                        <button class="format-tab active" onclick="selectFormat('ebook')">📱 eBook</button>
+                        <button class="format-tab" onclick="selectFormat('paperback')">📖 Tapa Blanda</button>
+                        <button class="format-tab" onclick="selectFormat('hardcover')">📘 Tapa Dura</button>
+                        <button class="format-tab" onclick="selectFormat('audio')">🎧 Audiolibro</button>
+                    </div>
+
+                    <div class="price" id="priceDisplay">
+                        <del>$399</del>
+                        $299
+                    </div>
+
+                    <div class="buy-buttons">
+                        <button class="btn-primary" onclick="addToCart()">🛒 Agregar al Carrito</button>
+                        <button class="btn-secondary" onclick="buyNow()">⚡ Comprar Ahora</button>
+                    </div>
+
+                    <p style="text-align: center; color: #666; font-size: 14px;">
+                        ✓ Entrega instantánea · ✓ Sin DRM · ✓ Lee en cualquier dispositivo
+                    </p>
+                </div>
+
+                <div class="book-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Páginas</div>
+                        <div class="detail-value">432 páginas</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Idioma</div>
+                        <div class="detail-value">🇪🇸 Español</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Publicación</div>
+                        <div class="detail-value">15 Enero 2025</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ISBN</div>
+                        <div class="detail-value">978-84-XXXXX-XX-X</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Género</div>
+                        <div class="detail-value">Fantasía Épica</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Editorial</div>
+                        <div class="detail-value">DrakkarPress</div>
+                    </div>
+                </div>
+
+                <div class="description">
+                    <h3>📖 Sinopsis</h3>
+                    <p>
+                        En un reino donde las sombras cobran vida y los secretos antiguos yacen enterrados bajo siglos de olvido, 
+                        una joven heredera debe enfrentarse a un destino que nunca deseó. Cuando las criaturas de la oscuridad 
+                        comienzan a atravesar el velo que separa los mundos, solo ella posee el poder para detenerlas.
+                    </p>
+                    <p>
+                        Acompañada por un grupo de aliados improbables —un guerrero desterrado, una maga rebelde y un ladrón 
+                        con un pasado oscuro— emprenderá un viaje épico a través de tierras malditas y ciudades olvidadas, 
+                        donde cada decisión podría significar la salvación o la destrucción de todo lo que ama.
+                    </p>
+                    <p>
+                        <strong>"El Reino de las Sombras"</strong> es la primera entrega de una saga que te mantendrá al borde 
+                        de tu asiento, combinando acción trepidante, magia fascinante y personajes inolvidables en un mundo 
+                        ricamente construido donde nada es lo que parece.
+                    </p>
+
+                    <h3>✨ Lo que dicen los lectores</h3>
+                    <p>
+                        ⭐ <em>"No pude dejarlo. Terminé las 432 páginas en dos días."</em> - Ana Martínez<br>
+                        ⭐ <em>"La mejor fantasía épica que he leído en años. Los personajes son increíbles."</em> - Carlos Ruiz<br>
+                        ⭐ <em>"Un mundo mágico que te atrapa desde la primera página."</em> - Laura Torres
+                    </p>
+
+                    <h3>📚 Sobre la Autora</h3>
+                    <p>
+                        <strong>María González</strong> es autora bestseller de fantasía épica con más de 500,000 copias vendidas. 
+                        Sus obras han sido traducidas a 12 idiomas y han recibido múltiples premios internacionales. 
+                        Actualmente trabaja en la continuación de esta saga desde su hogar en Barcelona.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-section">
+            <h2 style="margin-bottom: 30px;">⭐ Reseñas de Lectores (234)</h2>
+            
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Ana Martínez</div>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                    <div class="review-date">3 días atrás</div>
+                </div>
+                <div class="review-text">
+                    Simplemente increíble. La construcción del mundo es magistral y los personajes tienen una profundidad 
+                    que rara vez encuentras en fantasía. No pude dejarlo hasta terminarlo. Ya estoy esperando ansiosamente 
+                    el segundo libro de la saga. Totalmente recomendado para fans de Brandon Sanderson o Sarah J. Maas.
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Carlos Ruiz</div>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                    <div class="review-date">1 semana atrás</div>
+                </div>
+                <div class="review-text">
+                    Una obra maestra de la fantasía moderna. El sistema de magia es original y bien pensado, y la trama 
+                    tiene giros que jamás vi venir. María González se ha convertido en una de mis autoras favoritas.
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Laura Torres</div>
+                        <div class="stars">★★★★☆</div>
+                    </div>
+                    <div class="review-date">2 semanas atrás</div>
+                </div>
+                <div class="review-text">
+                    Muy bueno, aunque el inicio es un poco lento. Una vez que llegas al capítulo 5, no puedes parar. 
+                    Los personajes secundarios son tan interesantes como la protagonista, lo cual es raro. 
+                    Definitivamente leeré la continuación.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prices = {
+            ebook: { current: 299, original: 399 },
+            paperback: { current: 449, original: null },
+            hardcover: { current: 699, original: null },
+            audio: { current: 399, original: 499 }
+        };
+
+        function selectFormat(format) {
+            document.querySelectorAll('.format-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const price = prices[format];
+            const priceHTML = price.original 
+                ? `<del>$${price.original}</del> $${price.current}`
+                : `$${price.current}`;
+            document.getElementById('priceDisplay').innerHTML = priceHTML;
+        }
+
+        function addToCart() {
+            alert('Libro agregado al carrito');
+            // TODO: Implementar funcionalidad real
+        }
+
+        function buyNow() {
+            window.location.href = 'checkout.html?bookId=1&format=ebook';
+        }
+    </script>
+</body>
+</html>

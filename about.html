@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de Nosotros - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: white; color: var(--dark-gray); }
+        
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        .logo { font-size: 28px; font-weight: 700; color: var(--viking-blue); text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark-gray); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--viking-blue); }
+        
+        .hero { background: linear-gradient(135deg, var(--viking-blue), #0d2a4a); color: white; padding: 100px 30px; text-align: center; }
+        .hero h1 { font-size: 56px; margin-bottom: 20px; }
+        .hero p { font-size: 24px; max-width: 800px; margin: 0 auto; opacity: 0.95; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 30px; }
+        .section { margin-bottom: 80px; }
+        .section-title { font-size: 42px; color: var(--viking-blue); margin-bottom: 30px; text-align: center; }
+        .section-content { font-size: 18px; line-height: 1.8; color: #666; max-width: 900px; margin: 0 auto; }
+        
+        .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; }
+        .value-card { background: white; border: 2px solid #E0E6ED; border-radius: 15px; padding: 40px; text-align: center; transition: all 0.3s; }
+        .value-card:hover { border-color: var(--viking-blue); transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .value-icon { font-size: 64px; margin-bottom: 20px; }
+        .value-title { font-size: 24px; font-weight: 600; color: var(--viking-blue); margin-bottom: 15px; }
+        .value-desc { color: #666; line-height: 1.6; }
+        
+        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 60px; }
+        .team-card { text-align: center; }
+        .team-avatar { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, var(--viking-blue), var(--nordic-gold)); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: white; font-weight: 700; }
+        .team-name { font-size: 20px; font-weight: 600; color: var(--viking-blue); margin-bottom: 5px; }
+        .team-role { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .team-bio { color: #999; font-size: 13px; line-height: 1.4; }
+        
+        .stats-section { background: var(--light-gray); padding: 80px 30px; margin: 80px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .stat-card { text-align: center; }
+        .stat-value { font-size: 56px; font-weight: 700; color: var(--viking-blue); margin-bottom: 10px; }
+        .stat-label { font-size: 18px; color: #666; }
+        
+        .timeline { max-width: 900px; margin: 60px auto 0; }
+        .timeline-item { display: flex; gap: 30px; margin-bottom: 40px; position: relative; }
+        .timeline-year { font-size: 32px; font-weight: 700; color: var(--nordic-gold); min-width: 100px; }
+        .timeline-content h3 { font-size: 24px; color: var(--viking-blue); margin-bottom: 10px; }
+        .timeline-content p { color: #666; line-height: 1.6; }
+        
+        footer { background: var(--dark-gray); color: white; padding: 60px 30px; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+        .footer-section h3 { margin-bottom: 20px; color: var(--nordic-gold); }
+        .footer-section a { display: block; color: #ccc; text-decoration: none; margin-bottom: 10px; transition: color 0.3s; }
+        .footer-section a:hover { color: white; }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid #444; color: #999; }
+        
+        @media (max-width: 768px) { .values-grid, .team-grid, .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">⚔️ DrakkarPress</a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="about.html" style="color:var(--viking-blue)">Nosotros</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.html">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>⚔️ Acerca de DrakkarPress</h1>
+        <p>La plataforma editorial que empodera a escritores independientes con tecnología nórdica de vanguardia</p>
+    </section>
+
+    <div class="container">
+        <section class="section">
+            <h2 class="section-title">Nuestra Historia</h2>
+            <div class="section-content">
+                <p>DrakkarPress nació en 2023 con una misión clara: democratizar la publicación literaria y dar poder a los escritores independientes. Inspirados en los intrépidos navegantes vikingos que conquistaron nuevos territorios, creamos una plataforma que permite a los autores conquistar el mundo editorial sin intermediarios tradicionales.</p>
+                <br>
+                <p>Combinamos tecnología de última generación con un modelo de negocio justo que garantiza que los escritores reciban la mayor parte de sus ganancias (hasta 90% en regalías), mientras construimos un ecosistema completo que incluye afiliados, imprentas bajo demanda y servicios complementarios de marketing, desarrollo web e investigación.</p>
+                <br>
+                <p>Hoy, más de 2,000 autores confían en DrakkarPress para publicar, distribuir y vender sus obras en formato físico y digital, alcanzando lectores en más de 40 países.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Nuestros Valores</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">⚔️</div>
+                    <h3 class="value-title">Coraje</h3>
+                    <p class="value-desc">Apoyamos a escritores valientes que se atreven a publicar de forma independiente y conquistar sus propios mercados.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3 class="value-title">Transparencia</h3>
+                    <p class="value-desc">Modelo de comisiones claro y justo. Sin tarifas ocultas. El escritor siempre sabe cuánto gana.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🚀</div>
+                    <h3 class="value-title">Innovación</h3>
+                    <p class="value-desc">Tecnología de vanguardia: OAuth 2.0, IA integrada, pagos automatizados, multi-sitio con SSO.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🌍</div>
+                    <h3 class="value-title">Comunidad</h3>
+                    <p class="value-desc">Construimos una red de escritores, afiliados, imprentas y lectores que se apoyan mutuamente.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💎</div>
+                    <h3 class="value-title">Calidad</h3>
+                    <p class="value-desc">Estándares profesionales en edición, diseño, impresión y experiencia de usuario.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">⚖️</div>
+                    <h3 class="value-title">Equidad</h3>
+                    <p class="value-desc">90% de regalías para el autor. El modelo más justo del mercado editorial.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">2,000+</div>
+                <div class="stat-label">Autores Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">15,000+</div>
+                <div class="stat-label">Libros Publicados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$8M+</div>
+                <div class="stat-label">Pagado a Autores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">40+</div>
+                <div class="stat-label">Países</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="section">
+            <h2 class="section-title">Nuestro Equipo</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">EH</div>
+                    <div class="team-name">Erik Hansen</div>
+                    <div class="team-role">CEO & Fundador</div>
+                    <div class="team-bio">Ex-Amazon Publishing. Visión estratégica y liderazgo.</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">SM</div>
+                    <div class="team-name">Sofia Martínez</div>
+                    <div class="team-role">CTO</div>
+                    <div class="team-bio">15 años en tech. Arquitectura de plataforma multi-sitio.</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">LB</div>
+                    <div class="team-name">Lucas Bergström</div>
+                    <div class="team-role">Director de Operaciones</div>
+                    <div class="team-bio">Red de 50+ imprentas. Logística y producción.</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">AG</div>
+                    <div class="team-name">Ana García</div>
+                    <div class="team-role">Directora de Marketing</div>
+                    <div class="team-bio">Especialista en ads para autores. +$2M invertidos.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Nuestra Trayectoria</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2023</div>
+                    <div class="timeline-content">
+                        <h3>🚀 Fundación</h3>
+                        <p>DrakkarPress nace como plataforma de autopublicación con visión tecnológica. Primeros 50 autores se unen al proyecto.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-content">
+                        <h3>📈 Crecimiento</h3>
+                        <p>Lanzamiento de red de afiliados y sistema de impresión bajo demanda. Alcanzamos 500 autores y $1M en ventas.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-content">
+                        <h3>🌍 Expansión Internacional</h3>
+                        <p>Servicios de marketing digital y desarrollo web. Presencia en 40 países. 2,000+ autores activos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>DrakkarPress</h3>
+                <a href="about.html">Acerca de</a>
+                <a href="faq.html">Preguntas Frecuentes</a>
+                <a href="contact.html">Contacto</a>
+            </div>
+            <div class="footer-section">
+                <h3>Para Escritores</h3>
+                <a href="escritores.html">Portal Escritores</a>
+                <a href="register.html">Publicar mi Libro</a>
+            </div>
+            <div class="footer-section">
+                <h3>Servicios</h3>
+                <a href="servicios-marketing.html">Marketing Digital</a>
+                <a href="servicios-web.html">Desarrollo Web</a>
+                <a href="servicios-research.html">Investigación</a>
+            </div>
+            <div class="footer-section">
+                <h3>Comunidad</h3>
+                <a href="revendedores.html">Programa de Afiliados</a>
+                <a href="imprentas.html">Red de Imprentas</a>
+                <a href="biblioteca.html">Biblioteca</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

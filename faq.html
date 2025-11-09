@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: white; color: var(--dark-gray); }
+        
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        .logo { font-size: 28px; font-weight: 700; color: var(--viking-blue); text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark-gray); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--viking-blue); }
+        
+        .hero { background: linear-gradient(135deg, var(--viking-blue), #0d2a4a); color: white; padding: 80px 30px; text-align: center; }
+        .hero h1 { font-size: 48px; margin-bottom: 15px; }
+        .hero p { font-size: 20px; opacity: 0.9; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 30px; }
+        
+        .faq-categories { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 50px; }
+        .category-btn { padding: 12px 24px; background: white; border: 2px solid #E0E6ED; border-radius: 25px; cursor: pointer; transition: all 0.3s; font-size: 16px; font-weight: 500; }
+        .category-btn:hover, .category-btn.active { background: var(--viking-blue); color: white; border-color: var(--viking-blue); }
+        
+        .faq-section { margin-bottom: 50px; }
+        .faq-section-title { font-size: 32px; color: var(--viking-blue); margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid var(--nordic-gold); }
+        
+        .faq-item { background: white; border: 2px solid #E0E6ED; border-radius: 10px; margin-bottom: 15px; overflow: hidden; transition: all 0.3s; }
+        .faq-item:hover { border-color: var(--viking-blue); }
+        .faq-question { padding: 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 600; color: var(--viking-blue); }
+        .faq-question:hover { background: var(--light-gray); }
+        .faq-icon { font-size: 24px; transition: transform 0.3s; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .faq-answer-content { padding: 0 25px 25px 25px; color: #666; line-height: 1.8; font-size: 16px; }
+        .faq-item.active .faq-answer { max-height: 500px; }
+        
+        .cta-box { background: linear-gradient(135deg, var(--viking-blue), #0d2a4a); color: white; padding: 50px; border-radius: 20px; text-align: center; margin: 60px 0; }
+        .cta-box h2 { font-size: 32px; margin-bottom: 15px; }
+        .cta-box p { font-size: 18px; margin-bottom: 30px; opacity: 0.9; }
+        .btn-primary { padding: 15px 35px; background: var(--nordic-gold); color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        footer { background: var(--dark-gray); color: white; padding: 40px 30px; text-align: center; }
+        
+        @media (max-width: 768px) { .faq-categories { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">⚔️ DrakkarPress</a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="about.html">Nosotros</a>
+                <a href="faq.html" style="color:var(--viking-blue)">FAQ</a>
+                <a href="contact.html">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>❓ Preguntas Frecuentes</h1>
+        <p>Encuentra respuestas rápidas a las dudas más comunes</p>
+    </section>
+
+    <div class="container">
+        <div class="faq-categories">
+            <button class="category-btn active" onclick="showCategory('all')">Todas</button>
+            <button class="category-btn" onclick="showCategory('autores')">Para Autores</button>
+            <button class="category-btn" onclick="showCategory('lectores')">Para Lectores</button>
+            <button class="category-btn" onclick="showCategory('afiliados')">Programa Afiliados</button>
+            <button class="category-btn" onclick="showCategory('pagos')">Pagos y Comisiones</button>
+        </div>
+
+        <div class="faq-section" data-category="autores">
+            <h2 class="faq-section-title">✍️ Para Autores</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuánto cuesta publicar mi libro en DrakkarPress?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <strong>¡Es GRATIS publicar!</strong> No cobramos ninguna tarifa de inscripción ni publicación. Solo tomamos una comisión del 10% sobre cada venta realizada. Esto significa que solo ganamos cuando tú ganas. No hay costos ocultos ni tarifas mensuales.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Qué porcentaje de regalías recibo?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Recibes hasta el <strong>90% de las regalías</strong> en ventas directas. Si la venta viene de un afiliado, recibes el 60% (el afiliado recibe 30% y la plataforma 10%). Este es uno de los modelos más justos del mercado editorial.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuánto tiempo tarda el proceso de publicación?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Tu libro puede estar disponible en la plataforma en <strong>24-48 horas</strong> después de subir tu manuscrito y completar los metadatos. La revisión de calidad es rápida pero exhaustiva para asegurar una buena experiencia de lectura.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Conservo los derechos de mi obra?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <strong>SÍ, absolutamente.</strong> Tú mantienes el 100% de los derechos de autor de tu obra. DrakkarPress solo actúa como plataforma de distribución y venta. Puedes retirar tu libro en cualquier momento.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Ofrecen servicios de edición o diseño de portadas?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sí, ofrecemos servicios opcionales de edición profesional, diseño de portadas, corrección de estilo y más. También tenemos herramientas de IA integradas para ayudarte con títulos, sinopsis y diseño básico de portadas. Consulta nuestra sección de servicios.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" data-category="lectores">
+            <h2 class="faq-section-title">📚 Para Lectores</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Qué formatos de libros están disponibles?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Ofrecemos libros en <strong>4 formatos</strong>: eBook (EPUB/PDF), Tapa Blanda, Tapa Dura y Audiolibro. Cada libro puede tener diferentes formatos disponibles según las preferencias del autor.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cómo funciona la entrega de libros digitales?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Los eBooks se entregan <strong>instantáneamente</strong> después del pago. Puedes descargarlos desde tu biblioteca personal o leerlos directamente en nuestro lector web integrado. Compatible con Kindle, Kobo y otras apps.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuánto tardan en llegar los libros físicos?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Los libros físicos se imprimen bajo demanda y se envían en 3-5 días hábiles dentro de México. Envíos internacionales pueden tardar 7-14 días. Recibirás tracking de tu pedido.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Puedo regalar un libro?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        ¡Sí! Puedes comprar códigos de regalo para eBooks o enviar libros físicos a otra dirección. Incluye una nota personalizada con tu regalo.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" data-category="afiliados">
+            <h2 class="faq-section-title">💼 Programa de Afiliados</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cómo me uno al programa de afiliados?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Es muy sencillo: <strong>1)</strong> Crea una cuenta gratuita, <strong>2)</strong> Solicita acceso al programa de afiliados, <strong>3)</strong> Una vez aprobado, genera tus enlaces únicos y comienza a promocionar. No hay requisitos mínimos de seguidores.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuánto gano por cada venta?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Recibes el <strong>30% de comisión</strong> por cada venta generada a través de tu enlace de afiliado. Si un libro cuesta $300, ganas $90. Los pagos se realizan mensualmente vía transferencia bancaria o PayPal.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuánto dura la cookie de seguimiento?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        La cookie tiene una duración de <strong>30 días</strong>. Esto significa que si alguien hace clic en tu enlace pero compra 2 semanas después, aún recibirás tu comisión.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Puedo promover mis propios libros como afiliado?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        No, los enlaces de afiliado no funcionan para tus propios libros (ya recibes el 90% de regalías). Sin embargo, puedes promover libros de otros autores de la plataforma.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" data-category="pagos">
+            <h2 class="faq-section-title">💳 Pagos y Comisiones</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Qué métodos de pago aceptan?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Aceptamos <strong>tarjetas de crédito/débito</strong> (Visa, Mastercard, Amex), <strong>PayPal</strong>, <strong>transferencia bancaria</strong> y <strong>pagos en efectivo en OXXO</strong> (solo México). Todos los pagos son procesados de forma segura.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cuándo recibo mis regalías como autor?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Las regalías se pagan <strong>mensualmente</strong> el día 15 de cada mes por las ventas del mes anterior. Necesitas un mínimo de $500 acumulados para solicitar un pago. Sin ese mínimo, el saldo se acumula para el siguiente mes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Hay retención de impuestos?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sí, aplicamos las retenciones fiscales requeridas por ley según tu país de residencia. En México es 10% de ISR. Te proporcionamos los comprobantes fiscales necesarios para tu declaración.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Puedo cambiar el precio de mi libro?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sí, puedes cambiar el precio en cualquier momento desde tu panel de autor. Los cambios se reflejan inmediatamente. También puedes crear promociones temporales y códigos de descuento.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-box">
+            <h2>¿No encontraste tu respuesta?</h2>
+            <p>Contáctanos y te responderemos en menos de 24 horas</p>
+            <a href="contact.html" class="btn-primary">📧 Contactar Soporte</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+        }
+
+        function showCategory(category) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const sections = document.querySelectorAll('.faq-section');
+            sections.forEach(section => {
+                if (category === 'all') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = section.dataset.category === category ? 'block' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

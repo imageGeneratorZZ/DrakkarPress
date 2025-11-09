@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca - DrakkarPress</title>
+    <style>
+        :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --reader-purple: #9B59B6; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light-gray); color: var(--dark-gray); display: flex; min-height: 100vh; }
+        
+        .sidebar { width: 260px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.05); position: fixed; height: 100vh; overflow-y: auto; }
+        .logo { padding: 25px; background: linear-gradient(135deg, var(--reader-purple), #8e44ad); color: white; font-size: 20px; font-weight: bold; text-align: center; }
+        .nav-menu { padding: 20px 0; }
+        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; text-decoration: none; color: var(--dark-gray); }
+        .nav-item:hover, .nav-item.active { background: #f4ecf7; border-left: 4px solid var(--reader-purple); }
+        
+        .main-content { margin-left: 260px; flex: 1; padding: 30px; }
+        .header { background: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .welcome { font-size: 28px; font-weight: 600; color: var(--reader-purple); }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--reader-purple), #8e44ad); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .stat-icon { font-size: 32px; margin-bottom: 10px; }
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--reader-purple); margin-bottom: 5px; }
+        .stat-label { font-size: 14px; color: #666; }
+        
+        .section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .section-title { font-size: 22px; font-weight: 600; color: var(--reader-purple); }
+        
+        .books-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        .book-card { border: 2px solid #E0E6ED; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.3s; }
+        .book-card:hover { border-color: var(--reader-purple); transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .book-cover { width: 100%; aspect-ratio: 2/3; border-radius: 8px; object-fit: cover; margin-bottom: 10px; }
+        .progress-bar { width: 100%; height: 6px; background: #E0E6ED; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--reader-purple); border-radius: 3px; }
+        
+        .reader-container { background: white; border-radius: 15px; padding: 40px; max-width: 800px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .reader-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 15px; background: var(--light-gray); border-radius: 10px; }
+        .reader-text { font-size: 18px; line-height: 1.8; text-align: justify; }
+        
+        @media (max-width: 1024px) { .sidebar { width: 80px; } .main-content { margin-left: 80px; } .stats-grid, .books-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">📚 Mi Biblioteca</div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" onclick="showSection('library')"><span style="font-size:20px">📚</span> <span>Mi Biblioteca</span></a>
+            <a href="#" class="nav-item" onclick="showSection('reading')"><span style="font-size:20px">📖</span> <span>Leyendo</span></a>
+            <a href="#" class="nav-item"><span style="font-size:20px">⭐</span> <span>Favoritos</span></a>
+            <a href="#" class="nav-item"><span style="font-size:20px">📝</span> <span>Notas</span></a>
+            <a href="#" class="nav-item"><span style="font-size:20px">🎯</span> <span>Objetivos</span></a>
+            <a href="#" class="nav-item"><span style="font-size:20px">📊</span> <span>Estadísticas</span></a>
+            <a href="#" class="nav-item"><span style="font-size:20px">⚙️</span> <span>Configuración</span></a>
+            <a href="index.html" class="nav-item" style="margin-top:30px;border-top:1px solid #E0E6ED;padding-top:20px;"><span style="font-size:20px">🏠</span> <span>Volver al Sitio</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div id="librarySection">
+            <div class="header">
+                <div>
+                    <div class="welcome">¡Hola, Ana López! 📚</div>
+                    <p style="color:#666;margin-top:5px;">Lectora Ávida · 47 libros leídos</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:15px;">
+                    <div style="text-align:right;">
+                        <div style="font-weight:600;">Ana López</div>
+                        <div style="font-size:14px;color:#666;">Miembro desde 2023</div>
+                    </div>
+                    <div class="avatar">AL</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Libros en Biblioteca</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Leyendo Ahora</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Libros Completados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">36/50</div>
+                    <div class="stat-label">Objetivo Anual</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">📖 Continuar Leyendo</h2>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+                    <div class="book-card" onclick="openReader()">
+                        <img src="https://via.placeholder.com/200x300/667eea/ffffff?text=Reino+Sombras" class="book-cover">
+                        <div style="font-weight:600;margin-bottom:5px;">El Reino de las Sombras</div>
+                        <div style="font-size:14px;color:#666;margin-bottom:10px;">María González</div>
+                        <div style="font-size:12px;color:#666;">Capítulo 12 de 24</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:48%;"></div>
+                        </div>
+                        <div style="font-size:12px;color:var(--reader-purple);margin-top:5px;font-weight:600;">48% completado</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/200x300/f093fb/ffffff?text=Amor+Moderno" class="book-cover">
+                        <div style="font-weight:600;margin-bottom:5px;">Amor en Tiempos Modernos</div>
+                        <div style="font-size:14px;color:#666;margin-bottom:10px;">Carlos Ruiz</div>
+                        <div style="font-size:12px;color:#666;">Capítulo 8 de 18</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:44%;"></div>
+                        </div>
+                        <div style="font-size:12px;color:var(--reader-purple);margin-top:5px;font-weight:600;">44% completado</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/200x300/4facfe/ffffff?text=Detective" class="book-cover">
+                        <div style="font-weight:600;margin-bottom:5px;">El Último Detective</div>
+                        <div style="font-size:14px;color:#666;margin-bottom:10px;">Ana Martínez</div>
+                        <div style="font-size:12px;color:#666;">Capítulo 3 de 20</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:15%;"></div>
+                        </div>
+                        <div style="font-size:12px;color:var(--reader-purple);margin-top:5px;font-weight:600;">15% completado</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">📚 Todos Mis Libros</h2>
+                    <select style="padding:8px 12px;border:1px solid #E0E6ED;border-radius:6px;">
+                        <option>Todos</option>
+                        <option>No leídos</option>
+                        <option>Leyendo</option>
+                        <option>Completados</option>
+                        <option>Favoritos</option>
+                    </select>
+                </div>
+                <div class="books-grid">
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/150x220/667eea/ffffff?text=Libro+1" class="book-cover">
+                        <div style="font-weight:600;font-size:14px;">Historia Medieval</div>
+                        <div style="font-size:12px;color:#666;">Juan Pérez</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/150x220/f093fb/ffffff?text=Libro+2" class="book-cover">
+                        <div style="font-weight:600;font-size:14px;">Ciencia Ficción</div>
+                        <div style="font-size:12px;color:#666;">Laura García</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/150x220/4facfe/ffffff?text=Libro+3" class="book-cover">
+                        <div style="font-weight:600;font-size:14px;">Romance</div>
+                        <div style="font-size:12px;color:#666;">Pedro Sánchez</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/150x220/00f2c3/ffffff?text=Libro+4" class="book-cover">
+                        <div style="font-weight:600;font-size:14px;">Thriller</div>
+                        <div style="font-size:12px;color:#666;">Isabel Torres</div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://via.placeholder.com/150x220/fd79a8/ffffff?text=Libro+5" class="book-cover">
+                        <div style="font-weight:600;font-size:14px;">Fantasía</div>
+                        <div style="font-size:12px;color:#666;">Miguel Ruiz</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="readerSection" style="display:none;">
+            <div class="reader-container">
+                <div class="reader-controls">
+                    <button onclick="showSection('library')" style="padding:10px 20px;background:var(--reader-purple);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Volver a Biblioteca</button>
+                    <div style="display:flex;gap:15px;align-items:center;">
+                        <button style="padding:8px 16px;border:2px solid var(--reader-purple);background:white;color:var(--reader-purple);border-radius:6px;cursor:pointer;">A-</button>
+                        <button style="padding:8px 16px;border:2px solid var(--reader-purple);background:white;color:var(--reader-purple);border-radius:6px;cursor:pointer;">A+</button>
+                        <button style="padding:8px 16px;border:2px solid var(--reader-purple);background:white;color:var(--reader-purple);border-radius:6px;cursor:pointer;">📝 Nota</button>
+                        <button style="padding:8px 16px;border:2px solid var(--reader-purple);background:white;color:var(--reader-purple);border-radius:6px;cursor:pointer;">🔖</button>
+                    </div>
+                </div>
+
+                <div style="text-align:center;margin-bottom:30px;">
+                    <h1 style="font-size:32px;color:var(--reader-purple);margin-bottom:10px;">El Reino de las Sombras</h1>
+                    <p style="color:#666;font-size:18px;">Capítulo 12: El Despertar</p>
+                </div>
+
+                <div class="reader-text">
+                    <p style="margin-bottom:20px;">La niebla matutina envolvía el castillo como un manto espectral. Desde las almenas, Elena observaba el horizonte con una mezcla de temor y determinación. Habían pasado tres días desde el último ataque, pero sabía que no era más que el preludio de una tormenta mucho más grande.</p>
+
+                    <p style="margin-bottom:20px;">—Alteza, debemos partir antes del amanecer —la voz de Marcus la sacó de sus pensamientos. Su consejero más leal había envejecido diez años en las últimas semanas, las líneas de preocupación marcando profundamente su rostro.</p>
+
+                    <p style="margin-bottom:20px;">—Lo sé —respondió Elena sin apartar la vista del horizonte—. Pero no puedo abandonar a mi pueblo. No ahora que más me necesitan.</p>
+
+                    <p style="margin-bottom:20px;">El viento helado traía consigo el olor a ceniza y destrucción. Las aldeas cercanas aún humeaban después del ataque nocturno. Los Sombríos, criaturas nacidas de la oscuridad más profunda, se hacían cada vez más audaces con cada luna nueva.</p>
+
+                    <p style="margin-bottom:20px;">—Vuestra Alteza, vuestra supervivencia es lo único que importa. Si caéis, el reino caerá con vos —Marcus se acercó, su mano temblando ligeramente mientras extendía un pergamino sellado—. Este es el último mensaje del Consejo de los Antiguos. Hablan de una profecía...</p>
+
+                    <p style="margin-bottom:20px;">Elena tomó el pergamino y rompió el sello. Las palabras danzaban ante sus ojos, pero su significado era claro: ella era la última esperanza del reino. La sangre real que corría por sus venas no era solo un título nobiliario, sino la llave para despertar el poder ancestral que había dormido durante mil años.</p>
+                </div>
+
+                <div style="margin-top:40px;padding-top:30px;border-top:2px solid #E0E6ED;display:flex;justify-content:space-between;align-items:center;">
+                    <button style="padding:12px 30px;background:var(--light-gray);border:2px solid var(--reader-purple);color:var(--reader-purple);border-radius:8px;cursor:pointer;font-weight:600;">← Capítulo Anterior</button>
+                    <div style="text-align:center;">
+                        <div style="font-size:14px;color:#666;margin-bottom:5px;">Capítulo 12 de 24</div>
+                        <div class="progress-bar" style="width:200px;">
+                            <div class="progress-fill" style="width:50%;"></div>
+                        </div>
+                    </div>
+                    <button style="padding:12px 30px;background:var(--reader-purple);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente Capítulo →</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showSection(section) {
+            if (section === 'library') {
+                document.getElementById('librarySection').style.display = 'block';
+                document.getElementById('readerSection').style.display = 'none';
+            } else if (section === 'reading') {
+                openReader();
+            }
+        }
+
+        function openReader() {
+            document.getElementById('librarySection').style.display = 'none';
+            document.getElementById('readerSection').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

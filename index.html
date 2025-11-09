@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">DrakkarPress - La Flota Editorial Digital</title>
+    <style>
+        :root {
+            /* Colores Corporativos DrakkarPress */
+            --primary-dark: #0A2540;      /* Azul Marino Vikingo (Noche Nórdica) */
+            --primary: #1A4D7A;           /* Azul Vikingo (Principal) */
+            --primary-light: #2E6BA0;     /* Azul Océano */
+            --secondary: #D4AF37;         /* Oro Nórdico (Acentos) */
+            --secondary-light: #E8C968;   /* Oro Claro */
+            --accent-teal: #00B4D8;       /* Agua Vikinga */
+            
+            /* Colores por Rol */
+            --writer: #3498DB;            /* Azul Escritor */
+            --reseller: #27AE60;          /* Verde Revendedor */
+            --printer: #E67E22;           /* Naranja Imprenta */
+            --reader: #9B59B6;            /* Morado Lector */
+            
+            /* Neutrales */
+            --text-dark: #1A1A1A;
+            --text-medium: #4A4A4A;
+            --text-light: #7A7A7A;
+            --background: #F8F9FA;
+            --white: #FFFFFF;
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, #0A2540 0%, #1A4D7A 50%, #2E6BA0 100%);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #E8C968 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            color: var(--white);
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .logo-text .brand-tagline {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--secondary-light);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 220px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            margin-top: 10px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background: var(--background);
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: var(--primary-dark);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 90 L10 90 Z" fill="rgba(212,175,55,0.05)"/></svg>');
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 .brand-icon {
+            color: var(--secondary);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-box {
+            max-width: 800px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 4rem 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--gradient-gold);
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+            transform: scale(1.05);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .stats {
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Role Cards */
+        .roles-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-gold);
+            border-radius: 2px;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .role-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid;
+        }
+
+        .role-card:nth-child(1) { border-top-color: #3498DB; }
+        .role-card:nth-child(2) { border-top-color: #27AE60; }
+        .role-card:nth-child(3) { border-top-color: #E67E22; }
+        .role-card:nth-child(4) { border-top-color: #9B59B6; }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .role-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .role-card ul {
+            list-style: none;
+            text-align: left;
+            margin: 1rem 0;
+        }
+
+        .role-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .role-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27AE60;
+            font-weight: bold;
+        }
+
+        .role-card .btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .role-card .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 77, 122, 0.3);
+        }
+
+        /* Featured Books */
+        .featured-books {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+
+        .books-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-category {
+            color: #9B59B6;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            margin: 0.5rem 0;
+            color: var(--primary);
+        }
+
+        .book-author {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .book-rating {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .book-price {
+            font-size: 1.3rem;
+            color: #27AE60;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .book-actions button {
+            flex: 1;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-cart {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-cart:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-fav {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-fav:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* AI Section */
+        .ai-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .ai-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .ai-feature {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ai-feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .map-placeholder {
+            height: 400px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #666;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+            color: var(--secondary-light);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Libro Abierto (Conocimiento y Compartir) -->
+                        <path d="M4 10 C4 8 6 8 8 8 L22 8 C22 8 24 8 24 10 L24 38 C24 38 22 36 20 36 L8 36 C6 36 4 36 4 38 Z" 
+                              fill="#1A4D7A" stroke="#D4AF37" stroke-width="1.5"/>
+                        <path d="M44 10 C44 8 42 8 40 8 L26 8 C26 8 24 8 24 10 L24 38 C24 38 26 36 28 36 L40 36 C42 36 44 36 44 38 Z" 
+                              fill="#1A4D7A" stroke="#D4AF37" stroke-width="1.5"/>
+                        
+                        <!-- Runas Vikingas en las páginas (Antigüedad) -->
+                        <line x1="10" y1="14" x2="18" y2="14" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        <line x1="10" y1="18" x2="18" y2="18" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        <line x1="10" y1="22" x2="16" y2="22" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        <line x1="30" y1="14" x2="38" y2="14" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        <line x1="30" y1="18" x2="38" y2="18" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        <line x1="32" y1="22" x2="38" y2="22" stroke="#D4AF37" stroke-width="1" opacity="0.6"/>
+                        
+                        <!-- Drakkar navegando encima (Vikingos) -->
+                        <path d="M18 5 L20 3 L22 3 L23 4 L26 4 L28 3 L30 5 L24 8 Z" 
+                              fill="#D4AF37" stroke="#0A2540" stroke-width="0.5"/>
+                        <line x1="24" y1="3" x2="24" y2="7" stroke="#0A2540" stroke-width="1.5"/>
+                        
+                        <!-- Manos compartiendo/ofreciendo desde abajo (Generosidad) -->
+                        <path d="M14 40 Q12 42 14 44 L20 44 Q22 42 20 40" 
+                              stroke="#27AE60" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M34 40 Q36 42 34 44 L28 44 Q26 42 28 40" 
+                              stroke="#27AE60" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- Círculo de luz/sabiduría al centro (Conocimiento compartido) -->
+                        <circle cx="24" cy="24" r="3" fill="#E8C968" opacity="0.3"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">DrakkarPress</span>
+                    <span class="brand-tagline">La Flota Editorial Digital</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="catalogo.html">📚 Catálogo</a>
+                
+                <div class="dropdown">
+                    <a href="#portales">Portales ▾</a>
+                    <div class="dropdown-content">
+                        <a href="escritores.html">✍️ Escritores</a>
+                        <a href="revendedores.html">💼 Afiliados</a>
+                        <a href="imprentas.html">🖨️ Imprentas</a>
+                        <a href="biblioteca.html">📖 Mi Biblioteca</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="#servicios">Servicios ▾</a>
+                    <div class="dropdown-content">
+                        <a href="servicios-marketing.html">📢 Marketing Digital</a>
+                        <a href="servicios-web.html">💻 Desarrollo Web</a>
+                        <a href="servicios-research.html">🔬 Investigación</a>
+                    </div>
+                </div>
+                
+                <a href="about.html">Nosotros</a>
+                <a href="contact.html">Contacto</a>
+                <a href="login.html" class="btn-primary">Iniciar Sesión</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1><span class="brand-icon">⚓</span> La Flota Editorial Digital</h1>
+        <p>Donde tus libros navegan al mundo</p>
+        
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="🔍 Buscar libros, autores, ISBN...">
+            <button class="search-btn">Buscar</button>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn">Categoría ▾</button>
+            <button class="filter-btn">Formato ▾</button>
+            <button class="filter-btn">Precio ▾</button>
+            <button class="filter-btn">Más filtros ▾</button>
+        </div>
+
+        <div class="stats">
+            📊 <strong>124,583</strong> libros | <strong>8,421</strong> autores | <strong>326</strong> imprentas | <strong>45</strong> países
+        </div>
+    </section>
+
+    <!-- Marketing Campaigns Hero -->
+    <section style="padding: 3rem 2rem; background: linear-gradient(135deg, rgba(39,174,96,0.1) 0%, rgba(34,153,84,0.1) 100%); border-top: 3px solid #27AE60;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 2.5rem; color: #27AE60; margin-bottom: 1rem;">🎯 Marketing Sinérgico</h2>
+            <p style="font-size: 1.2rem; color: #666; max-width: 800px; margin: 0 auto;">
+                Potenciamos tu éxito con <strong>campañas bidireccionales</strong>: desde DrakkarPress hacia tu negocio 
+                y desde tu sitio hacia nuestra red. <strong>Todos ganan más tráfico y ventas.</strong>
+            </p>
+            <a href="#marketing-campaigns" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 2rem; background: #27AE60; color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s;">
+                Ver Estrategias Completas →
+            </a>
+        </div>
+    </section>
+
+    <!-- Roles Section -->
+    <section class="roles-section">
+        <h2 class="section-title">¿Cómo quieres participar en DrakkarPress?</h2>
+        
+        <div class="roles-grid">
+            <!-- Escritor -->
+            <div class="role-card">
+                <div class="role-icon">✍️</div>
+                <h3>Soy Escritor</h3>
+                <p>Crea y publica tus libros</p>
+                <ul>
+                    <li>Publica gratis</li>
+                    <li>IA te ayuda a crear</li>
+                    <li>90% directo / 60% con revendedor</li>
+                    <li>Sin inventario</li>
+                    <li>Venta automática</li>
+                </ul>
+                <a href="#" class="btn">Publicar mi libro →</a>
+            </div>
+
+            <!-- Revendedor -->
+            <div class="role-card" id="revendedores">
+                <div class="role-icon">💼</div>
+                <h3>Quiero Revender</h3>
+                <p>Vende libros y gana comisiones</p>
+                <ul>
+                    <li>Sin inversión inicial</li>
+                    <li>Elige tu catálogo</li>
+                    <li>30% de comisión</li>
+                    <li>Enlaces con tracking</li>
+                    <li>IA genera marketing</li>
+                </ul>
+                <a href="#" class="btn">Ser afiliado →</a>
+            </div>
+
+            <!-- Imprenta -->
+            <div class="role-card">
+                <div class="role-icon">🏭</div>
+                <h3>Tengo Imprenta</h3>
+                <p>Imprime libros bajo demanda</p>
+                <ul>
+                    <li>Pedidos automáticos</li>
+                    <li>Flujo constante</li>
+                    <li>Pagos puntuales</li>
+                    <li>Panel de gestión</li>
+                    <li>Sin riesgo</li>
+                </ul>
+                <a href="#" class="btn">Unirme a la red →</a>
+            </div>
+
+            <!-- Cliente -->
+            <div class="role-card">
+                <div class="role-icon">📚</div>
+                <h3>Quiero Comprar</h3>
+                <p>Descubre tu próxima lectura</p>
+                <ul>
+                    <li>Miles de títulos</li>
+                    <li>Digital o físico</li>
+                    <li>Envío rápido local</li>
+                    <li>Precios accesibles</li>
+                    <li>Biblioteca personal</li>
+                </ul>
+                <a href="#" class="btn">Explorar catálogo →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Books -->
+    <section class="featured-books">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title" style="color: #1A4D7A;">📚 Libros Destacados</h2>
+            
+            <div class="books-grid">
+                <!-- Book 1 -->
+                <div class="book-card">
+                    <div class="book-cover" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        El Mar<br>Eterno
+                    </div>
+                    <div class="book-info">
+                        <div class="book-category">Romance</div>
+                        <h3 class="book-title">El Mar Eterno</h3>
+                        <p class="book-author">por Ana García</p>
+                        <div class="book-rating">⭐⭐⭐⭐⭐ 4.8 (234)</div>
+                        <div class="book-price">
+                            💲 $12.99 Digital<br>
+                            <small style="color: #666;">💲 $24.99 Impreso</small>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                            📍 Impresión: MX, ES, AR<br>
+                            🚚 3-5 días
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn-cart">🛒 Comprar</button>
+                            <button class="btn-fav">❤️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card">
+                    <div class="book-cover" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        Noches<br>en París
+                    </div>
+                    <div class="book-info">
+                        <div class="book-category">Thriller</div>
+                        <h3 class="book-title">Noches en París</h3>
+                        <p class="book-author">por Carlos López</p>
+                        <div class="book-rating">⭐⭐⭐⭐☆ 4.5 (89)</div>
+                        <div class="book-price">
+                            💲 $15.99 Digital<br>
+                            <small style="color: #666;">💲 $28.99 Impreso</small>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                            📍 Impresión: AR, CL<br>
+                            🚚 2-4 días
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn-cart">🛒 Comprar</button>
+                            <button class="btn-fav">❤️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card">
+                    <div class="book-cover" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        Recetas<br>de la Abuela
+                    </div>
+                    <div class="book-info">
+                        <div class="book-category">Cocina</div>
+                        <h3 class="book-title">Recetas de la Abuela</h3>
+                        <p class="book-author">por María Santos</p>
+                        <div class="book-rating">⭐⭐⭐⭐⭐ 4.9 (156)</div>
+                        <div class="book-price">
+                            💲 $9.99 Digital<br>
+                            <small style="color: #666;">💲 $19.99 Impreso</small>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                            📍 Impresión: MX, US<br>
+                            🚚 3-5 días
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn-cart">🛒 Comprar</button>
+                            <button class="btn-fav">❤️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 4 -->
+                <div class="book-card">
+                    <div class="book-cover" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        El Dragón<br>Arcoíris
+                    </div>
+                    <div class="book-info">
+                        <div class="book-category">Scryptorium</div>
+                        <h3 class="book-title">El Dragón Arcoíris</h3>
+                        <p class="book-author">por Laura Ramírez</p>
+                        <div class="book-rating">⭐⭐⭐⭐⭐ 5.0 (67)</div>
+                        <div class="book-price">
+                            💲 $7.99 Digital<br>
+                            <small style="color: #666;">💲 $16.99 Impreso</small>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                            📍 Impresión: MX, ES<br>
+                            🚚 3-5 días
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn-cart">🛒 Comprar</button>
+                            <button class="btn-fav">❤️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Section -->
+    <section class="ai-section">
+        <h2>🤖 IA de DrakkarPress</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem;">Tu copiloto creativo impulsado por inteligencia artificial</p>
+        
+        <div class="ai-features">
+            <div class="ai-feature">
+                <div class="ai-feature-icon">✨</div>
+                <h3>Genera Ideas</h3>
+                <p>Ideas de libros según tu categoría</p>
+            </div>
+            <div class="ai-feature">
+                <div class="ai-feature-icon">📝</div>
+                <h3>Extiende Textos</h3>
+                <p>Continúa tus capítulos</p>
+            </div>
+            <div class="ai-feature">
+                <div class="ai-feature-icon">🎯</div>
+                <h3>Crea Sinopsis</h3>
+                <p>Descripciones atractivas</p>
+            </div>
+            <div class="ai-feature">
+                <div class="ai-feature-icon">🎨</div>
+                <h3>Estructuras</h3>
+                <p>Para libros infantiles</p>
+            </div>
+            <div class="ai-feature">
+                <div class="ai-feature-icon">📢</div>
+                <h3>Marketing</h3>
+                <p>Posts para redes sociales</p>
+            </div>
+            <div class="ai-feature">
+                <div class="ai-feature-icon">🌍</div>
+                <h3>Multiidioma</h3>
+                <p>Disponible en varios idiomas</p>
+            </div>
+        </div>
+
+        <button style="background: white; color: #667eea; padding: 1rem 3rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 2rem;">
+            ⚡ Probar IA de DrakkarPress Gratis
+        </button>
+    </section>
+
+    <!-- Marketing Campaigns Section -->
+    <section id="marketing-campaigns" style="padding: 4rem 2rem; background: linear-gradient(135deg, #27AE60 0%, #229954 100%); color: white;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h2 class="section-title" style="color: white;">🎯 Campañas de Marketing Sinérgicas</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 3rem; opacity: 0.95;">
+                Potenciamos el éxito de todos: escritores, revendedores e imprentas
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
+                <!-- Hacia los Motores Propios -->
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Desde DrakkarPress hacia TU negocio</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Campañas SEO/SEM</strong> que dirigen tráfico a tu portal de escritor, afiliado o imprenta
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Email Marketing</strong> segmentado promocionando tus libros o servicios
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Social Media</strong> con enlaces directos a tu página
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Banners destacados</strong> en marketplace principal
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Desde los Motores hacia DrakkarPress -->
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Desde TU sitio hacia DrakkarPress</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Widget integrado</strong> en tu web que muestra catálogo completo
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Enlaces de afiliado rastreables</strong> con tu comisión garantizada
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Cross-promotion</strong>: tus visitantes descubren más libros
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Tracking completo</strong> de conversiones y comisiones
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Efecto Red -->
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Efecto Red Sinérgico</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Más tráfico para todos</strong>: escritores, revendedores e imprentas
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>IA optimiza</strong> qué libros promocionar a cada audiencia
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Dashboards con métricas</strong> de campañas en tiempo real
+                        </li>
+                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0;">✓</span>
+                            <strong>Todos ganan</strong>: más visibilidad = más ventas
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.15); border-radius: 15px; border: 2px solid rgba(232,201,104,0.4);">
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">💡 Ejemplo Práctico</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    Un <strong>escritor</strong> publica su libro → DrakkarPress lanza campaña en Google Ads → 
+                    Los <strong>revendedores</strong> comparten en sus redes sociales (30% comisión) → 
+                    Las <strong>imprentas</strong> reciben pedidos locales automáticamente → 
+                    El escritor ve tráfico desde múltiples fuentes → 
+                    Todos ganan: <span style="color: #E8C968; font-weight: bold;">90% escritor + 30% revendedor + margen imprenta + 10% plataforma</span>
+                </p>
+            </div>
+
+            <button style="background: white; color: #27AE60; padding: 1rem 3rem; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 2rem; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
+                📊 Ver Estrategias de Marketing
+            </button>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section" id="red-imprentas">
+        <h2 class="section-title">🗺️ Red de Imprentas DrakkarPress</h2>
+        <p style="font-size: 1.4rem; font-weight: 600; color: #E67E22; margin-bottom: 0.5rem;">
+            ¿Quieres Imprimir?
+        </p>
+        <p style="font-size: 1.1rem; color: #666; margin-bottom: 1.5rem;">
+            Impresión local, entrega rápida en 45 países
+        </p>
+        
+        <div class="map-placeholder">
+            🌍 Mapa Interactivo de la Red<br>
+            <small style="font-size: 1rem;">(326 imprentas activas)</small>
+        </div>
+
+        <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: left;">
+            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
+                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">326</div>
+                <div style="color: #666;">Imprentas</div>
+            </div>
+            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</div>
+                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">45</div>
+                <div style="color: #666;">Países</div>
+            </div>
+            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚚</div>
+                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">3-7</div>
+                <div style="color: #666;">Días entrega</div>
+            </div>
+            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">24h</div>
+                <div style="color: #666;">Inicio impresión</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Plataforma</h3>
+                <ul>
+                    <li><a href="#">Para autores</a></li>
+                    <li><a href="#">Para afiliados</a></li>
+                    <li><a href="#">Para imprentas</a></li>
+                    <li><a href="#">Catálogo</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="#">Scryptorium</a></li>
+                    <li><a href="#">Erótica</a></li>
+                    <li><a href="#">Thriller</a></li>
+                    <li><a href="#">Romance</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Soporte</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#">Tutorial</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Términos</a></li>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DrakkarPress. Todos los derechos reservados.</p>
+            <p style="margin-top: 1rem;">
+                🔒 Pago seguro | 📦 Envío trackeable | ⚡ Impresión 24h
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script de Internacionalización -->
+    <script src="js/i18n.js"></script>
+    
+    <style>
+        /* Estilos para selector de idioma */
+        .language-selector {
+            position: relative;
+            margin-right: 1rem;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .lang-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 180px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .lang-option {
+            display: block;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-dark);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .lang-option:hover {
+            background: rgba(26, 77, 122, 0.1);
+        }
+
+        .lang-option.active {
+            background: rgba(26, 77, 122, 0.15);
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .language-selector {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</body>
+</html>
