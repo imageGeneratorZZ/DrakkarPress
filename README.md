@@ -1,9 +1,10 @@
 # ⚔️ DrakkarPress - La Flota Editorial Digital
 
 ![DrakkarPress Logo](https://img.shields.io/badge/DrakkarPress-Publishing%20Platform-1A4D7A?style=for-the-badge)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/drakkarpress/platform)
 [![GitHub](https://img.shields.io/badge/GitHub-DrakkarPress-181717?logo=github)](https://github.com/yourusername/DrakkarPress)
+
+**© 2025 DrakkarPress. Todos los derechos reservados.**
 
 > **Plataforma editorial completa con multi-sitio, autenticación OAuth 2.0, sistema de comisiones automatizado y herramientas de IA para escritores independientes.**
 
@@ -234,7 +235,9 @@ netlify deploy --prod
 
 ## 📝 Licencia
 
-MIT License - Copyright (c) 2025 DrakkarPress
+**© 2025 DrakkarPress. Todos los derechos reservados.**
+
+Este código es propiedad de DrakkarPress y se proporciona únicamente con fines de demostración. No está permitido copiar, modificar, distribuir o usar este código sin autorización expresa por escrito.
 
 ---
 

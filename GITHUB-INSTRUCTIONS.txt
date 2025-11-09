@@ -1,0 +1,108 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                 INSTRUCCIONES PARA SUBIR A GITHUB                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+✅ Git ya está inicializado y el commit inicial está hecho!
+
+📋 PASOS PARA CREAR EL REPOSITORIO EN GITHUB:
+
+1️⃣  IR A GITHUB
+   • Abre tu navegador: https://github.com
+   • Inicia sesión con tu cuenta
+
+2️⃣  CREAR NUEVO REPOSITORIO
+   • Click en el botón "+" (arriba derecha)
+   • Selecciona "New repository"
+   • Nombre del repo: DrakkarPress
+   • Descripción: "Plataforma de autopublicación editorial con 90% royalties"
+   • Selecciona: ✅ Public (para que sea visible)
+   • NO marques "Initialize with README" (ya tenemos uno)
+   • Click en "Create repository"
+
+3️⃣  COPIAR LA URL DEL REPOSITORIO
+   GitHub te mostrará una pantalla con comandos.
+   Copia la URL que aparece, ejemplo:
+   https://github.com/TU_USUARIO/DrakkarPress.git
+
+4️⃣  CONECTAR TU REPOSITORIO LOCAL CON GITHUB
+   Ejecuta estos comandos en PowerShell:
+
+   git remote add origin https://github.com/TU_USUARIO/DrakkarPress.git
+   git branch -M main
+   git push -u origin main
+
+5️⃣  AUTENTICACIÓN
+   • GitHub te pedirá autenticación
+   • Usa tu usuario y token personal (no contraseña)
+   • Si no tienes token: https://github.com/settings/tokens
+   
+   O mejor, instala GitHub CLI:
+   winget install GitHub.cli
+   gh auth login
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DEPLOYMENT AUTOMÁTICO EN GITHUB PAGES:
+
+Una vez subido el código:
+
+6️⃣  ACTIVAR GITHUB PAGES
+   • Ve a tu repositorio en GitHub
+   • Click en "Settings" (arriba)
+   • Scroll hasta "Pages" (menú izquierda)
+   • En "Source": selecciona "main" branch
+   • Click en "Save"
+   • ¡Espera 2-3 minutos!
+
+7️⃣  VER TU SITIO PUBLICADO
+   Tu sitio estará en:
+   https://TU_USUARIO.github.io/DrakkarPress
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 CONTENIDO DEL REPOSITORIO:
+
+✅ 18 páginas HTML completamente funcionales
+✅ Sistema de internacionalización (6 idiomas)
+✅ 4 portales especializados
+✅ Sistema de e-commerce completo
+✅ 16 documentos de arquitectura técnica
+✅ README.md profesional con badges
+✅ Configuraciones para Vercel y Netlify
+✅ Instrucciones de deployment completas
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 COMANDOS ÚTILES:
+
+Ver estado:          git status
+Ver historial:       git log --oneline
+Agregar cambios:     git add .
+Hacer commit:        git commit -m "mensaje"
+Subir cambios:       git push
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🆘 SI TIENES PROBLEMAS:
+
+1. Error de autenticación:
+   gh auth login
+   
+2. Repository not found:
+   Verifica la URL: git remote -v
+   
+3. Push rejected:
+   git pull origin main --allow-unrelated-histories
+   git push
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📧 ¿LISTO PARA SUBIR?
+
+Ejecuta este comando cuando tengas la URL de GitHub:
+
+git remote add origin [URL_DE_TU_REPO]
+git branch -M main
+git push -u origin main
+
+¡Y tu código estará en GitHub en segundos! 🎉
