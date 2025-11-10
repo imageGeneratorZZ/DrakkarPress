@@ -289,31 +289,39 @@
     <div class="login-container">
         <div class="login-header">
             <div class="logo-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Círculo Rúnico exterior -->
-                    <circle cx="24" cy="24" r="22" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
-                    <circle cx="24" cy="24" r="19" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
+                <svg viewBox="0 0 60 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Olas del conocimiento -->
+                    <path d="M2 40 Q8 38 14 40 T26 40 T38 40 T50 40 T58 40" stroke="#FFFFFF" stroke-width="1" opacity="0.3" fill="none"/>
                     
-                    <!-- Runas direccionales -->
-                    <path d="M24 6 L24 14 M20 10 L24 6 L28 10" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M38 24 L30 24 M34 20 L38 24 L34 28" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M24 42 L24 34 M20 38 L24 42 L28 38" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M10 24 L18 24 M14 20 L10 24 L14 28" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Drakkar Principal (Centro blanco) -->
+                    <g transform="translate(30, 24)">
+                        <path d="M-8,4 L-6,0 L6,0 L8,4 Q8,6 6,6 L-6,6 Q-8,6 -8,4 Z" fill="#FFFFFF" stroke="#D4AF37" stroke-width="0.8"/>
+                        <line x1="0" y1="0" x2="0" y2="-12" stroke="#D4AF37" stroke-width="1.5"/>
+                        <path d="M0,-12 L-5,-4 L0,-2 Z" fill="#E8C968" opacity="0.7"/>
+                        <path d="M0,-12 L5,-4 L0,-2 Z" fill="#E8C968" opacity="0.5"/>
+                        <text x="0" y="-6" font-size="5" fill="#1A4D7A" text-anchor="middle" font-weight="bold">ᚲ</text>
+                    </g>
                     
-                    <!-- Drakkar central -->
-                    <path d="M12 24 Q24 18 36 24 Q24 30 12 24" fill="#FFFFFF" opacity="0.2"/>
-                    <path d="M15 24 L33 24" stroke="#D4AF37" stroke-width="1.5"/>
-                    <path d="M24 20 L24 28" stroke="#D4AF37" stroke-width="2"/>
+                    <!-- Drakkars menores (flota) -->
+                    <g transform="translate(12, 28)">
+                        <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#FFFFFF" opacity="0.5" stroke="#D4AF37" stroke-width="0.6"/>
+                        <line x1="0" y1="0" x2="0" y2="-8" stroke="#D4AF37" stroke-width="1"/>
+                        <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#FFFFFF" opacity="0.4"/>
+                    </g>
                     
-                    <!-- Runas pequeñas -->
-                    <text x="24" y="10" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᛖ</text>
-                    <text x="38" y="26" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚠ</text>
-                    <text x="24" y="44" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚹ</text>
-                    <text x="10" y="26" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚦ</text>
+                    <g transform="translate(48, 28)">
+                        <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#FFFFFF" opacity="0.5" stroke="#D4AF37" stroke-width="0.6"/>
+                        <line x1="0" y1="0" x2="0" y2="-8" stroke="#D4AF37" stroke-width="1"/>
+                        <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#FFFFFF" opacity="0.4"/>
+                    </g>
                     
-                    <!-- Centro luminoso -->
-                    <circle cx="24" cy="24" r="4" stroke="#D4AF37" stroke-width="1.5" fill="none" opacity="0.7"/>
-                    <circle cx="24" cy="24" r="2" fill="#FFFFFF"/>
+                    <!-- Estrellas guía -->
+                    <circle cx="30" cy="5" r="1.5" fill="#D4AF37" opacity="0.8"/>
+                    <circle cx="26" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
+                    <circle cx="34" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
+                    
+                    <!-- Círculo de unidad -->
+                    <circle cx="30" cy="24" r="23" stroke="#D4AF37" stroke-width="0.8" opacity="0.3" fill="none"/>
                 </svg>
             </div>
             <h1>DrakkarPress</h1>

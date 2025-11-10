@@ -619,38 +619,66 @@
         <nav>
             <a href="/" class="logo">
                 <div class="logo-icon">
-                    <svg width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Círculo Rúnico exterior (protección vikinga) -->
-                        <circle cx="24" cy="24" r="22" stroke="#D4AF37" stroke-width="2" opacity="0.8"/>
-                        <circle cx="24" cy="24" r="19" stroke="#D4AF37" stroke-width="0.5" opacity="0.4"/>
+                    <svg width="40" height="40" viewBox="0 0 60 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Olas del conocimiento (base) -->
+                        <path d="M2 40 Q8 38 14 40 T26 40 T38 40 T50 40 T58 40" stroke="#3498db" stroke-width="1" opacity="0.3" fill="none"/>
+                        <path d="M2 43 Q8 41 14 43 T26 43 T38 43 T50 43 T58 43" stroke="#3498db" stroke-width="1" opacity="0.2" fill="none"/>
                         
-                        <!-- Runas principales formando "ᛞᚱᚨᚲᚲᚨᚱ" (Drakkar) -->
-                        <!-- Runa "ᛞ" (Dagaz - día/nuevo comienzo) superior -->
-                        <path d="M24 6 L24 14 M20 10 L24 6 L28 10" stroke="#1A4D7A" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Drakkar Principal (Centro) - Representa DrakkarPress -->
+                        <g transform="translate(30, 24)">
+                            <!-- Casco del barco -->
+                            <path d="M-8,4 L-6,0 L6,0 L8,4 Q8,6 6,6 L-6,6 Q-8,6 -8,4 Z" fill="#1A4D7A" stroke="#D4AF37" stroke-width="0.8"/>
+                            <!-- Mástil dorado (conocimiento central) -->
+                            <line x1="0" y1="0" x2="0" y2="-12" stroke="#D4AF37" stroke-width="1.5"/>
+                            <!-- Vela del conocimiento -->
+                            <path d="M0,-12 L-5,-4 L0,-2 Z" fill="#E8C968" opacity="0.7"/>
+                            <path d="M0,-12 L5,-4 L0,-2 Z" fill="#E8C968" opacity="0.5"/>
+                            <!-- Runa del conocimiento en vela -->
+                            <text x="0" y="-6" font-size="5" fill="#1A4D7A" text-anchor="middle" font-weight="bold">ᚲ</text>
+                            <!-- Cabeza de dragón -->
+                            <path d="M-8,4 L-10,2 L-9,1" stroke="#D4AF37" stroke-width="1" fill="none"/>
+                        </g>
                         
-                        <!-- Runa "ᚱ" (Raido - viaje) derecha -->
-                        <path d="M38 24 L30 24 M34 20 L38 24 L34 28" stroke="#1A4D7A" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Drakkar Izquierdo (Autores) -->
+                        <g transform="translate(12, 28)">
+                            <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="0.6"/>
+                            <line x1="0" y1="0" x2="0" y2="-8" stroke="#2980b9" stroke-width="1"/>
+                            <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
+                            <text x="0" y="-4" font-size="3.5" fill="#1A4D7A" text-anchor="middle">✍</text>
+                        </g>
                         
-                        <!-- Runa "ᛊ" (Sowilo - sol/victoria) inferior -->
-                        <path d="M24 42 L24 34 M20 38 L24 42 L28 38" stroke="#1A4D7A" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Drakkar Derecho (Imprentas) -->
+                        <g transform="translate(48, 28)">
+                            <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#e67e22" opacity="0.7" stroke="#d35400" stroke-width="0.6"/>
+                            <line x1="0" y1="0" x2="0" y2="-8" stroke="#d35400" stroke-width="1"/>
+                            <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
+                            <text x="0" y="-4" font-size="3.5" fill="#1A4D7A" text-anchor="middle">🖨</text>
+                        </g>
                         
-                        <!-- Runa "ᚲ" (Kenaz - antorcha/conocimiento) izquierda -->
-                        <path d="M10 24 L18 24 M14 20 L10 24 L14 28" stroke="#1A4D7A" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Drakkar Arriba Izquierda (Promotores) -->
+                        <g transform="translate(18, 18)">
+                            <path d="M-5,2 L-3,0 L3,0 L5,2 Q5,3 3,3 L-3,3 Q-5,3 -5,2 Z" fill="#27ae60" opacity="0.6" stroke="#229954" stroke-width="0.5"/>
+                            <line x1="0" y1="0" x2="0" y2="-6" stroke="#229954" stroke-width="0.8"/>
+                            <path d="M0,-6 L-2,-1 L0,-0.5 Z" fill="#ecf0f1" opacity="0.5"/>
+                        </g>
                         
-                        <!-- Drakkar estilizado central -->
-                        <path d="M12 24 Q24 18 36 24 Q24 30 12 24" fill="#1A4D7A" opacity="0.3"/>
-                        <path d="M15 24 L33 24" stroke="#D4AF37" stroke-width="1.5"/>
-                        <path d="M24 20 L24 28" stroke="#D4AF37" stroke-width="2"/>
+                        <!-- Drakkar Arriba Derecha (Lectores) -->
+                        <g transform="translate(42, 18)">
+                            <path d="M-5,2 L-3,0 L3,0 L5,2 Q5,3 3,3 L-3,3 Q-5,3 -5,2 Z" fill="#9b59b6" opacity="0.6" stroke="#8e44ad" stroke-width="0.5"/>
+                            <line x1="0" y1="0" x2="0" y2="-6" stroke="#8e44ad" stroke-width="0.8"/>
+                            <path d="M0,-6 L-2,-1 L0,-0.5 Z" fill="#ecf0f1" opacity="0.5"/>
+                        </g>
                         
-                        <!-- Símbolos rúnicos pequeños en el círculo -->
-                        <text x="24" y="10" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᛖ</text>
-                        <text x="38" y="26" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚠ</text>
-                        <text x="24" y="44" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚹ</text>
-                        <text x="10" y="26" font-size="6" fill="#D4AF37" text-anchor="middle" opacity="0.6">ᚦ</text>
+                        <!-- Estrellas guía (destino común) -->
+                        <circle cx="30" cy="5" r="1.5" fill="#D4AF37" opacity="0.8"/>
+                        <circle cx="26" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
+                        <circle cx="34" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
                         
-                        <!-- Nudo celta/vikingo central -->
-                        <circle cx="24" cy="24" r="4" stroke="#27AE60" stroke-width="1.5" fill="none" opacity="0.7"/>
-                        <circle cx="24" cy="24" r="2" fill="#E8C968"/>
+                        <!-- Líneas de conexión (unidos en el viaje) -->
+                        <path d="M12,28 Q18,22 30,24 Q42,22 48,28" stroke="#D4AF37" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2" fill="none"/>
+                        
+                        <!-- Círculo de unidad (flota unida) -->
+                        <circle cx="30" cy="24" r="23" stroke="#D4AF37" stroke-width="0.8" opacity="0.2" fill="none"/>
                     </svg>
                 </div>
                 <div class="logo-text">
