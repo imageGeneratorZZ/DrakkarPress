@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Generadores de IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .status-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            color: white;
+            text-align: center;
+        }
+
+        .status-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .status-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .generators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .generator-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .generator-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .generator-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .generator-card .icon {
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ DrakkarPress</h1>
+            <h2>Generadores de IA para Autores</h2>
+            <p style="color: #666; margin-top: 10px;">
+                Herramientas de inteligencia artificial para impulsar tu creatividad
+            </p>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-label">Backend</div>
+                    <div class="status-value" id="backend-status">⏳ Verificando...</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">IA Service</div>
+                    <div class="status-value" id="ai-status">⏳ Verificando...</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">PostgreSQL</div>
+                    <div class="status-value">✓ Activo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="generators-grid">
+            <!-- Generador de Ideas -->
+            <div class="generator-card">
+                <h3><span class="icon">💡</span> Generar Idea de Libro</h3>
+                <form onsubmit="generateIdea(event)">
+                    <div class="form-group">
+                        <label>Género:</label>
+                        <select id="idea-genre">
+                            <option value="Romance">Romance</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Ciencia Ficción">Ciencia Ficción</option>
+                            <option value="Fantasía">Fantasía</option>
+                            <option value="Misterio">Misterio</option>
+                            <option value="Terror">Terror</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Palabras Clave:</label>
+                        <input type="text" id="idea-keywords" placeholder="ej: amor, aventura, misterio">
+                    </div>
+                    <button type="submit" class="btn">Generar Idea</button>
+                    <div class="result-box" id="idea-result"></div>
+                </form>
+            </div>
+
+            <!-- Extender Capítulo -->
+            <div class="generator-card">
+                <h3><span class="icon">📖</span> Extender Capítulo</h3>
+                <form onsubmit="extendChapter(event)">
+                    <div class="form-group">
+                        <label>Texto Actual:</label>
+                        <textarea id="chapter-text" placeholder="Escribe el inicio de tu capítulo..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección:</label>
+                        <select id="chapter-direction">
+                            <option value="continue">Continuar</option>
+                            <option value="twist">Giro Inesperado</option>
+                            <option value="climax">Clímax</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Palabras:</label>
+                        <input type="number" id="chapter-words" value="300" min="100" max="1000">
+                    </div>
+                    <button type="submit" class="btn">Extender</button>
+                    <div class="result-box" id="chapter-result"></div>
+                </form>
+            </div>
+
+            <!-- Generar Sinopsis -->
+            <div class="generator-card">
+                <h3><span class="icon">📝</span> Generar Sinopsis</h3>
+                <form onsubmit="generateSynopsis(event)">
+                    <div class="form-group">
+                        <label>Contenido del Libro:</label>
+                        <textarea id="synopsis-content" placeholder="Resumen o texto del libro..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitud Máxima:</label>
+                        <input type="number" id="synopsis-length" value="150" min="50" max="500">
+                    </div>
+                    <button type="submit" class="btn">Generar Sinopsis</button>
+                    <div class="result-box" id="synopsis-result"></div>
+                </form>
+            </div>
+
+            <!-- Sugerir Títulos -->
+            <div class="generator-card">
+                <h3><span class="icon">🏷️</span> Sugerir Títulos</h3>
+                <form onsubmit="suggestTitles(event)">
+                    <div class="form-group">
+                        <label>Sinopsis:</label>
+                        <textarea id="titles-synopsis" placeholder="Breve sinopsis del libro..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Género:</label>
+                        <select id="titles-genre">
+                            <option value="Romance">Romance</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Ciencia Ficción">Ciencia Ficción</option>
+                            <option value="Fantasía">Fantasía</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad:</label>
+                        <input type="number" id="titles-count" value="5" min="1" max="10">
+                    </div>
+                    <button type="submit" class="btn">Sugerir Títulos</button>
+                    <div class="result-box" id="titles-result"></div>
+                </form>
+            </div>
+
+            <!-- Generar Diálogo -->
+            <div class="generator-card">
+                <h3><span class="icon">💬</span> Generar Diálogo</h3>
+                <form onsubmit="generateDialogue(event)">
+                    <div class="form-group">
+                        <label>Escena:</label>
+                        <input type="text" id="dialogue-scene" placeholder="ej: Reunión en café">
+                    </div>
+                    <div class="form-group">
+                        <label>Personajes:</label>
+                        <input type="text" id="dialogue-characters" placeholder="ej: Ana y Carlos">
+                    </div>
+                    <div class="form-group">
+                        <label>Tono:</label>
+                        <select id="dialogue-tone">
+                            <option value="neutral">Neutral</option>
+                            <option value="romántico">Romántico</option>
+                            <option value="tenso">Tenso</option>
+                            <option value="cómico">Cómico</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Generar Diálogo</button>
+                    <div class="result-box" id="dialogue-result"></div>
+                </form>
+            </div>
+
+            <!-- Mejorar Texto -->
+            <div class="generator-card">
+                <h3><span class="icon">✨</span> Mejorar Texto</h3>
+                <form onsubmit="improveText(event)">
+                    <div class="form-group">
+                        <label>Texto:</label>
+                        <textarea id="improve-text" placeholder="Texto a mejorar..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Enfoque:</label>
+                        <select id="improve-focus">
+                            <option value="general">General</option>
+                            <option value="grammar">Gramática</option>
+                            <option value="style">Estilo</option>
+                            <option value="clarity">Claridad</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Mejorar</button>
+                    <div class="result-box" id="improve-result"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Verificar estado al cargar
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    document.getElementById('backend-status').textContent = '✓ Activo';
+                    checkAiStatus();
+                }
+            } catch (error) {
+                document.getElementById('backend-status').textContent = '✗ Inactivo';
+            }
+        }
+
+        async function checkAiStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/ai/status`);
+                if (response.ok) {
+                    document.getElementById('ai-status').textContent = '✓ Activo';
+                }
+            } catch (error) {
+                document.getElementById('ai-status').textContent = '⏳ Pendiente';
+            }
+        }
+
+        async function apiCall(endpoint, data) {
+            const response = await fetch(`${API_BASE}/ai/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return await response.text();
+        }
+
+        function showResult(elementId, content, isError = false) {
+            const resultBox = document.getElementById(elementId);
+            resultBox.innerHTML = isError ? 
+                `<div class="error">${content}</div>` : 
+                `<div class="success">${content}</div>`;
+            resultBox.classList.add('show');
+        }
+
+        function showLoading(elementId) {
+            const resultBox = document.getElementById(elementId);
+            resultBox.innerHTML = '<div class="loading">Generando</div>';
+            resultBox.classList.add('show');
+        }
+
+        async function generateIdea(e) {
+            e.preventDefault();
+            const genre = document.getElementById('idea-genre').value;
+            const keywords = document.getElementById('idea-keywords').value;
+            
+            showLoading('idea-result');
+            try {
+                const result = await apiCall('generate-idea', { genre, keywords });
+                showResult('idea-result', result);
+            } catch (error) {
+                showResult('idea-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function extendChapter(e) {
+            e.preventDefault();
+            const currentText = document.getElementById('chapter-text').value;
+            const direction = document.getElementById('chapter-direction').value;
+            const words = parseInt(document.getElementById('chapter-words').value);
+            
+            showLoading('chapter-result');
+            try {
+                const result = await apiCall('extend-chapter', { currentText, direction, words });
+                showResult('chapter-result', result);
+            } catch (error) {
+                showResult('chapter-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function generateSynopsis(e) {
+            e.preventDefault();
+            const bookContent = document.getElementById('synopsis-content').value;
+            const maxLength = parseInt(document.getElementById('synopsis-length').value);
+            
+            showLoading('synopsis-result');
+            try {
+                const result = await apiCall('generate-synopsis', { bookContent, maxLength });
+                showResult('synopsis-result', result);
+            } catch (error) {
+                showResult('synopsis-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function suggestTitles(e) {
+            e.preventDefault();
+            const synopsis = document.getElementById('titles-synopsis').value;
+            const genre = document.getElementById('titles-genre').value;
+            const count = parseInt(document.getElementById('titles-count').value);
+            
+            showLoading('titles-result');
+            try {
+                const result = await apiCall('suggest-titles', { synopsis, genre, count });
+                showResult('titles-result', result);
+            } catch (error) {
+                showResult('titles-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function generateDialogue(e) {
+            e.preventDefault();
+            const scene = document.getElementById('dialogue-scene').value;
+            const characters = document.getElementById('dialogue-characters').value;
+            const tone = document.getElementById('dialogue-tone').value;
+            
+            showLoading('dialogue-result');
+            try {
+                const result = await apiCall('generate-dialogue', { scene, characters, tone });
+                showResult('dialogue-result', result);
+            } catch (error) {
+                showResult('dialogue-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function improveText(e) {
+            e.preventDefault();
+            const text = document.getElementById('improve-text').value;
+            const focus = document.getElementById('improve-focus').value;
+            
+            showLoading('improve-result');
+            try {
+                const result = await apiCall('improve-text', { text, focus });
+                showResult('improve-result', result);
+            } catch (error) {
+                showResult('improve-result', 'Error: ' + error.message, true);
+            }
+        }
+
+        // Verificar estado inicial
+        checkStatus();
+        
+        // Verificar cada 30 segundos
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

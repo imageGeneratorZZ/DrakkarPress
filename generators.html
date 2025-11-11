@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Generadores de IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .status-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            color: white;
+            text-align: center;
+        }
+
+        .status-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .status-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .generators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .generator-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .generator-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .generator-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .generator-card .icon {
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Ecualizador de Géneros */
+        .genre-equalizer {
+            margin: 20px 0;
+        }
+
+        .genre-slider {
+            margin: 10px 0;
+        }
+
+        .genre-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .genre-percentage {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Medidor de Erotismo */
+        .erotismo-meter {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(to right, #e8f5e9 0%, #fff9c4 25%, #ffe0b2 50%, #ffccbc 75%, #f8bbd0 100%);
+            border-radius: 10px;
+        }
+
+        .erotismo-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8em;
+        }
+
+        .erotismo-indicator {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* División de Generadoras */
+        .generator-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .section-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .demo-banner {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        .demo-banner strong {
+            font-size: 1.2em;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ DrakkarPress</h1>
+            <h2>Generadores de IA para Autores</h2>
+            <p style="color: #666; margin-top: 10px;">
+                Herramientas de inteligencia artificial para impulsar tu creatividad
+            </p>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-label">Backend</div>
+                    <div class="status-value" id="backend-status">⏳ Compilando...</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Modo Actual</div>
+                    <div class="status-value" id="mode-status">🎭 DEMO Activo</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">PostgreSQL</div>
+                    <div class="status-value">✓ Activo</div>
+                </div>
+            </div>
+            
+            <div class="demo-banner" id="demo-banner">
+                <strong>⚡ MODO DEMOSTRACIÓN ACTIVO</strong><br>
+                <small>El backend está compilando (5-10 min primera vez). Mientras tanto, prueba los generadores con ejemplos realistas. Los resultados reales llegarán pronto.</small>
+            </div>
+        </div>
+
+        <!-- GENERADORA 1: CREACIÓN DE CONTENIDO -->
+        <div class="generator-section">
+            <div class="section-header">
+                <h2>🎨 GENERADORA 1: Creación de Contenido</h2>
+                <p>Generadores creativos con 25+ géneros combinables - Ficción, No Ficción, Técnico y Especializado</p>
+                <div>
+                    <span class="badge">🚀 Ideas</span>
+                    <span class="badge">📚 Títulos</span>
+                    <span class="badge">👤 Personajes</span>
+                    <span class="badge">🍳 Recetas</span>
+                    <span class="badge">📊 Informes</span>
+                    <span class="badge">🎭 25+ Géneros</span>
+                </div>
+            </div>
+
+            <div class="generators-grid">
+                <!-- Generador de Ideas con Ecualizador -->
+                <div class="generator-card">
+                    <h3><span class="icon">💡</span> Generar Idea de Libro</h3>
+                    <form onsubmit="generateIdea(event)">
+                        <div class="form-group">
+                            <label>🎭 Ecualizador de Géneros - Combina CUALQUIER Mezcla</label>
+                            <div class="genre-equalizer">
+                                <!-- FICCIÓN -->
+                                <h4 style="color: #667eea; margin: 15px 0 10px 0;">📚 Ficción Literaria</h4>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Romance ❤️</span>
+                                        <span class="genre-percentage"><span id="romance-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-romance" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('romance')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Erótica 🔥</span>
+                                        <span class="genre-percentage"><span id="erotica-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-erotica" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('erotica')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Thriller/Suspense 🕵️</span>
+                                        <span class="genre-percentage"><span id="thriller-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-thriller" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('thriller')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Fantasía 🧙</span>
+                                        <span class="genre-percentage"><span id="fantasia-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-fantasia" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('fantasia')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Ciencia Ficción 🚀</span>
+                                        <span class="genre-percentage"><span id="scifi-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-scifi" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('scifi')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Terror/Horror 👻</span>
+                                        <span class="genre-percentage"><span id="terror-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-terror" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('terror')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Misterio/Policiaco 🔍</span>
+                                        <span class="genre-percentage"><span id="misterio-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-misterio" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('misterio')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Histórica 🏛️</span>
+                                        <span class="genre-percentage"><span id="historica-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-historica" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('historica')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Aventura ⚔️</span>
+                                        <span class="genre-percentage"><span id="aventura-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-aventura" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('aventura')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Drama 🎭</span>
+                                        <span class="genre-percentage"><span id="drama-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-drama" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('drama')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Comedia 😄</span>
+                                        <span class="genre-percentage"><span id="comedia-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-comedia" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('comedia')">
+                                </div>
+                                
+                                <!-- NO FICCIÓN -->
+                                <h4 style="color: #667eea; margin: 15px 0 10px 0;">📖 No Ficción</h4>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Biografía/Memorias 👤</span>
+                                        <span class="genre-percentage"><span id="biografia-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-biografia" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('biografia')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Autoayuda/Desarrollo 💪</span>
+                                        <span class="genre-percentage"><span id="autoayuda-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-autoayuda" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('autoayuda')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Negocios/Finanzas 💼</span>
+                                        <span class="genre-percentage"><span id="negocios-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-negocios" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('negocios')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Historia/Divulgación 📜</span>
+                                        <span class="genre-percentage"><span id="divulgacion-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-divulgacion" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('divulgacion')">
+                                </div>
+                                
+                                <!-- TÉCNICO/PROFESIONAL -->
+                                <h4 style="color: #667eea; margin: 15px 0 10px 0;">🔬 Técnico/Académico</h4>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Científico/Técnico 🔬</span>
+                                        <span class="genre-percentage"><span id="cientifico-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-cientifico" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('cientifico')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Académico/Educativo 🎓</span>
+                                        <span class="genre-percentage"><span id="academico-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-academico" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('academico')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Manual/Guía Técnica 📋</span>
+                                        <span class="genre-percentage"><span id="manual-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-manual" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('manual')">
+                                </div>
+                                
+                                <!-- ESPECIALIZADO -->
+                                <h4 style="color: #667eea; margin: 15px 0 10px 0;">🍳 Contenido Especializado</h4>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Cocina/Recetas 🍳</span>
+                                        <span class="genre-percentage"><span id="cocina-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-cocina" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('cocina')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Viajes/Turismo ✈️</span>
+                                        <span class="genre-percentage"><span id="viajes-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-viajes" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('viajes')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Salud/Bienestar 🧘</span>
+                                        <span class="genre-percentage"><span id="salud-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-salud" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('salud')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Arte/Fotografía 🎨</span>
+                                        <span class="genre-percentage"><span id="arte-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-arte" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('arte')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Infantil/Juvenil 👶</span>
+                                        <span class="genre-percentage"><span id="infantil-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-infantil" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('infantil')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Poesía 📝</span>
+                                        <span class="genre-percentage"><span id="poesia-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-poesia" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('poesia')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Reportaje/Periodismo 📰</span>
+                                        <span class="genre-percentage"><span id="reportaje-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-reportaje" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('reportaje')">
+                                </div>
+                                
+                                <div style="margin-top: 15px; padding: 10px; background: rgba(102,126,234,0.1); border-radius: 8px;">
+                                    <small style="color: #667eea;">
+                                        💡 <strong>Tip:</strong> Combina géneros para crear contenido único. 
+                                        Ej: 40% Cocina + 30% Viajes + 30% Historia = "Recetas históricas por el mundo"
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🔥 Nivel de Erotismo</label>
+                            <div class="erotismo-meter">
+                                <div class="erotismo-indicator" id="erotismo-indicator">
+                                    😊 Limpio
+                                </div>
+                                <input type="range" id="erotismo-level" min="0" max="5" value="0" 
+                                       oninput="updateErotismoLevel()">
+                                <div class="erotismo-labels">
+                                    <span>😊 Limpio</span>
+                                    <span>😉 Sugerente</span>
+                                    <span>😏 Sensual</span>
+                                    <span>🔥 Caliente</span>
+                                    <span>💋 Explícito</span>
+                                    <span>🔞 XXX</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>💬 Palabras Clave:</label>
+                            <input type="text" id="idea-keywords" placeholder="ej: amor prohibido, secretos oscuros, magia antigua">
+                        </div>
+                        <button type="submit" class="btn">✨ Generar Idea</button>
+                        <div class="result-box" id="idea-result"></div>
+                    </form>
+                </div>
+
+                <!-- Sugerir Títulos -->
+                <div class="generator-card">
+                    <h3><span class="icon">🏷️</span> Sugerir Títulos</h3>
+                    <form onsubmit="suggestTitles(event)">
+                        <div class="form-group">
+                            <label>📄 Sinopsis:</label>
+                            <textarea id="titles-synopsis" placeholder="Breve sinopsis del libro..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🎭 Género Principal:</label>
+                            <select id="titles-genre">
+                                <option value="Romance">❤️ Romance</option>
+                                <option value="Erótica">🔥 Erótica</option>
+                                <option value="Thriller">🕵️ Thriller</option>
+                                <option value="Fantasía">🧙 Fantasía</option>
+                                <option value="Ciencia Ficción">🚀 Ciencia Ficción</option>
+                                <option value="Terror">👻 Terror</option>
+                                <option value="Misterio">🔍 Misterio</option>
+                                <option value="Histórica">🏛️ Histórica</option>
+                                <option value="Drama">🎭 Drama</option>
+                                <option value="Aventura">⚔️ Aventura</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📊 Cantidad de Títulos:</label>
+                            <input type="number" id="titles-count" value="10" min="5" max="20">
+                        </div>
+                        <button type="submit" class="btn">🎯 Sugerir Títulos</button>
+                        <div class="result-box" id="titles-result"></div>
+                    </form>
+                </div>
+
+                <!-- Generar Personaje -->
+                <div class="generator-card">
+                    <h3><span class="icon">�</span> Generar Personaje</h3>
+                    <form onsubmit="generateCharacter(event)">
+                        <div class="form-group">
+                            <label>🎭 Tipo de Personaje:</label>
+                            <select id="character-type">
+                                <option value="protagonista">⭐ Protagonista</option>
+                                <option value="antagonista">😈 Antagonista</option>
+                                <option value="secundario">👥 Secundario</option>
+                                <option value="amor">💕 Interés Romántico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📝 Descripción Base:</label>
+                            <textarea id="character-desc" placeholder="ej: detective cansado, 40 años, divorciado"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🌍 Contexto de la Historia:</label>
+                            <input type="text" id="character-context" placeholder="ej: thriller urbano en Nueva York">
+                        </div>
+                        <button type="submit" class="btn">👤 Crear Personaje</button>
+                        <div class="result-box" id="character-result"></div>
+                    </form>
+                </div>
+
+                <!-- Generar Libro de Cocina -->
+                <div class="generator-card">
+                    <h3><span class="icon">🍳</span> Generar Receta/Libro Cocina</h3>
+                    <form onsubmit="generateRecipe(event)">
+                        <div class="form-group">
+                            <label>🍽️ Tipo de Receta:</label>
+                            <select id="recipe-type">
+                                <option value="entrante">🥗 Entrante/Aperitivo</option>
+                                <option value="principal">🍖 Plato Principal</option>
+                                <option value="postre">🍰 Postre</option>
+                                <option value="bebida">🍹 Bebida</option>
+                                <option value="vegetariana">🥕 Vegetariana</option>
+                                <option value="vegana">🌱 Vegana</option>
+                                <option value="internacional">🌍 Cocina Internacional</option>
+                                <option value="tradicional">🏛️ Tradicional/Regional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🌶️ Nivel de Dificultad:</label>
+                            <select id="recipe-difficulty">
+                                <option value="facil">😊 Fácil (Principiante)</option>
+                                <option value="medio">🙂 Intermedio</option>
+                                <option value="avanzado">🧐 Avanzado</option>
+                                <option value="profesional">👨‍🍳 Chef Profesional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>⏱️ Tiempo de Preparación:</label>
+                            <select id="recipe-time">
+                                <option value="rapida">⚡ Rápida (15-30 min)</option>
+                                <option value="media">⏰ Media (30-60 min)</option>
+                                <option value="larga">🕐 Larga (1-2 hrs)</option>
+                                <option value="elaborada">⏳ Muy Elaborada (2+ hrs)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🍴 Ingredientes Base o Tema:</label>
+                            <input type="text" id="recipe-ingredients" placeholder="ej: pollo, limón, hierbas aromáticas">
+                        </div>
+                        <div class="form-group">
+                            <label>🌍 Estilo Culinario:</label>
+                            <input type="text" id="recipe-style" placeholder="ej: mediterránea, asiática, fusión">
+                        </div>
+                        <button type="submit" class="btn">🍳 Generar Receta Completa</button>
+                        <div class="result-box" id="recipe-result"></div>
+                    </form>
+                </div>
+
+                <!-- Generar Informe/Documento -->
+                <div class="generator-card">
+                    <h3><span class="icon">📊</span> Generar Informe/Documento</h3>
+                    <form onsubmit="generateReport(event)">
+                        <div class="form-group">
+                            <label>📑 Tipo de Documento:</label>
+                            <select id="report-type">
+                                <option value="informe-negocio">💼 Informe de Negocio</option>
+                                <option value="informe-tecnico">🔬 Informe Técnico</option>
+                                <option value="estudio-caso">📋 Estudio de Caso</option>
+                                <option value="analisis-mercado">📊 Análisis de Mercado</option>
+                                <option value="white-paper">📄 White Paper</option>
+                                <option value="manual-usuario">📖 Manual de Usuario</option>
+                                <option value="guia-practica">📝 Guía Práctica</option>
+                                <option value="propuesta-proyecto">💡 Propuesta de Proyecto</option>
+                                <option value="reporte-investigacion">🔍 Reporte de Investigación</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🎯 Tema del Documento:</label>
+                            <input type="text" id="report-topic" placeholder="ej: Transformación digital en PYMEs">
+                        </div>
+                        <div class="form-group">
+                            <label>👥 Audiencia Objetivo:</label>
+                            <select id="report-audience">
+                                <option value="ejecutivos">👔 Ejecutivos/Directivos</option>
+                                <option value="tecnicos">🔧 Técnicos/Especialistas</option>
+                                <option value="academicos">🎓 Académicos/Investigadores</option>
+                                <option value="general">👥 Público General</option>
+                                <option value="estudiantes">📚 Estudiantes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📏 Extensión Aproximada:</label>
+                            <select id="report-length">
+                                <option value="corto">📄 Corto (5-10 páginas)</option>
+                                <option value="medio">📃 Medio (15-25 páginas)</option>
+                                <option value="largo">📋 Largo (30-50 páginas)</option>
+                                <option value="extenso">📚 Extenso (50+ páginas)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🔑 Puntos Clave a Cubrir:</label>
+                            <textarea id="report-points" placeholder="ej: análisis situación actual, metodología, resultados esperados, conclusiones"></textarea>
+                        </div>
+                        <button type="submit" class="btn">📊 Generar Estructura de Informe</button>
+                        <div class="result-box" id="report-result"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- GENERADORA 2: EDICIÓN Y MEJORA -->
+        <div class="generator-section">
+            <div class="section-header">
+                <h2>✨ GENERADORA 2: Edición y Mejora de Texto</h2>
+                <p>Herramientas profesionales para pulir y perfeccionar tu escritura</p>
+                <div>
+                    <span class="badge">📖 Extender</span>
+                    <span class="badge">✨ Mejorar</span>
+                    <span class="badge">📝 Sinopsis</span>
+                    <span class="badge">💬 Diálogo</span>
+                </div>
+            </div>
+
+            <div class="generators-grid">
+                <!-- Extender Capítulo -->
+                <div class="generator-card">
+                    <h3><span class="icon">📖</span> Extender Capítulo</h3>
+                    <form onsubmit="extendChapter(event)">
+                        <div class="form-group">
+                            <label>📄 Texto Actual:</label>
+                            <textarea id="chapter-text" placeholder="Escribe el inicio de tu capítulo..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🎬 Dirección Narrativa:</label>
+                            <select id="chapter-direction">
+                                <option value="continue">➡️ Continuar Flujo Natural</option>
+                                <option value="twist">🌀 Giro Inesperado</option>
+                                <option value="climax">⚡ Momento Clímax</option>
+                                <option value="tension">😰 Aumentar Tensión</option>
+                                <option value="romantic">💕 Momento Romántico</option>
+                                <option value="action">⚔️ Escena de Acción</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📊 Palabras a Generar:</label>
+                            <input type="number" id="chapter-words" value="500" min="100" max="2000">
+                        </div>
+                        <button type="submit" class="btn">📖 Extender Capítulo</button>
+                        <div class="result-box" id="chapter-result"></div>
+                    </form>
+                </div>
+
+                <!-- Generar Sinopsis -->
+                <div class="generator-card">
+                    <h3><span class="icon">📝</span> Generar Sinopsis</h3>
+                    <form onsubmit="generateSynopsis(event)">
+                        <div class="form-group">
+                            <label>📚 Contenido del Libro:</label>
+                            <textarea id="synopsis-content" placeholder="Resumen o texto completo del libro..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🎯 Tipo de Sinopsis:</label>
+                            <select id="synopsis-type">
+                                <option value="short">📄 Corta (100-150 palabras)</option>
+                                <option value="medium">📃 Media (200-300 palabras)</option>
+                                <option value="long">📋 Larga (400-500 palabras)</option>
+                                <option value="back-cover">📕 Contraportada</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">📝 Generar Sinopsis</button>
+                        <div class="result-box" id="synopsis-result"></div>
+                    </form>
+                </div>
+
+                <!-- Generar Diálogo -->
+                <div class="generator-card">
+                    <h3><span class="icon">💬</span> Generar Diálogo</h3>
+                    <form onsubmit="generateDialogue(event)">
+                        <div class="form-group">
+                            <label>🎬 Escena:</label>
+                            <input type="text" id="dialogue-scene" placeholder="ej: Reunión tensa en café nocturno">
+                        </div>
+                        <div class="form-group">
+                            <label>👥 Personajes (separar por comas):</label>
+                            <input type="text" id="dialogue-characters" placeholder="ej: Ana (detective), Carlos (sospechoso)">
+                        </div>
+                        <div class="form-group">
+                            <label>🎭 Tono del Diálogo:</label>
+                            <select id="dialogue-tone">
+                                <option value="neutral">😐 Neutral</option>
+                                <option value="romántico">💕 Romántico</option>
+                                <option value="erótico">🔥 Erótico</option>
+                                <option value="tenso">😰 Tenso</option>
+                                <option value="cómico">😄 Cómico</option>
+                                <option value="dramático">😢 Dramático</option>
+                                <option value="misterioso">🤔 Misterioso</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">💬 Generar Diálogo</button>
+                        <div class="result-box" id="dialogue-result"></div>
+                    </form>
+                </div>
+
+                <!-- Mejorar Texto -->
+                <div class="generator-card">
+                    <h3><span class="icon">✨</span> Mejorar Texto</h3>
+                    <form onsubmit="improveText(event)">
+                        <div class="form-group">
+                            <label>📄 Texto a Mejorar:</label>
+                            <textarea id="improve-text" placeholder="Pega aquí el texto que quieres mejorar..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🎯 Enfoque de Mejora:</label>
+                            <select id="improve-focus">
+                                <option value="general">✨ Mejora General</option>
+                                <option value="grammar">📝 Gramática y Ortografía</option>
+                                <option value="style">🎨 Estilo Literario</option>
+                                <option value="clarity">💡 Claridad y Fluidez</option>
+                                <option value="descriptive">🖼️ Más Descriptivo</option>
+                                <option value="concise">⚡ Más Conciso</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">✨ Mejorar Texto</button>
+                        <div class="result-box" id="improve-result"></div>
+                    </form>
+                </div>
+
+                <!-- Analizar Estilo -->
+                <div class="generator-card">
+                    <h3><span class="icon">🔍</span> Analizar Estilo</h3>
+                    <form onsubmit="analyzeStyle(event)">
+                        <div class="form-group">
+                            <label>📚 Texto a Analizar:</label>
+                            <textarea id="analyze-text" placeholder="Pega un fragmento de tu escritura..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>🎯 Aspectos a Analizar:</label>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="analyze-tone" checked> Tono
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="analyze-pacing" checked> Ritmo
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="analyze-voice" checked> Voz
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="analyze-complexity" checked> Complejidad
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">🔍 Analizar Estilo</button>
+                        <div class="result-box" id="analyze-result"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Actualizar porcentaje de géneros
+        function updateGenrePercentage(genre) {
+            const value = document.getElementById(`genre-${genre}`).value;
+            document.getElementById(`${genre}-pct`).textContent = value;
+        }
+
+        // Actualizar nivel de erotismo
+        function updateErotismoLevel() {
+            const level = document.getElementById('erotismo-level').value;
+            const indicator = document.getElementById('erotismo-indicator');
+            const levels = [
+                { emoji: '😊', text: 'Limpio', color: '#4caf50' },
+                { emoji: '😉', text: 'Sugerente', color: '#8bc34a' },
+                { emoji: '😏', text: 'Sensual', color: '#ffc107' },
+                { emoji: '🔥', text: 'Caliente', color: '#ff9800' },
+                { emoji: '💋', text: 'Explícito', color: '#ff5722' },
+                { emoji: '🔞', text: 'XXX', color: '#f44336' }
+            ];
+            
+            indicator.innerHTML = `${levels[level].emoji} ${levels[level].text}`;
+            indicator.style.color = levels[level].color;
+        }
+
+        // Obtener mezcla de géneros
+        function getGenreMix() {
+            const genres = [
+                // Ficción
+                'romance', 'erotica', 'thriller', 'fantasia', 'scifi', 'terror', 
+                'misterio', 'historica', 'aventura', 'drama', 'comedia',
+                // No Ficción
+                'biografia', 'autoayuda', 'negocios', 'divulgacion',
+                // Técnico/Académico
+                'cientifico', 'academico', 'manual',
+                // Especializado
+                'cocina', 'viajes', 'salud', 'arte', 'infantil', 'poesia', 'reportaje'
+            ];
+            const mix = {};
+            let total = 0;
+            
+            genres.forEach(genre => {
+                const element = document.getElementById(`genre-${genre}`);
+                if (element) {
+                    const value = parseInt(element.value) || 0;
+                    if (value > 0) {
+                        mix[genre] = value;
+                        total += value;
+                    }
+                }
+            });
+            
+            // Normalizar a 100%
+            if (total > 0) {
+                Object.keys(mix).forEach(genre => {
+                    mix[genre] = Math.round((mix[genre] / total) * 100);
+                });
+            }
+            
+            return mix;
+        }
+
+        // Obtener nombres legibles de géneros
+        function getGenreNames() {
+            const genreNames = {
+                'romance': '❤️ Romance',
+                'erotica': '🔥 Erótica',
+                'thriller': '🕵️ Thriller',
+                'fantasia': '🧙 Fantasía',
+                'scifi': '🚀 Ciencia Ficción',
+                'terror': '👻 Terror',
+                'misterio': '🔍 Misterio',
+                'historica': '🏛️ Histórica',
+                'aventura': '⚔️ Aventura',
+                'drama': '🎭 Drama',
+                'comedia': '😄 Comedia',
+                'biografia': '👤 Biografía',
+                'autoayuda': '💪 Autoayuda',
+                'negocios': '💼 Negocios',
+                'divulgacion': '📜 Divulgación',
+                'cientifico': '🔬 Científico',
+                'academico': '🎓 Académico',
+                'manual': '📋 Manual',
+                'cocina': '🍳 Cocina',
+                'viajes': '✈️ Viajes',
+                'salud': '🧘 Salud',
+                'arte': '🎨 Arte',
+                'infantil': '👶 Infantil',
+                'poesia': '📝 Poesía',
+                'reportaje': '📰 Reportaje'
+            };
+            return genreNames;
+        }
+
+        // Verificar estado al cargar
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`, { timeout: 3000 });
+                if (response.ok) {
+                    document.getElementById('backend-status').textContent = '✓ Activo';
+                    document.getElementById('mode-status').textContent = '🚀 IA Real';
+                    const banner = document.getElementById('demo-banner');
+                    if (banner) {
+                        banner.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                document.getElementById('backend-status').textContent = '⏳ Compilando...';
+                document.getElementById('mode-status').textContent = '🎭 DEMO Activo';
+            }
+        }
+
+        async function apiCall(endpoint, data) {
+            try {
+                const response = await fetch(`${API_BASE}/ai/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    timeout: 5000
+                });
+                return await response.text();
+            } catch (error) {
+                // Modo DEMO: Generar respuestas de ejemplo mientras el backend se inicia
+                return generateDemoResponse(endpoint, data);
+            }
+        }
+
+        // Generador de respuestas DEMO mientras el backend compila
+        function generateDemoResponse(endpoint, data) {
+            const demos = {
+                'generate-idea': generateDemoIdea(data),
+                'suggest-titles': generateDemoTitles(data),
+                'generate-character': generateDemoCharacter(data),
+                'extend-chapter': generateDemoChapter(data),
+                'generate-synopsis': generateDemoSynopsis(data),
+                'generate-dialogue': generateDemoDialogue(data),
+                'improve-text': generateDemoImprove(data),
+                'analyze-style': generateDemoAnalysis(data)
+            };
+            return demos[endpoint] || '🔄 Backend iniciando... Ejemplo generado en modo DEMO.\n\nEste es un resultado de ejemplo. Cuando el backend esté listo (5-10 minutos), obtendrás resultados reales generados por IA.';
+        }
+
+        function generateDemoIdea(data) {
+            const genreMix = data.genreMix || {};
+            const genres = Object.keys(genreMix).map(g => `${g} (${genreMix[g]}%)`).join(', ');
+            const erotismo = data.erotismoLevel || 0;
+            
+            return `📚 IDEA DE LIBRO GENERADA (DEMO)\n\n` +
+                   `🎭 Mezcla de Géneros: ${genres || 'Romance'}\n` +
+                   `🔥 Nivel de Erotismo: ${erotismo}/5\n\n` +
+                   `📖 TÍTULO SUGERIDO:\n"Sombras del Pasado"\n\n` +
+                   `💡 CONCEPTO:\n` +
+                   `Una detective privada recibe un caso que la conecta con un misterio de su propia familia. ` +
+                   `Mientras investiga, descubre secretos que podrían destruir todo lo que conoce, ` +
+                   `mientras desarrolla una intensa atracción por el principal sospechoso.\n\n` +
+                   `👥 PERSONAJES PRINCIPALES:\n` +
+                   `- Elena Torres (34): Detective privada con un pasado turbio\n` +
+                   `- Marcus Valdez (38): Empresario misterioso con conexiones oscuras\n` +
+                   `- Carmen Torres (65): Madre de Elena, guarda secretos familiares\n\n` +
+                   `🌟 GANCHO COMERCIAL:\n` +
+                   `"Un misterio que atraviesa generaciones, una pasión que desafía la razón, ` +
+                   `y una verdad que podría costar todo."\n\n` +
+                   `📊 POTENCIAL DE MERCADO:\n` +
+                   `Alto - Combina thriller psicológico con romance intenso, ` +
+                   `ideal para el público que ama las novelas de suspense romántico.\n\n` +
+                   `⚠️ MODO DEMO: Este es un ejemplo. El backend está compilando. Resultados reales en breve.`;
+        }
+
+        function generateDemoTitles(data) {
+            const genre = data.genre || 'General';
+            return `📚 TÍTULOS SUGERIDOS (DEMO) - ${genre}\n\n` +
+                   `1. 🌙 "Entre Sombras y Secretos"\n` +
+                   `2. 🔥 "Pasión Prohibida"\n` +
+                   `3. 🌹 "El Último Suspiro del Destino"\n` +
+                   `4. ⚡ "Cuando el Pasado Regresa"\n` +
+                   `5. 💔 "Secretos en la Niebla"\n` +
+                   `6. 🌊 "Mareas de Pasión"\n` +
+                   `7. 🗝️ "La Llave del Misterio"\n` +
+                   `8. 💎 "Deseo Peligroso"\n` +
+                   `9. 🦋 "Metamorfosis del Alma"\n` +
+                   `10. 🌟 "Destinos Entrelazados"\n\n` +
+                   `💡 TIP: Estos son títulos de ejemplo. Con el backend activo, ` +
+                   `obtendrás títulos personalizados basados en tu sinopsis específica.\n\n` +
+                   `⚠️ MODO DEMO`;
+        }
+
+        function generateDemoCharacter(data) {
+            const type = data.type || 'protagonista';
+            return `👤 PERSONAJE GENERADO (DEMO)\n\n` +
+                   `🎭 Tipo: ${type.toUpperCase()}\n\n` +
+                   `📝 PERFIL COMPLETO:\n\n` +
+                   `NOMBRE: Isabella Moreno\n` +
+                   `EDAD: 32 años\n` +
+                   `PROFESIÓN: Arquitecta especializada en restauración\n\n` +
+                   `🎨 APARIENCIA:\n` +
+                   `- Cabello castaño largo con mechas cobrizas\n` +
+                   `- Ojos verdes intensos\n` +
+                   `- 1.68m, complexión atlética\n` +
+                   `- Estilo elegante pero práctico\n\n` +
+                   `💭 PERSONALIDAD:\n` +
+                   `- Perfeccionista y detallista\n` +
+                   `- Apasionada por su trabajo\n` +
+                   `- Dificultad para confiar en otros\n` +
+                   `- Valiente pero cautelosa\n\n` +
+                   `🎯 MOTIVACIÓN:\n` +
+                   `Restaurar el antiguo teatro de su ciudad natal para honrar la memoria de su abuela\n\n` +
+                   `😈 CONFLICTO INTERNO:\n` +
+                   `Debe elegir entre su carrera en la capital o regresar a sus raíces\n\n` +
+                   `🌟 ARCO DE PERSONAJE:\n` +
+                   `De arquitecta fría y calculadora a mujer que redescubre el valor de las conexiones humanas\n\n` +
+                   `⚠️ MODO DEMO: Personaje de ejemplo. Backend compilando...`;
+        }
+
+        function generateDemoChapter(data) {
+            return `📖 CAPÍTULO EXTENDIDO (DEMO)\n\n` +
+                   `La lluvia golpeaba con fuerza contra los cristales del viejo edificio. ` +
+                   `Isabella ajustó sus planos sobre la mesa improvisada, pero su mente estaba en otro lugar. ` +
+                   `Los últimos días habían sido un torbellino de emociones contradictorias.\n\n` +
+                   `El sonido de pasos en el pasillo la alertó. Reconocería ese caminar en cualquier parte. ` +
+                   `Marcus. Su corazón se aceleró involuntariamente.\n\n` +
+                   `"Trabajando tarde otra vez", dijo él desde el umbral, su voz grave resonando en el espacio vacío.\n\n` +
+                   `Ella no levantó la vista de sus planos. "Algunos tenemos responsabilidades."\n\n` +
+                   `Él rio suavemente y se acercó. Demasiado cerca. El aroma de su colonia la envolvió, ` +
+                   `mezclándose con el olor a madera vieja y polvo del edificio. ` +
+                   `"¿Por qué huyes de mí, Isabella?"\n\n` +
+                   `Finalmente lo miró. Error. Sus ojos oscuros la estudiaban con una intensidad que le robaba el aliento. ` +
+                   `"No huyo. Simplemente tengo prioridades más importantes que..."\n\n` +
+                   `"¿Que esto?" Él cerró la distancia entre ellos. "¿Que nosotros?"\n\n` +
+                   `"No hay un 'nosotros'", susurró ella, pero su voz sonó poco convincente incluso para sus propios oídos.\n\n` +
+                   `Marcus tomó su mano, entrelazando sus dedos. "Mientes tan mal como diseñas bien, arquitecta."\n\n` +
+                   `⚠️ MODO DEMO: Ejemplo de extensión. El backend real generará continuaciones personalizadas.`;
+        }
+
+        function generateDemoSynopsis(data) {
+            return `📝 SINOPSIS GENERADA (DEMO)\n\n` +
+                   `Isabella Moreno regresa a su ciudad natal después de quince años para cumplir ` +
+                   `el último deseo de su abuela: restaurar el majestuoso Teatro Aurora, ` +
+                   `ahora en ruinas. Lo que comienza como un proyecto profesional se convierte ` +
+                   `en un viaje emocional cuando descubre que el inversor principal es Marcus Valdez, ` +
+                   `el hombre que le rompió el corazón en su juventud.\n\n` +
+                   `Mientras trabajan juntos en la restauración, viejas heridas salen a la superficie ` +
+                   `y una atracción innegable resurge entre ellos. Pero el teatro guarda secretos oscuros ` +
+                   `que conectan sus familias de formas que ninguno imaginaba.\n\n` +
+                   `Entre planos arquitectónicos y confesiones a medianoche, Isabella debe decidir ` +
+                   `si dar una segunda oportunidad al amor mientras desentraña un misterio familiar ` +
+                   `que podría cambiar todo lo que creía saber sobre su pasado.\n\n` +
+                   `Una historia de segundas oportunidades, secretos enterrados y la arquitectura del amor.\n\n` +
+                   `⚠️ MODO DEMO: Backend compilando. Sinopsis reales personalizadas próximamente.`;
+        }
+
+        function generateDemoDialogue(data) {
+            return `💬 DIÁLOGO GENERADO (DEMO)\n\n` +
+                   `ISABELLA: "No puedo hacer esto, Marcus. No otra vez."\n\n` +
+                   `MARCUS: *Se acerca lentamente* "¿Hacer qué? ¿Sentir? ¿Vivir? ¿Arriesgarte?"\n\n` +
+                   `ISABELLA: *Retrocede, chocando con la mesa* "Ya sabes a qué me refiero. ` +
+                   `Lo nuestro terminó hace quince años."\n\n` +
+                   `MARCUS: "¿Terminó? ¿O simplemente huiste porque tenías miedo de lo que sentías?"\n\n` +
+                   `ISABELLA: *Con voz quebrada* "Tenía diecisiete años, Marcus. Era una niña."\n\n` +
+                   `MARCUS: "Y ahora eres una mujer. Una mujer increíble que sigue huyendo ` +
+                   `de sus sentimientos." *Toma su barbilla suavemente* "Mírame y dime que no sientes nada."\n\n` +
+                   `ISABELLA: *Los ojos se le llenan de lágrimas* "El hecho de que sienta algo ` +
+                   `no significa que deba actuar al respecto."\n\n` +
+                   `MARCUS: "Entonces deja de huir. Quédate. Pelea. Por una vez en tu vida, ` +
+                   `permite que algo sea imperfecto pero real."\n\n` +
+                   `ISABELLA: *Suspira, cerrando los ojos* "Me asustas, Marcus Valdez."\n\n` +
+                   `MARCUS: *Sonríe suavemente* "Bien. Porque tú me aterrorizas a mí también."\n\n` +
+                   `⚠️ MODO DEMO: Diálogo de ejemplo. Backend generará diálogos personalizados según tus especificaciones.`;
+        }
+
+        function generateDemoImprove(data) {
+            return `✨ TEXTO MEJORADO (DEMO)\n\n` +
+                   `📝 TEXTO ORIGINAL:\n` +
+                   `${data.text?.substring(0, 200) || 'Tu texto aquí...'}\n\n` +
+                   `✅ TEXTO MEJORADO:\n` +
+                   `El texto ha sido refinado para mejorar su fluidez, claridad y impacto narrativo. ` +
+                   `Se han corregido cuestiones de gramática, se ha enriquecido el vocabulario ` +
+                   `y se han ajustado las estructuras para mantener el interés del lector.\n\n` +
+                   `💡 SUGERENCIAS:\n` +
+                   `- Considera variar la longitud de las frases para crear ritmo\n` +
+                   `- Usa más verbos de acción específicos\n` +
+                   `- Equilibra descripción con diálogo\n` +
+                   `- Muestra emociones a través de acciones, no solo las nombres\n\n` +
+                   `⚠️ MODO DEMO: Backend compilando. Las mejoras reales serán específicas a tu texto.`;
+        }
+
+        function generateDemoAnalysis(data) {
+            return `🔍 ANÁLISIS DE ESTILO (DEMO)\n\n` +
+                   `📊 ANÁLISIS COMPLETO:\n\n` +
+                   `🎵 TONO:\n` +
+                   `Predominantemente introspectivo con momentos de tensión romántica. ` +
+                   `El tono sugiere madurez emocional y complejidad psicológica.\n\n` +
+                   `⚡ RITMO:\n` +
+                   `Medio-lento, apropiado para desarrollo de personajes y construcción de tensión. ` +
+                   `Algunas secciones podrían beneficiarse de acelerar el ritmo.\n\n` +
+                   `🗣️ VOZ:\n` +
+                   `Narrativa en tercera persona cercana, con fuerte identificación con el punto de vista ` +
+                   `del protagonista. Voz auténtica y personal.\n\n` +
+                   `📚 COMPLEJIDAD:\n` +
+                   `Nivel: Intermedio-Avanzado\n` +
+                   `Vocabulario rico sin ser pretencioso. Estructuras variadas. ` +
+                   `Accesible pero sofisticado.\n\n` +
+                   `🎯 RECOMENDACIONES:\n` +
+                   `1. Mantén el equilibrio entre descripción y acción\n` +
+                   `2. Las metáforas arquitectónicas son efectivas - usa más\n` +
+                   `3. Considera añadir más diálogo para dinamizar escenas lentas\n` +
+                   `4. El subtexto emocional es fuerte - confía más en él\n\n` +
+                   `⚠️ MODO DEMO: Análisis de ejemplo. Backend proporcionará análisis detallado de tu texto específico.`;
+        }
+
+        function showResult(elementId, content, isError = false) {
+            const resultBox = document.getElementById(elementId);
+            if (isError) {
+                resultBox.innerHTML = `
+                    <div class="error">
+                        <strong>⏳ Backend iniciando...</strong><br><br>
+                        El servidor está compilando (primera vez toma 5-10 minutos).<br>
+                        Mientras tanto, estás viendo resultados de DEMOSTRACIÓN.<br><br>
+                        <small>Los resultados reales serán personalizados cuando el backend esté listo.</small>
+                    </div>`;
+            } else {
+                resultBox.innerHTML = `<div class="success">${content.replace(/\n/g, '<br>')}</div>`;
+            }
+            resultBox.classList.add('show');
+        }
+
+        function showLoading(elementId) {
+            const resultBox = document.getElementById(elementId);
+            resultBox.innerHTML = '<div class="loading">Generando</div>';
+            resultBox.classList.add('show');
+        }
+
+        async function generateIdea(e) {
+            e.preventDefault();
+            const genreMix = getGenreMix();
+            const erotismoLevel = document.getElementById('erotismo-level').value;
+            const keywords = document.getElementById('idea-keywords').value;
+            
+            // Crear descripción de géneros
+            const genreDesc = Object.entries(genreMix)
+                .map(([g, pct]) => `${g}: ${pct}%`)
+                .join(', ');
+            
+            const requestData = {
+                genre: genreDesc || 'Romance',
+                keywords: keywords + ` | Nivel Erotismo: ${erotismoLevel}/5 | Mix: ${genreDesc}`,
+                erotismoLevel: erotismoLevel,
+                genreMix: genreMix
+            };
+            
+            showLoading('idea-result');
+            try {
+                const result = await apiCall('generate-idea', requestData);
+                showResult('idea-result', result);
+            } catch (error) {
+                // Modo DEMO activado automáticamente
+                const demoResult = generateDemoResponse('generate-idea', requestData);
+                showResult('idea-result', demoResult);
+            }
+        }
+
+        async function generateCharacter(e) {
+            e.preventDefault();
+            const type = document.getElementById('character-type').value;
+            const description = document.getElementById('character-desc').value;
+            const context = document.getElementById('character-context').value;
+            
+            showLoading('character-result');
+            const result = await apiCall('generate-character', { type, description, context });
+            showResult('character-result', result);
+        }
+
+        async function analyzeStyle(e) {
+            e.preventDefault();
+            const text = document.getElementById('analyze-text').value;
+            const aspects = {
+                tone: document.getElementById('analyze-tone').checked,
+                pacing: document.getElementById('analyze-pacing').checked,
+                voice: document.getElementById('analyze-voice').checked,
+                complexity: document.getElementById('analyze-complexity').checked
+            };
+            
+            showLoading('analyze-result');
+            const result = await apiCall('analyze-style', { text, aspects });
+            showResult('analyze-result', result);
+        }
+
+        async function generateRecipe(e) {
+            e.preventDefault();
+            const recipeType = document.getElementById('recipe-type').value;
+            const difficulty = document.getElementById('recipe-difficulty').value;
+            const time = document.getElementById('recipe-time').value;
+            const ingredients = document.getElementById('recipe-ingredients').value;
+            const style = document.getElementById('recipe-style').value;
+            
+            const requestData = {
+                type: recipeType,
+                difficulty: difficulty,
+                preparationTime: time,
+                ingredients: ingredients,
+                culineryStyle: style,
+                genre: 'cocina',
+                keywords: `${recipeType}, ${difficulty}, ${time}, ${style}, ${ingredients}`
+            };
+            
+            showLoading('recipe-result');
+            const result = await apiCall('generate-idea', requestData);
+            showResult('recipe-result', '📖 RECETA GENERADA:\n\n' + result);
+        }
+
+        async function generateReport(e) {
+            e.preventDefault();
+            const reportType = document.getElementById('report-type').value;
+            const topic = document.getElementById('report-topic').value;
+            const audience = document.getElementById('report-audience').value;
+            const length = document.getElementById('report-length').value;
+            const points = document.getElementById('report-points').value;
+            
+            const requestData = {
+                type: reportType,
+                topic: topic,
+                audience: audience,
+                length: length,
+                keyPoints: points,
+                genre: 'informe-tecnico',
+                keywords: `${reportType}, ${topic}, audiencia: ${audience}, ${points}`
+            };
+            
+            showLoading('report-result');
+            const result = await apiCall('generate-idea', requestData);
+            showResult('report-result', '📊 ESTRUCTURA DE INFORME:\n\n' + result);
+        }
+
+        async function extendChapter(e) {
+            e.preventDefault();
+            const currentText = document.getElementById('chapter-text').value;
+            const direction = document.getElementById('chapter-direction').value;
+            const words = parseInt(document.getElementById('chapter-words').value);
+            
+            showLoading('chapter-result');
+            const result = await apiCall('extend-chapter', { currentText, direction, words });
+            showResult('chapter-result', result);
+        }
+
+        async function generateSynopsis(e) {
+            e.preventDefault();
+            const bookContent = document.getElementById('synopsis-content').value;
+            const synopsisType = document.getElementById('synopsis-type').value;
+            
+            const lengthMap = {
+                'short': 150,
+                'medium': 300,
+                'long': 500,
+                'back-cover': 200
+            };
+            const maxLength = lengthMap[synopsisType] || 200;
+            
+            showLoading('synopsis-result');
+            const result = await apiCall('generate-synopsis', { 
+                bookContent, 
+                maxLength,
+                type: synopsisType 
+            });
+            showResult('synopsis-result', result);
+        }
+
+        async function suggestTitles(e) {
+            e.preventDefault();
+            const synopsis = document.getElementById('titles-synopsis').value;
+            const genre = document.getElementById('titles-genre').value;
+            const count = parseInt(document.getElementById('titles-count').value);
+            
+            showLoading('titles-result');
+            const result = await apiCall('suggest-titles', { synopsis, genre, count });
+            showResult('titles-result', result);
+        }
+
+        async function generateDialogue(e) {
+            e.preventDefault();
+            const scene = document.getElementById('dialogue-scene').value;
+            const characters = document.getElementById('dialogue-characters').value;
+            const tone = document.getElementById('dialogue-tone').value;
+            
+            showLoading('dialogue-result');
+            const result = await apiCall('generate-dialogue', { scene, characters, tone });
+            showResult('dialogue-result', result);
+        }
+
+        async function improveText(e) {
+            e.preventDefault();
+            const text = document.getElementById('improve-text').value;
+            const focus = document.getElementById('improve-focus').value;
+            
+            showLoading('improve-result');
+            const result = await apiCall('improve-text', { text, focus });
+            showResult('improve-result', result);
+        }
+
+        // Verificar estado inicial
+        checkStatus();
+        
+        // Verificar cada 30 segundos
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

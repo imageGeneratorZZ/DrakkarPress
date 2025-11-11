@@ -57,3 +57,22 @@ env/
 
 # Deployment packages (ya tenemos el source)
 DrakkarPress-Deploy.zip
+
+# Java/Spring Boot Backend
+backend/target/
+backend/.java/
+backend/.m2/
+*.class
+*.jar
+*.war
+*.ear
+backend/logs/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Respaldo directory (privado)
+Respaldo_Externorium/
+
+# Directorio drakkarpress-platform (repositorio separado)
+drakkarpress-platform/

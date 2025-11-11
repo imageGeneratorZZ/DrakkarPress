@@ -1,0 +1,193 @@
+spring:
+  application:
+    name: drakkarpress-platform
+  
+  # Database Configuration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/drakkarpress}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: ${SHOW_SQL:false}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+  
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          # Google OAuth
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          
+          # Facebook OAuth
+          facebook:
+            client-id: ${FACEBOOK_CLIENT_ID}
+            client-secret: ${FACEBOOK_CLIENT_SECRET}
+            scope:
+              - email
+              - public_profile
+          
+          # GitHub OAuth
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope:
+              - user:email
+              - read:user
+          
+          # Twitter OAuth
+          twitter:
+            client-id: ${TWITTER_CLIENT_ID}
+            client-secret: ${TWITTER_CLIENT_SECRET}
+            scope:
+              - users.read
+              - tweet.read
+          
+          # Apple OAuth
+          apple:
+            client-id: ${APPLE_CLIENT_ID}
+            client-secret: ${APPLE_CLIENT_SECRET}
+            scope:
+              - name
+              - email
+          
+          # Microsoft OAuth
+          microsoft:
+            client-id: ${MICROSOFT_CLIENT_ID}
+            client-secret: ${MICROSOFT_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+  
+  # Mail Configuration
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  
+  # File Upload Configuration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  
+  # Thymeleaf Configuration
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+
+# Server Configuration
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+  
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:drakkarpress-super-secret-key-change-in-production}
+  expiration: 86400000 # 24 horas en milisegundos
+  refresh-expiration: 604800000 # 7 días
+
+# Stripe Configuration
+stripe:
+  api-key: ${STRIPE_API_KEY}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+
+# AWS S3 Configuration (para almacenamiento de archivos)
+aws:
+  s3:
+    bucket: ${AWS_S3_BUCKET:drakkarpress-books}
+    region: ${AWS_S3_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+
+# External APIs Configuration
+api:
+  investigatron:
+    url: ${INVESTIGATRON_API_URL:http://localhost:8000}
+    api-key: ${INVESTIGATRON_API_KEY}
+  
+  odrbrand:
+    url: ${ODRBRAND_API_URL:http://localhost:8081}
+    api-key: ${ODRBRAND_API_KEY}
+
+# Commission Configuration
+commission:
+  author-direct: 0.90 # 90% para autor en venta directa
+  author-with-reseller: 0.60 # 60% para autor con revendedor
+  reseller: 0.30 # 30% para revendedor
+  platform: 0.10 # 10% para plataforma
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.drakkarpress: ${LOG_LEVEL:DEBUG}
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: logs/drakkarpress.log
+    max-size: 10MB
+    max-history: 30
+
+# Custom Application Properties
+app:
+  name: DrakkarPress
+  version: 1.0.0
+  description: Editorial Platform with Multi-User System and AI Integration
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080}

@@ -1,0 +1,155 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                 GUIA RAPIDA - INSTALACION DRAKKARPRESS BACKEND              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ YA TIENES:
+  • PostgreSQL corriendo en Docker (puerto 5432)
+  • Todos los archivos de configuración listos
+  • Base de datos 'drakkarpress' creada
+
+❌ TE FALTA:
+  • Java 17 (tienes Java 8)
+  • Maven 3.8+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         OPCION 1: INSTALACION AUTOMATICA                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1. Click derecho en el icono de PowerShell
+2. Selecciona "Ejecutar como administrador"
+3. Ejecuta estos comandos:
+
+   cd "C:\Users\SuperUsuario\DrakkarPress.com\backend"
+   .\install-dependencies.ps1
+
+4. Espera a que termine la instalación
+5. CIERRA PowerShell y ábrelo nuevamente (normal, no como admin)
+6. Ejecuta:
+
+   cd "C:\Users\SuperUsuario\DrakkarPress.com\backend"
+   mvn spring-boot:run
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          OPCION 2: INSTALACION MANUAL                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+JAVA 17:
+--------
+1. Descarga desde: https://adoptium.net/temurin/releases/?version=17
+2. Descarga el instalador .msi para Windows x64
+3. Ejecuta el instalador
+4. Marca la opción "Add to PATH"
+5. Completa la instalación
+
+MAVEN:
+------
+1. Descarga desde: https://maven.apache.org/download.cgi
+2. Descarga el archivo "Binary zip archive"
+3. Descomprime en: C:\Program Files\apache-maven
+4. Agregar a PATH:
+   a. Busca "Variables de entorno del sistema" en Windows
+   b. Click en "Variables de entorno"
+   c. En "Variables del sistema", busca "Path" y edítala
+   d. Agrega: C:\Program Files\apache-maven\bin
+   e. Click OK en todas las ventanas
+
+5. REINICIA PowerShell
+
+VERIFICAR:
+----------
+java -version     # Debe mostrar: openjdk version "17.x.x"
+mvn -version      # Debe mostrar: Apache Maven 3.x.x
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      DESPUES DE INSTALAR TODO                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+cd "C:\Users\SuperUsuario\DrakkarPress.com\backend"
+mvn spring-boot:run
+
+La aplicación se compilará y arrancará.
+Espera a ver el mensaje: "DRAKKARPRESS PLATFORM STARTED"
+
+PROBAR:
+-------
+• http://localhost:8080/api
+• http://localhost:8080/api/health
+• http://localhost:8080/api/health/db
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           COMANDOS UTILES                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+# Ver estado de PostgreSQL
+docker ps
+
+# Ver logs de PostgreSQL
+docker logs drakkarpress-postgres
+
+# Detener PostgreSQL
+docker-compose down
+
+# Iniciar PostgreSQL
+docker-compose up -d
+
+# Compilar sin ejecutar
+mvn clean install
+
+# Compilar saltando tests
+mvn clean install -DskipTests
+
+# Ver logs de Spring Boot
+# Los logs se muestran en la consola mientras se ejecuta
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              CREDENCIALES                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+PostgreSQL:
+-----------
+Host: localhost
+Port: 5432
+Database: drakkarpress
+Username: postgres
+Password: postgres
+
+Admin de la aplicación (después de la primera ejecución):
+----------------------------------------------------------
+Username: admin
+Email: admin@drakkarpress.com
+Password: admin123
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         SOLUCION DE PROBLEMAS                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+ERROR: "mvn no se reconoce"
+---------------------------
+• Maven no está instalado o no está en PATH
+• Solución: Instala Maven y reinicia PowerShell
+
+ERROR: "Connection refused"
+---------------------------
+• PostgreSQL no está corriendo
+• Solución: docker-compose up -d
+
+ERROR: "Port 8080 already in use"
+---------------------------------
+• Otro servicio usa el puerto 8080
+• Solución 1: Detén el otro servicio
+• Solución 2: Cambia el puerto en .env: PORT=8081
+
+ERROR: Java version incompatible
+---------------------------------
+• Necesitas Java 17 o superior
+• Solución: Instala Java 17 desde adoptium.net
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                             ¡LISTO PARA USAR!                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Después de instalar Java 17 y Maven, simplemente ejecuta:
+
+    mvn spring-boot:run
+
+Y tu aplicación estará corriendo en http://localhost:8080

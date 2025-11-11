@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1f3a 0%, #0a0e27 100%);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #ffd700 0%, #ff6b00 100%);
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #0a0e27;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #0a0e27;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .price-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+        }
+        .grandfathered {
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffd700, #ff6b00);
+            color: #0a0e27;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #0a0e27;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 th:text="${appName}">DrakkarPress</h1>
+        </div>
+        
+        <div class="content">
+            <h2>¡Bienvenido, <span th:text="${userName}">Usuario</span>!</h2>
+            
+            <p>Te has registrado exitosamente en <span th:text="${appName}">DrakkarPress</span>.</p>
+            
+            <p><strong>Número de Usuario:</strong> <span class="highlight" th:text="${userNumber}">1</span></p>
+            
+            <div th:if="${isGrandfathered}">
+                <div class="badge" th:text="${badge}">FOUNDER</div>
+                
+                <p class="grandfathered">🎉 ¡PRECIO BLOQUEADO DE POR VIDA! 🎉</p>
+                
+                <div class="price-box">
+                    <div>Tu Precio Especial:</div>
+                    <div class="price" th:text="'$' + ${annualPrice} + '/año'">$50/año</div>
+                    <div style="font-size: 14px; color: #888; margin-top: 10px;">
+                        o <span th:text="'$' + ${monthlyPrice} + '/mes'">$5/mes</span>
+                    </div>
+                </div>
+                
+                <p th:text="${welcomeMessage}">Mensaje personalizado</p>
+                
+                <p style="background: rgba(0, 255, 136, 0.1); padding: 15px; border-left: 4px solid #00ff88; border-radius: 5px;">
+                    ℹ️ <strong>Tu precio está garantizado para siempre.</strong> Incluso cuando otros usuarios paguen más tarde, tú mantendrás este precio especial por ser uno de los primeros.
+                </p>
+            </div>
+            
+            <div th:unless="${isGrandfathered}">
+                <div class="price-box">
+                    <div>Precio Regular:</div>
+                    <div class="price" th:text="'$' + ${annualPrice} + '/año'">$170/año</div>
+                    <div style="font-size: 14px; color: #888; margin-top: 10px;">
+                        o <span th:text="'$' + ${monthlyPrice} + '/mes'">$19.90/mes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a th:href="${frontendUrl}" class="button">Ir a tu Dashboard</a>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
+                <h3>Próximos Pasos:</h3>
+                <ul style="line-height: 1.8;">
+                    <li>Completa tu perfil y elige tu runa personal</li>
+                    <li>Explora las funcionalidades de la plataforma</li>
+                    <li>Cuando estés listo, activa tu membresía Premium</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p th:text="'© 2025 ' + ${appName} + '. Todos los derechos reservados.'">© 2025 DrakkarPress. Todos los derechos reservados.</p>
+            <p>Este es un email automático, por favor no responder.</p>
+        </div>
+    </div>
+</body>
+</html>

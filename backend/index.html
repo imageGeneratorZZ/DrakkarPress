@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Plataforma Editorial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            max-width: 800px;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sword {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        p {
+            color: #555;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+
+        .status {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .status h2 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        .status-label {
+            text-align: left;
+        }
+
+        .status-value {
+            font-weight: bold;
+        }
+
+        .check {
+            color: #4ade80;
+            font-size: 1.5em;
+        }
+
+        .pending {
+            color: #fbbf24;
+            font-size: 1.5em;
+        }
+
+        .info-box {
+            background: #f3f4f6;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            text-align: left;
+            list-style-position: inside;
+            color: #555;
+        }
+
+        .info-box li {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sword">⚔️</div>
+        <h1>DrakkarPress</h1>
+        <p><strong>Plataforma Editorial Completa</strong></p>
+        <p>Sistema multi-usuario con integración de IA para autores, lectores, imprentas y revendedores</p>
+
+        <div class="status">
+            <h2>Estado del Sistema</h2>
+            <div class="status-item">
+                <span class="status-label">Base de Datos PostgreSQL</span>
+                <span class="status-value check">✓ ACTIVO</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Docker Container</span>
+                <span class="status-value check">✓ CORRIENDO</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Backend Spring Boot</span>
+                <span class="status-value pending pulse">⏳ INSTALANDO</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Frontend Temporal</span>
+                <span class="status-value check">✓ ACTIVO</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>✨ Características Principales</h3>
+            <ul>
+                <li><strong>Autores:</strong> Publica y vende tus libros digitales y físicos</li>
+                <li><strong>Lectores:</strong> Compra y lee libros en tu biblioteca personal</li>
+                <li><strong>Imprentas:</strong> Impresión bajo demanda de libros físicos</li>
+                <li><strong>Revendedores:</strong> Gana comisiones vendiendo libros</li>
+                <li><strong>IA Integrada:</strong> Genera ideas, capítulos y sinopsis</li>
+                <li><strong>Comisiones Automáticas:</strong> Sistema transparente de pagos</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🔧 Instalación en Progreso</h3>
+            <ul>
+                <li>Java 17 (Temurin) - Instalando...</li>
+                <li>Apache Maven - Instalando...</li>
+                <li>Spring Boot Application - Pendiente</li>
+            </ul>
+            <p style="margin-top: 20px; color: #667eea; font-weight: bold;">
+                La instalación completa estará lista en 5-10 minutos
+            </p>
+        </div>
+
+        <div>
+            <a href="#" class="btn" onclick="checkStatus(); return false;">Verificar Estado</a>
+            <a href="http://localhost:8080/api/health" class="btn" target="_blank">Probar API</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 DrakkarPress - Plataforma Editorial con IA</p>
+            <p>Puerto: 8080 | Base de Datos: PostgreSQL | Framework: Spring Boot</p>
+        </div>
+    </div>
+
+    <script>
+        function checkStatus() {
+            fetch('http://localhost:8080/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    alert('¡Backend funcionando!\n\n' + JSON.stringify(data, null, 2));
+                })
+                .catch(error => {
+                    alert('Backend aún no está disponible.\nContinúa la instalación de Java 17 y Maven.\n\nVerifica el progreso en la ventana de PowerShell como Administrador.');
+                });
+        }
+
+        // Auto-check cada 30 segundos
+        setInterval(() => {
+            fetch('http://localhost:8080/api/health')
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                })
+                .catch(() => {
+                    // Backend aún no disponible
+                });
+        }, 30000);
+    </script>
+</body>
+</html>

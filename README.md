@@ -1,244 +1,267 @@
-# ⚔️ DrakkarPress - La Flota Editorial Digital
+# ⚔️ DrakkarPress - Plataforma Comunitaria para Escritores
 
-![DrakkarPress Logo](https://img.shields.io/badge/DrakkarPress-Publishing%20Platform-1A4D7A?style=for-the-badge)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/drakkarpress/platform)
-[![GitHub](https://img.shields.io/badge/GitHub-DrakkarPress-181717?logo=github)](https://github.com/yourusername/DrakkarPress)
+**Versión:** 2.0 - Sistema de Perfiles Multi-rol con Runas del Elder Futhark  
+**Última actualización:** 11 de Noviembre, 2025
 
 **© 2025 DrakkarPress. Todos los derechos reservados.**
 
-> **Plataforma editorial completa con multi-sitio, autenticación OAuth 2.0, sistema de comisiones automatizado y herramientas de IA para escritores independientes.**
+> **Plataforma comunitaria completa donde escritores, editoriales, imprentas y revendedores se conectan, colaboran y crecen juntos. Con generadores de IA, sistema de runas nórdicas y membresías escalonadas.**
 
 ---
 
-## 🌟 Descripción General
+## 🌟 ¿Qué es DrakkarPress?
 
-DrakkarPress es una **flota editorial digital** inspirada en los intrépidos navegantes vikingos que conecta cuatro tipos de usuarios en una comunidad global de publicación y distribución de libros:
+**DrakkarPress** es mucho más que un generador de libros con IA. Es una **plataforma comunitaria completa** donde escritores, editoriales, imprentas y revendedores se conectan, colaboran y crecen juntos.
 
-### 🚢 Los 4 Tipos de Usuario
+### Características Principales:
 
-#### 1. ✍️ **Autores / Escritores**
-Crean y publican sus libros en la plataforma. Usan la IA de DrakkarPress para generar ideas, extender textos y crear sinopsis. Reciben **90%** de regalías en ventas directas o **60%** cuando hay revendedor (la plataforma retiene 10%). Sus libros se venden automáticamente en Shopify, MercadoLibre y la tienda DrakkarPress.
+- 🤝 **Red Social Literaria** - Networking estilo "Facebook de escritores"
+- 🤖 **Generadores de IA** - DrakkarPress (general) + Scriptorium (infantil)
+- 💰 **Marketplace Integrado** - Compra/venta con marketing sinérgico
+- 🔮 **Sistema de Runas** - Personalización única con runas del Elder Futhark
+- 🏆 **Membresías por Fases** - Pricing escalonado con beneficios de por vida
+- ⚡ **Panel de Administración** - Gestión completa de usuarios y fases
 
-#### 2. 💼 **Revendedores (Afiliados)**
-Eligen qué libros del catálogo quieren vender. Arman sus propios catálogos personalizados y generan enlaces con tracking para compartir en sus redes sociales. Cobran **30%** de comisión por cada venta (plataforma retiene 10%, autor recibe 60%). Sin inventario, sin inversión inicial. La IA les genera contenido para marketing.
+---
 
-#### 3. 🏭 **Red de Imprentas**
-Reciben pedidos automáticos de impresión bajo demanda. Imprimen libros según especificaciones y los envían a clientes locales. Distribuidas en distintos países para envío rápido (3-7 días). Actualizan estados y tracking. Cobran por cada trabajo realizado con pagos automáticos.
+## 🎯 Sistema de Perfiles
 
-#### 4. 📚 **Clientes / Lectores**
-Compran libros en formato digital o físico. Si eligen digital: descarga inmediata y acceso a biblioteca personal. Si eligen físico: se imprime localmente y llega rápido. Pueden dejar reseñas y valoraciones.
+### 4 Tipos de Perfiles:
 
-## Características Principales
+#### 1. 👤 **Cliente** (Base)
+Todos empiezan aquí. Acceso a compras, comunidad, generadores IA según plan.
 
-### 🔍 Portal Tipo Inmobiliario para Libros
-- **Búsqueda avanzada** con filtros múltiples (categoría, precio, idioma, rating, etc.)
-- **Vista Grid y Lista** similar a portales inmobiliarios
-- **Mapa de imprentas** por ubicación geográfica
-- **Comparador** de precios y formatos
-- **Alertas** personalizadas para nuevos libros
+#### 2. ✍️ **Autor/Editorial**
+- **Persona:** Autor individual autopublicando
+- **Empresa:** Editorial publicando para terceros
+- Vende obras, busca imprentas, networking
 
-### 👥 Multi-Rol de Usuarios
-- **Escritores:** Publican y gestionan sus libros con ayuda de IA
-- **Revendedores/Afiliados:** Catálogo personalizado con enlaces de tracking
-- **Imprentas:** Panel para gestionar pedidos de impresión bajo demanda
-- **Lectores:** Biblioteca digital y tracking de pedidos físicos
+#### 3. 🏭 **Imprenta**
+- Ofrece servicios de impresión
+- Requiere certificación y documentación
+- Portfolio de trabajos
 
-### 🤖 IA de DrakkarPress
-- Generación de ideas de libros por categoría
-- Extensión de textos y capítulos
-- Creación de sinopsis y títulos atractivos
-- Sugerencias de marketing para redes sociales
-- Estructuras para libros infantiles y colorear
+#### 4. 🤝 **Revendedor**
+- Distribuye libros de otros
+- Comisiones automáticas
+- Red de ventas geográfica
 
-### 🛒 Integraciones E-commerce
-- **Shopify:** Tienda oficial con checkout completo
-- **MercadoLibre:** Publicación automática en marketplace LATAM
-- **Lulu.com:** Impresión bajo demanda global
-- **Imprentas locales:** Red propia de imprentas por país
+---
 
-### 📚 Categorías Editoriales
-- **Scryptorium:** Libros infantiles y para colorear
-- **Erótica:** Ficción erótica para adultos
-- **Thriller/Suspenso:** Misterio y tensión
-- **Romance:** Historias de amor
-- **Fantasía/Sci-Fi:** Mundos imaginarios
-- **Cocina:** Recetas y gastronomía
-- **No Ficción:** Desarrollo personal y conocimiento
+## � Membresías
+
+### 🆓 GRATUITO
+```
+Generación completa:  ❌ BLOQUEADA
+Portadas con IA:      ✅ 3/mes
+Asistente escritura:  ✅ 10/mes
+Corrección texto:     ✅ 5 capítulos/mes
+```
+
+### ⭐ PREMIUM (Acceso Ilimitado a IA)
+
+#### Fase 1: Fundadores (1-1,000)
+```
+💵 $5/mes  |  $50/año
+🏆 Badge "Fundador" + Runa Othala (ᛟ)
+⭐ Precio bloqueado DE POR VIDA
+```
+
+#### Fase 2: Early Adopters (1,001-10,000)
+```
+💵 $10/mes  |  $100/año
+⭐ Badge "Early Adopter" + Runa Sowilo (ᛊ)
+⭐ Precio bloqueado DE POR VIDA
+```
+
+#### Fase 3: Regular (10,001+)
+```
+💵 $19.99/mes  |  $199/año
+✨ Badge "Premium"
+📈 Precio estándar
+```
+
+---
+
+## 🔮 Sistema de Runas (Elder Futhark)
+
+Cada usuario **Premium** elige una runa nórdica que representa su identidad como creador.
+
+### Runas Destacadas:
+
+| Runa | Nombre | Significado | Categoría |
+|------|--------|-------------|-----------|
+| **ᚲ** | Kenaz | Creatividad, inspiración | 🎨 Creatividad |
+| **ᛊ** | Sowilo | Éxito, victoria | 💪 Éxito |
+| **ᛟ** | Othala | Legado, herencia | 🏠 Legado |
+| **ᚨ** | Ansuz | Sabiduría, palabra | 🎨 Conocimiento |
+| **ᛞ** | Dagaz | Despertar, transformación | 🌱 Transformación |
+
+*+ 19 runas más disponibles*
+
+### Reglas:
+- ✅ Solo usuarios Premium
+- ✅ Cambio permitido: **1 vez al mes**
+- ✅ Aparece en perfil, posts, comentarios
+
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
 DrakkarPress.com/
-├── index.html              # Landing page principal
-├── 🔐 Autenticación (3 páginas)
-│   ├── login.html
-│   ├── register.html
-│   └── forgot-password.html
-├── 🛒 E-Commerce (4 páginas)
-│   ├── catalogo.html
-│   ├── libro.html
-│   ├── cart.html
-│   └── checkout.html
-├── 👥 Portales (4 páginas)
-│   ├── escritores.html
-│   ├── revendedores.html
-│   ├── imprentas.html
-│   └── biblioteca.html
-├── 🌐 Servicios (3 páginas)
-│   ├── servicios-marketing.html
-│   ├── servicios-web.html
-│   └── servicios-research.html
-├── ℹ️ Info (3 páginas)
-│   ├── about.html
-│   ├── faq.html
-│   └── contact.html
-├── js/i18n.js              # Sistema multiidioma
-└── docs/ (16 archivos MD)  # Documentación completa
+├── README.md
+├── backend/
+│   ├── pom.xml                          # Maven config
+│   ├── src/main/java/.../model/
+│   │   ├── Rune.java                    # ✅ Completo
+│   │   ├── Badge.java                   # ✅ Completo
+│   │   └── [15 entities pending...]     # 🚧 Pendiente
+│   └── src/main/resources/
+│       └── application.properties
+├── database/
+│   ├── schema.sql                        # ✅ 100% (17 tables)
+│   └── seeds/
+│       └── init-data.sql                 # ✅ 100% (24 runas + 8 badges)
+├── docs/                                 # Documentación antigua (v1.0)
+├── ARQUITECTURA_ECOSISTEMA_COMPLETO.md  # ✅ 100 páginas
+├── ROADMAP_COMPLETO.md                  # ✅ 50 páginas
+├── RESUMEN_EJECUTIVO_COMPLETO.md        # ✅ 20 páginas
+├── QUICK_START_GUIDE.md                 # ✅ 15 páginas
+└── INDICE_DOCUMENTACION.md              # ✅ Índice completo
 ```
 
-**Total: 18 páginas HTML funcionales** ✅
+## 🚀 Quick Start
 
-## 🚀 Instalación y Uso
+### Para Desarrolladores:
 
-### Opción 1: Servidor Local Rápido (Python)
-
-```bash
-# Clona el repositorio
-git clone https://github.com/drakkarpress/platform.git
+```powershell
+# 1. Clonar repositorio
+git clone https://github.com/imageGeneratorZZ/DrakkarPress.git
 cd DrakkarPress.com
 
-# Inicia servidor HTTP
-python -m http.server 8000
+# 2. Leer documentación
+start INDICE_DOCUMENTACION.md        # Índice general
+start QUICK_START_GUIDE.md           # Guía de inicio rápido
 
-# Abre en navegador: http://localhost:8000
+# 3. Iniciar base de datos
+cd backend
+docker-compose up -d postgres
+
+# 4. Ejecutar scripts SQL
+$env:PGPASSWORD='drakkarpress'; psql -h localhost -p 5432 -U drakkarpress -d drakkarpress_db -f ..\database\schema.sql
+$env:PGPASSWORD='drakkarpress'; psql -h localhost -p 5432 -U drakkarpress -d drakkarpress_db -f ..\database\seeds\init-data.sql
+
+# 5. Iniciar backend
+.\mvnw.cmd spring-boot:run
 ```
 
-### Opción 2: Live Server (VS Code)
+---
 
-```bash
-# Instala extensión Live Server en VS Code
-# Click derecho en index.html > "Open with Live Server"
+## 📚 Documentación
+
+### 📑 [INDICE_DOCUMENTACION.md](./INDICE_DOCUMENTACION.md)
+**→ Índice completo de toda la documentación** 👈 **Empieza aquí**
+
+### Guías Principales:
+
+| Documento | Descripción | Para quién |
+|-----------|-------------|------------|
+| **[QUICK_START_GUIDE.md](./QUICK_START_GUIDE.md)** | Guía de inicio rápido | 👨‍💻 Desarrolladores |
+| **[RESUMEN_EJECUTIVO_COMPLETO.md](./RESUMEN_EJECUTIVO_COMPLETO.md)** | Presentación ejecutiva | 💼 Stakeholders |
+| **[ARQUITECTURA_ECOSISTEMA_COMPLETO.md](./ARQUITECTURA_ECOSISTEMA_COMPLETO.md)** | Arquitectura completa | 🏗️ Arquitectos |
+| **[ROADMAP_COMPLETO.md](./ROADMAP_COMPLETO.md)** | Plan de trabajo detallado | 📋 PMs / Devs |
+
+---
+
+## 🏗️ Stack Tecnológico
+
+### Backend
+```
+☕ Java 17
+🍃 Spring Boot 3.2.0
+🗄️ PostgreSQL 14+
+🔐 JWT Auth (io.jsonwebtoken 0.12.3)
+💳 Stripe Integration
+🧩 JPA/Hibernate + Lombok
+📦 Maven 3.9+
 ```
 
-### Opción 3: Node.js
-
-```bash
-npm install -g http-server
-http-server -p 8000
-# Abre http://localhost:8000
+### Frontend
+```
+🌐 HTML/CSS/JavaScript
+📱 Responsive Design
+🎨 Framework moderno (React/Vue - futuro)
 ```
 
-## 📄 Páginas Disponibles
+---
 
-| Página | URL | Descripción |
-|--------|-----|-------------|
-| Landing | `/index.html` | Página principal |
-| Catálogo | `/catalogo.html` | 8 libros con filtros |
-| Libro | `/libro.html` | 4 formatos disponibles |
-| Carrito | `/cart.html` | Gestión + cupones |
-| Checkout | `/checkout.html` | 3 métodos de pago |
-| Login | `/login.html` | OAuth 2.0 |
-| Escritores | `/escritores.html` | Dashboard + IA tools |
-| Afiliados | `/revendedores.html` | Links + comisiones |
-| Imprentas | `/imprentas.html` | Órdenes + producción |
-| Biblioteca | `/biblioteca.html` | E-reader integrado |
-| Marketing | `/servicios-marketing.html` | Desde $599 |
-| Web Dev | `/servicios-web.html` | Desde $2,999 |
-| Research | `/servicios-research.html` | Desde $1,499 |
-| About | `/about.html` | Historia y equipo |
-| FAQ | `/faq.html` | 20+ preguntas |
-| Contacto | `/contact.html` | Formulario |
+## 📊 Estado del Proyecto
 
-## 📚 Documentación Completa
-
-Consulta la carpeta `/docs` (16 archivos):
-
-- **`00-resumen-ejecutivo.md`** - Overview del proyecto
-- **`01-vision-general.md`** - Visión y alcance
-- **`02-arquitectura-multisitio.md`** - 5 portales independientes con SSO
-- **`03-modelo-comisiones.md`** - 90%/60% escritor, 30% afiliado, 10% plataforma
-- **`04-flujo-compra.md`** - Journey del comprador
-- **`05-oauth-autenticacion.md`** - 6 providers OAuth 2.0
-- **`06-procesamiento-pagos.md`** - Stripe Connect + PayPal
-- **`07-distribucion-productos.md`** - Físico vs Digital
-- **`08-sistema-entregas.md`** - Imprentas bajo demanda
-- **`09-dashboards-analytics.md`** - Métricas por rol
-- **`10-herramientas-ia.md`** - ChatGPT integrado
-- **`11-integracion-imprentas.md`** - Red de producción
-- **`12-servicio-marketing.md`** - FB/IG/Google Ads
-- **`13-servicio-desarrollo-web.md`** - Sitios para autores
-- **`14-servicio-investigacion.md`** - Histórica/Científica
-- **`15-campanas-publicidad-digital.md`** - Estrategias completas
-
-## 🛠️ Stack Tecnológico
-
-### Frontend (Actual - MVP)
-- **HTML5/CSS3/JavaScript**: Vanilla JS
-- **Responsive**: Móvil-first
-- **i18n**: 6 idiomas (ES, EN, PT, FR, DE, IT)
-
-### Backend (Propuesto)
-- **Java 17+**: Spring Boot
-- **PostgreSQL**: Base de datos
-- **Redis**: Caché
-- **OAuth 2.0**: 6 providers
-
-### Pagos
-- **Stripe Connect**: Splits automáticos
-- **PayPal**: Alternativa
-- **OXXO**: México
-
-### Deployment
-- **Vercel/Netlify**: Frontend
-- **AWS/Azure**: Backend
-- **GitHub Pages**: Demo
-
-## 🚀 Deployment
-
-### Vercel (1 minuto)
-
-```bash
-npm i -g vercel
-vercel --prod
+```
+Documentación:     ████████████████████ 100%
+Base de Datos:     ████████████████████ 100%
+Backend (Models):  ████░░░░░░░░░░░░░░░░  20%
+Backend (Logic):   ░░░░░░░░░░░░░░░░░░░░   0%
+Frontend:          ░░░░░░░░░░░░░░░░░░░░   0%
+Testing:           ░░░░░░░░░░░░░░░░░░░░   0%
+──────────────────────────────────────────────
+TOTAL:             ███░░░░░░░░░░░░░░░░░  17%
 ```
 
-### Netlify
+### 📁 Archivos Creados:
+- ✅ 5 documentos de arquitectura (~185 páginas)
+- ✅ Esquema completo de BD (~800 líneas SQL)
+- ✅ Seeds con 24 runas + 8 badges (~600 líneas SQL)
+- ✅ 2 modelos Java (Rune.java, Badge.java)
 
-```bash
-npm install -g netlify-cli
-netlify deploy --prod
+### 📝 Pendiente (según ROADMAP):
+- 🚧 15 entidades Java adicionales
+- 🚧 15 JPA repositories
+- 🚧 20+ DTOs
+- 🚧 12 services
+- 🚧 11 controllers
+- 🚧 Security components (JWT, filters, config)
+- 🚧 Frontend (15+ páginas)
+- 🚧 Testing suite
+- 🚧 DevOps configuration
+
+### ⏱️ Timeline:
+**22 semanas** divididas en 4 milestones (ver ROADMAP_COMPLETO.md)
+
+---
+
+## � Proyección de Ingresos
+
+### Año 1 (Conservador):
+```
+MRR Año 1:  $95,000/mes
+ARR Año 1:  $1,140,000
 ```
 
-### GitHub Pages
-
-```bash
-# Settings > Pages > Source: main branch
-# https://username.github.io/drakkarpress
+### Año 2 (Optimista):
+```
+MRR Año 2:  $395,000/mes
+ARR Año 2:  $4,740,000
 ```
 
-## 📊 Métricas
+**Detalles completos:** Ver `RESUMEN_EJECUTIVO_COMPLETO.md`
 
-| Métrica | Valor |
-|---------|-------|
-| Páginas HTML | 18 |
-| Líneas de Código | ~15,000 |
-| Documentación | 16 archivos |
-| Idiomas | 6 |
-| OAuth Providers | 6 |
-| Estado | ✅ MVP Completo |
+---
 
-## 📞 Soporte
+## 📞 Contacto
 
-- 📧 Email: contacto@drakkarpress.com
-- 📞 Teléfono: +52 55 1234 5678
-- 🏢 Oficina: Av. Reforma 123, CDMX
+**Repositorio:** [github.com/imageGeneratorZZ/DrakkarPress](https://github.com/imageGeneratorZZ/DrakkarPress)  
+**Branch principal:** `main`
+
+---
 
 ## 📝 Licencia
 
 **© 2025 DrakkarPress. Todos los derechos reservados.**
 
-Este código es propiedad de DrakkarPress y se proporciona únicamente con fines de demostración. No está permitido copiar, modificar, distribuir o usar este código sin autorización expresa por escrito.
-
 ---
 
-**⚔️ Navega hacia el éxito con DrakkarPress** 🌍📚
+**DrakkarPress - Donde los escritores forjan su legado** ⚔️📚
+
+*"Cada palabra escrita es una runa de poder que perdura en el tiempo"*

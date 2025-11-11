@@ -66,12 +66,12 @@
         <div class="header">
             <div>
                 <div class="welcome">¡Hola, Imprenta Gutenberg! 🖨️</div>
-                <p style="color:#666;margin-top:5px;">Socio Productor · Imprimimos juntos el éxito desde 2023</p>
+                <p style="color:#666;margin-top:5px;">📍 Punto de Venta Local · 124,583 libros disponibles · Madrid, España</p>
             </div>
             <div style="display:flex;align-items:center;gap:15px;">
                 <div style="text-align:right;">
                     <div style="font-weight:600;">Imprenta Gutenberg</div>
-                    <div style="font-size:14px;color:#666;">Socio Productor de la Flota</div>
+                    <div style="font-size:14px;color:#666;">�️ Visible en Google Maps · 30% comisión por venta</div>
                 </div>
                 <div class="avatar">IG</div>
             </div>
@@ -79,28 +79,28 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📦</div>
-                <div class="stat-value">47</div>
-                <div class="stat-label">Pedidos Activos</div>
-                <div class="stat-change">15 en producción ahora</div>
+                <div class="stat-icon">�</div>
+                <div class="stat-value">124,583</div>
+                <div class="stat-label">Libros en Catálogo</div>
+                <div class="stat-change">Catálogo completo DrakkarPress</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-value">12,847</div>
-                <div class="stat-label">Libros Impresos (Este Mes)</div>
-                <div class="stat-change">↑ +18% vs mes anterior</div>
+                <div class="stat-icon">�</div>
+                <div class="stat-value">$8,420</div>
+                <div class="stat-label">Comisiones (Este Mes)</div>
+                <div class="stat-change">↑ +18% vs mes anterior · 30% por venta</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">💰</div>
-                <div class="stat-value">$45,230</div>
-                <div class="stat-label">Ingresos (Este Mes)</div>
+                <div class="stat-icon">🛒</div>
+                <div class="stat-value">287</div>
+                <div class="stat-label">Ventas Este Mes</div>
                 <div class="stat-change">↑ +22% vs mes anterior</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
-                <div class="stat-value">3.2 días</div>
-                <div class="stat-label">Tiempo Promedio</div>
-                <div class="stat-change">↓ -0.5 días (mejora)</div>
+                <div class="stat-icon">🗺️</div>
+                <div class="stat-value">4.8 ⭐</div>
+                <div class="stat-label">Rating en Google Maps</div>
+                <div class="stat-change">142 reseñas verificadas</div>
             </div>
         </div>
 
@@ -173,66 +173,194 @@
 
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title">📦 Pedidos Recientes</h2>
+                <h2 class="section-title">� Ventas Recientes en tu Punto Local</h2>
                 <select style="padding:8px 12px;border:1px solid #E0E6ED;border-radius:6px;">
                     <option selected>Todos</option>
-                    <option>Pendientes</option>
-                    <option>En Producción</option>
-                    <option>En Envío</option>
-                    <option>Completados</option>
+                    <option>Imprimiendo</option>
+                    <option>Listo para Entregar</option>
+                    <option>Entregado</option>
+                    <option>Cancelado</option>
                 </select>
             </div>
             <table class="orders-table">
                 <thead>
                     <tr>
-                        <th>ID Orden</th>
+                        <th>ID Venta</th>
                         <th>Libro</th>
-                        <th>Formato</th>
-                        <th>Cantidad</th>
-                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Precio</th>
+                        <th>Tu Comisión (30%)</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="font-weight:600;">#ORD-8474</td>
-                        <td>Detective Privado</td>
-                        <td>Tapa Dura Especial</td>
-                        <td>200</td>
-                        <td>8 Nov 2025</td>
-                        <td><span class="status-badge status-shipping">En Envío</span></td>
+                        <td style="font-weight:600;">#VTA-8474</td>
+                        <td>Detective Privado<br><small style="color:#666;">Tapa Dura Especial · Autor: Laura Gómez</small></td>
+                        <td>Juan Pérez<br><small style="color:#666;">📍 Recogerá en tienda</small></td>
+                        <td>$24.99</td>
+                        <td style="color:#27AE60;font-weight:600;">$7.50</td>
+                        <td><span class="status-badge status-completed">✅ Listo para Entregar</span></td>
+                        <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">📞 Notificar</button></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:600;">#VTA-8473</td>
+                        <td>Amor en Tiempos Modernos<br><small style="color:#666;">Tapa Blanda · Autor: María González</small></td>
+                        <td>María García<br><small style="color:#666;">📍 Recogerá en tienda</small></td>
+                        <td>$16.99</td>
+                        <td style="color:#27AE60;font-weight:600;">$5.10</td>
+                        <td><span class="status-badge status-printing">🖨️ Imprimiendo</span></td>
                         <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">Ver Detalle</button></td>
                     </tr>
                     <tr>
-                        <td style="font-weight:600;">#ORD-8473</td>
-                        <td>Amor en Tiempos Modernos</td>
-                        <td>Tapa Blanda</td>
-                        <td>1000</td>
-                        <td>7 Nov 2025</td>
-                        <td><span class="status-badge status-printing">Imprimiendo</span></td>
-                        <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">Ver Detalle</button></td>
+                        <td style="font-weight:600;">#VTA-8472</td>
+                        <td>El Reino de las Sombras<br><small style="color:#666;">Tapa Dura · Autor: María González</small></td>
+                        <td>Carlos Rodríguez<br><small style="color:#666;">📍 Recogerá en tienda</small></td>
+                        <td>$29.99 x2</td>
+                        <td style="color:#27AE60;font-weight:600;">$18.00</td>
+                        <td><span class="status-badge status-completed">✅ Listo para Entregar</span></td>
+                        <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">📞 Notificar</button></td>
                     </tr>
                     <tr>
-                        <td style="font-weight:600;">#ORD-8472</td>
-                        <td>El Reino de las Sombras</td>
-                        <td>Tapa Dura</td>
-                        <td>500</td>
-                        <td>6 Nov 2025</td>
-                        <td><span class="status-badge status-printing">Imprimiendo</span></td>
-                        <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">Ver Detalle</button></td>
+                        <td style="font-weight:600;">#VTA-8471</td>
+                        <td>Historia Medieval<br><small style="color:#666;">Tapa Blanda · Autor: Pedro Sánchez</small></td>
+                        <td>Ana López<br><small style="color:#666;">✅ Entregado en tienda</small></td>
+                        <td>$18.99</td>
+                        <td style="color:#27AE60;font-weight:600;">$5.70</td>
+                        <td><span class="status-badge" style="background:#e8e8e8;color:#666;">✅ Entregado</span></td>
+                        <td><button style="padding:6px 12px;border:1px solid #E0E6ED;background:white;color:#666;border-radius:6px;cursor:pointer;" disabled>Completado</button></td>
                     </tr>
                     <tr>
-                        <td style="font-weight:600;">#ORD-8471</td>
-                        <td>Historia Medieval</td>
-                        <td>Tapa Blanda</td>
-                        <td>750</td>
-                        <td>5 Nov 2025</td>
-                        <td><span class="status-badge status-completed">Completado</span></td>
+                        <td style="font-weight:600;">#VTA-8470</td>
+                        <td>Cocina Mediterránea<br><small style="color:#666;">Tapa Dura Premium · Autor: Chef Ramírez</small></td>
+                        <td>Luis Martínez<br><small style="color:#666;">📍 Recogerá en tienda</small></td>
+                        <td>$34.99 x5</td>
+                        <td style="color:#27AE60;font-weight:600;">$52.50</td>
+                        <td><span class="status-badge status-printing">🖨️ Imprimiendo</span></td>
                         <td><button style="padding:6px 12px;border:1px solid var(--printer-orange);background:white;color:var(--printer-orange);border-radius:6px;cursor:pointer;">Ver Detalle</button></td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Sección: Información como Punto de Venta -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🗺️ Tu Punto de Venta en Google Maps</h2>
+                <button class="btn-primary" onclick="alert('Abrir configuración de tienda')">⚙️ Editar Información</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+                <div style="background:var(--light-gray);padding:25px;border-radius:10px;">
+                    <div style="font-size:24px;margin-bottom:15px;">�️</div>
+                    <div style="font-weight:600;font-size:18px;margin-bottom:10px;">Ubicación en Google Maps</div>
+                    <div style="font-size:14px;color:#666;line-height:1.6;">
+                        <strong>Imprenta Gutenberg</strong><br>
+                        Calle Mayor 42, Local 3<br>
+                        28013 Madrid, España<br><br>
+                        <strong>Visibilidad:</strong><br>
+                        ⭐ 4.8 estrellas (142 reseñas)<br>
+                        📍 Apareces en búsquedas de "librerías cerca"<br>
+                        🔍 Los clientes te encuentran por ubicación<br><br>
+                        <strong>Horario:</strong><br>
+                        Lunes a Viernes: 9:00 - 19:00<br>
+                        Sábados: 10:00 - 14:00
+                    </div>
+                </div>
+                <div style="background:var(--light-gray);padding:25px;border-radius:10px;">
+                    <div style="font-size:24px;margin-bottom:15px;">�</div>
+                    <div style="font-weight:600;font-size:18px;margin-bottom:10px;">Catálogo Completo DrakkarPress</div>
+                    <div style="font-size:14px;color:#666;line-height:1.6;">
+                        <strong>124,583 libros disponibles</strong><br>
+                        Todos los libros de DrakkarPress<br>
+                        para imprimir bajo demanda<br><br>
+                        <strong>Ventajas:</strong><br>
+                        ✅ Sin inventario físico necesario<br>
+                        ✅ Imprime solo lo que vendes<br>
+                        ✅ Cero riesgo de stock<br>
+                        ✅ Catálogo siempre actualizado<br><br>
+                        📖 Los clientes ven el catálogo completo<br>
+                        🖨️ Tú imprimes en 24-48 horas
+                    </div>
+                </div>
+                <div style="background:var(--light-gray);padding:25px;border-radius:10px;">
+                    <div style="font-size:24px;margin-bottom:15px;">💰</div>
+                    <div style="font-weight:600;font-size:18px;margin-bottom:10px;">Modelo de Comisiones (30%)</div>
+                    <div style="font-size:14px;color:#666;line-height:1.6;">
+                        <strong>Ganas el 30% de cada venta</strong><br><br>
+                        � <strong>Ejemplo de ganancias:</strong><br>
+                        • Libro $20 → Ganas $6<br>
+                        • Libro $30 → Ganas $9<br>
+                        • Libro $50 → Ganas $15<br><br>
+                        <strong>Costos incluidos:</strong><br>
+                        ✅ Impresión y materiales<br>
+                        ✅ Encuadernación<br>
+                        ✅ Tu comisión del 30%<br><br>
+                        💳 Pagos quincenales automáticos
+                    </div>
+                </div>
+                <div style="background:var(--light-gray);padding:25px;border-radius:10px;">
+                    <div style="font-size:24px;margin-bottom:15px;">�</div>
+                    <div style="font-weight:600;font-size:18px;margin-bottom:10px;">Flujo de Venta Local</div>
+                    <div style="font-size:14px;color:#666;line-height:1.6;">
+                        <strong>Cómo funciona:</strong><br><br>
+                        1️⃣ Cliente te encuentra en Google Maps<br>
+                        2️⃣ Ve el catálogo completo online<br>
+                        3️⃣ Hace el pedido (online o en tienda)<br>
+                        4️⃣ Tú imprimes el libro (24-48h)<br>
+                        5️⃣ Cliente recoge en tu tienda<br>
+                        6️⃣ Ganas tu 30% de comisión<br><br>
+                        <strong>Pagos aceptados:</strong><br>
+                        💳 Tarjeta · 💵 Efectivo · 📱 Bizum<br>
+                        🌐 Pago online en DrakkarPress
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección: Catálogo más vendido en tu zona -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🔥 Más Vendidos en Madrid (Tus últimos 30 días)</h2>
+                <a href="catalogo.html" style="padding:10px 20px;background:#E67E22;color:white;text-decoration:none;border-radius:8px;font-weight:600;">📚 Ver Catálogo Completo</a>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:20px;">
+                <div style="text-align:center;">
+                    <div style="width:100%;height:200px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:40px;">📖</div>
+                    <div style="font-weight:600;margin-bottom:5px;">El Reino de las Sombras</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:5px;">María González</div>
+                    <div style="color:var(--printer-orange);font-weight:600;">$29.99</div>
+                    <div style="font-size:12px;color:#27AE60;">45 vendidos</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="width:100%;height:200px;background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:40px;">💕</div>
+                    <div style="font-weight:600;margin-bottom:5px;">Corazones Eternos</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:5px;">María González</div>
+                    <div style="color:var(--printer-orange);font-weight:600;">$24.99</div>
+                    <div style="font-size:12px;color:#27AE60;">38 vendidos</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="width:100%;height:200px;background:linear-gradient(135deg,#4facfe,#00f2fe);border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:40px;">🕵️</div>
+                    <div style="font-weight:600;margin-bottom:5px;">Detective Privado</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:5px;">Laura Gómez</div>
+                    <div style="color:var(--printer-orange);font-weight:600;">$24.99</div>
+                    <div style="font-size:12px;color:#27AE60;">32 vendidos</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="width:100%;height:200px;background:linear-gradient(135deg,#fa709a,#fee140);border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:40px;">🍳</div>
+                    <div style="font-weight:600;margin-bottom:5px;">Cocina Mediterránea</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:5px;">Chef Ramírez</div>
+                    <div style="color:var(--printer-orange);font-weight:600;">$34.99</div>
+                    <div style="font-size:12px;color:#27AE60;">28 vendidos</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="width:100%;height:200px;background:linear-gradient(135deg,#30cfd0,#330867);border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:40px;">📜</div>
+                    <div style="font-weight:600;margin-bottom:5px;">Historia Medieval</div>
+                    <div style="font-size:12px;color:#666;margin-bottom:5px;">Pedro Sánchez</div>
+                    <div style="color:var(--printer-orange);font-weight:600;">$18.99</div>
+                    <div style="font-size:12px;color:#27AE60;">25 vendidos</div>
+                </div>
+            </div>
         </div>
 
         <div class="section">

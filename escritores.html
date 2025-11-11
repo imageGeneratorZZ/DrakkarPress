@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Escritores - DrakkarPress</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root { --viking-blue: #1A4D7A; --nordic-gold: #D4AF37; --writer-blue: #3498DB; --light-gray: #F5F7FA; --dark-gray: #2C3E50; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -136,19 +137,116 @@
             </div>
         </div>
 
+        <!-- Configuración de Privacidad -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title">📈 Ventas de los Últimos 30 Días</h2>
-                <select style="padding: 8px 12px; border: 1px solid #E0E6ED; border-radius: 6px;">
-                    <option>Últimos 7 días</option>
-                    <option selected>Últimos 30 días</option>
-                    <option>Últimos 3 meses</option>
-                    <option>Este año</option>
+                <h2 class="section-title">🔒 Configuración de Privacidad del Perfil</h2>
+                <button class="btn-primary" onclick="savePrivacySettings()">💾 Guardar Cambios</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">� Biografía del Autor</div>
+                            <div style="font-size: 14px; color: #666;">Tu información personal y biografía</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-bio" checked style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2196F3; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">📚 Lista de Libros</div>
+                            <div style="font-size: 14px; color: #666;">Mostrar tu catálogo completo</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-books" checked style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2196F3; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">📊 Estadísticas de Ventas</div>
+                            <div style="font-size: 14px; color: #666;">Copias vendidas y números públicos</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-stats" style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">📧 Información de Contacto</div>
+                            <div style="font-size: 14px; color: #666;">Email y redes sociales</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-contact" checked style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2196F3; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">💰 Ingresos Totales</div>
+                            <div style="font-size: 14px; color: #666;">Mostrar ganancias acumuladas</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-earnings" style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="padding: 20px; border: 2px solid #E0E6ED; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">⭐ Reseñas y Calificaciones</div>
+                            <div style="font-size: 14px; color: #666;">Mostrar opiniones de lectores</div>
+                        </div>
+                        <label style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                            <input type="checkbox" id="privacy-reviews" checked style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2196F3; transition: .4s; border-radius: 26px;"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficas de Ventas -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">�📈 Ventas de los Últimos 30 Días</h2>
+                <select id="timeRange" onchange="updateCharts()" style="padding: 8px 12px; border: 1px solid #E0E6ED; border-radius: 6px;">
+                    <option value="7">Últimos 7 días</option>
+                    <option value="30" selected>Últimos 30 días</option>
+                    <option value="90">Últimos 3 meses</option>
+                    <option value="365">Este año</option>
                 </select>
             </div>
-            <div class="chart-container">
-                📊 Gráfica de ventas (Integrar Chart.js o similar)
+            <canvas id="salesChart" style="max-height: 300px;"></canvas>
+        </div>
+
+        <!-- Gráfica de Ingresos por Libro -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">💰 Ingresos por Libro (Top 5)</h2>
             </div>
+            <canvas id="bookRevenueChart" style="max-height: 300px;"></canvas>
+        </div>
+
+        <!-- Gráfica de Tendencias -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📊 Tendencia de Calificaciones</h2>
+            </div>
+            <canvas id="ratingsChart" style="max-height: 300px;"></canvas>
         </div>
 
         <div class="section">
@@ -223,5 +321,185 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Configuración de Privacidad
+        function savePrivacySettings() {
+            const settings = {
+                biography: document.getElementById('privacy-bio').checked,
+                books: document.getElementById('privacy-books').checked,
+                stats: document.getElementById('privacy-stats').checked,
+                contact: document.getElementById('privacy-contact').checked,
+                earnings: document.getElementById('privacy-earnings').checked,
+                reviews: document.getElementById('privacy-reviews').checked
+            };
+            
+            console.log('Guardando configuración de privacidad:', settings);
+            // Aquí iría la llamada al backend: await fetch('/api/author/privacy', { method: 'POST', body: JSON.stringify(settings) })
+            
+            alert('✅ Configuración de privacidad guardada exitosamente');
+        }
+
+        // Gráfica de Ventas (Línea temporal)
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['1 Nov', '5 Nov', '10 Nov', '15 Nov', '20 Nov', '25 Nov', '30 Nov'],
+                datasets: [{
+                    label: 'Ventas Diarias',
+                    data: [120, 190, 150, 220, 180, 250, 300],
+                    borderColor: '#3498DB',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' copias';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfica de Ingresos por Libro (Barra horizontal)
+        const bookRevenueCtx = document.getElementById('bookRevenueChart').getContext('2d');
+        const bookRevenueChart = new Chart(bookRevenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['El Reino de las Sombras', 'Corazones Eternos', 'La Ciudad Perdida', 'Secretos del Pasado', 'Amor en Tiempos'],
+                datasets: [{
+                    label: 'Ingresos ($)',
+                    data: [18517, 13382, 9234, 7890, 6543],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(46, 204, 113, 0.8)',
+                        'rgba(241, 196, 15, 0.8)',
+                        'rgba(231, 76, 60, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(155, 89, 182, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(241, 196, 15, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.x.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfica de Calificaciones (Línea)
+        const ratingsCtx = document.getElementById('ratingsChart').getContext('2d');
+        const ratingsChart = new Chart(ratingsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Sept', 'Oct', 'Nov'],
+                datasets: [{
+                    label: 'Calificación Promedio',
+                    data: [4.2, 4.3, 4.4, 4.5, 4.4, 4.6, 4.7, 4.6, 4.7, 4.8, 4.7],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 3.5,
+                        max: 5,
+                        ticks: {
+                            callback: function(value) {
+                                return '⭐ ' + value.toFixed(1);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Actualizar gráficas según rango de tiempo
+        function updateCharts() {
+            const range = document.getElementById('timeRange').value;
+            console.log('Actualizando gráficas para rango:', range + ' días');
+            
+            // Aquí iría la lógica para cargar datos del backend según el rango
+            // await fetch(`/api/author/sales?days=${range}`)
+            
+            // Por ahora solo mostramos un mensaje
+            alert(`📊 Cargando datos de los últimos ${range} días...`);
+        }
+
+        // Estilo de los toggles de privacidad
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const span = this.nextElementSibling;
+                if (this.checked) {
+                    span.style.backgroundColor = '#2196F3';
+                } else {
+                    span.style.backgroundColor = '#ccc';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

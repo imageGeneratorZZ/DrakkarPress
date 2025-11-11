@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1f3a 0%, #0a0e27 100%);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #00ff88 0%, #00d4ff 100%);
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #0a0e27;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .success-icon {
+            font-size: 64px;
+            margin: 20px 0;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .transaction-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+        .transaction-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 20px;
+            color: #00ff88;
+            padding-top: 15px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #0a0e27;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .grandfathered-banner {
+            background: linear-gradient(90deg, #ffd700, #ff6b00);
+            color: #0a0e27;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            color: #0a0e27;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #0a0e27;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+        .highlight {
+            color: #00ff88;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">✅</div>
+            <h1>¡Compra Confirmada!</h1>
+        </div>
+        
+        <div class="content">
+            <h2>Gracias, <span th:text="${userName}">Usuario</span>!</h2>
+            
+            <p>Tu compra de membresía <strong th:text="${plan}">Premium</strong> ha sido procesada exitosamente.</p>
+            
+            <div class="transaction-box">
+                <h3 style="margin-top: 0; color: #00ff88;">Detalles de la Transacción</h3>
+                
+                <div class="transaction-row">
+                    <span>ID de Transacción:</span>
+                    <span class="highlight" th:text="${transactionId}">xxx-xxx-xxx</span>
+                </div>
+                
+                <div class="transaction-row">
+                    <span>Plan:</span>
+                    <span th:text="${plan}">Premium Phase 1</span>
+                </div>
+                
+                <div class="transaction-row">
+                    <span>Frecuencia:</span>
+                    <span th:text="${frequency}">ANNUAL</span>
+                </div>
+                
+                <div class="transaction-row">
+                    <span>Fecha:</span>
+                    <span th:text="${date}">11/11/2025 10:30</span>
+                </div>
+                
+                <div class="transaction-row">
+                    <span>Número de Usuario:</span>
+                    <span th:text="${userNumber}">1</span>
+                </div>
+                
+                <div class="transaction-row">
+                    <span>Total Pagado:</span>
+                    <span th:text="'$' + ${amount}">$50.00</span>
+                </div>
+            </div>
+            
+            <div th:if="${isGrandfathered}">
+                <div class="grandfathered-banner">
+                    🎉 ¡PRECIO BLOQUEADO DE POR VIDA! 🎉
+                </div>
+                
+                <div class="badge" th:text="${badge}">FOUNDER</div>
+                
+                <p style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-left: 4px solid #ffd700; border-radius: 5px;">
+                    <strong>Tu precio especial:</strong><br>
+                    💰 <span th:text="'$' + ${monthlyPrice} + '/mes'">$5/mes</span> o 
+                    <span th:text="'$' + ${annualPrice} + '/año'">$50/año</span><br><br>
+                    Este precio está garantizado para siempre. Eres uno de los primeros usuarios y este beneficio es permanente.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a th:href="${frontendUrl}" class="button">Acceder a tu Dashboard Premium</a>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
+                <h3>¿Qué incluye tu membresía Premium?</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✨ Acceso completo a todos los generadores de IA</li>
+                    <li>🔮 Cambio de runa personal cada 30 días</li>
+                    <li>🏆 Badge exclusivo de tu fase</li>
+                    <li>👥 Red social y conexiones ilimitadas</li>
+                    <li>💬 Mensajería interna</li>
+                    <li>📚 Biblioteca completa de recursos</li>
+                </ul>
+            </div>
+            
+            <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <p style="margin: 0;">
+                    📧 <strong>Recibo de compra:</strong> Este email sirve como tu recibo oficial. 
+                    Guárdalo para tus registros.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p th:text="'© 2025 ' + ${appName} + '. Todos los derechos reservados.'">© 2025 DrakkarPress. Todos los derechos reservados.</p>
+            <p>Si tienes alguna pregunta, contáctanos en support@drakkarpress.com</p>
+        </div>
+    </div>
+</body>
+</html>
