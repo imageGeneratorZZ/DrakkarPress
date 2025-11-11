@@ -13,6 +13,9 @@ build/
 .env
 .env.local
 .env.production
+backend/.env.production
+backend/SECRETS_ONLY.txt
+SECRETS_ONLY.txt
 
 # IDEs
 .vscode/
