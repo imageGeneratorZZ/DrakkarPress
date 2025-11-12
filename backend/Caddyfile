@@ -1,0 +1,32 @@
+{
+    # Optional: increase timeouts, enable debug temporarily
+    # debug
+}
+
+# Set your API host here via docker run-time bind mount or keep default
+# Example: api.drakkarpress.com
+{$API_HOST:api.localhost} {
+    encode gzip zstd
+    @acme {
+        header Connection *
+    }
+
+    # Reverse proxy to Spring Boot app service
+    reverse_proxy backend:8080 {
+        health_uri /actuator/health
+        fail_duration 5s
+        transport http {
+            versions h2c 1.1
+        }
+    }
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer-when-downgrade"
+        X-XSS-Protection "1; mode=block"
+        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:;"
+    }
+}
