@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integración Shopify - DrakkarPress</title>
+  <style>
+    :root { --viking-blue:#1A4D7A; --nordic-gold:#D4AF37; --light:#F5F7FA; --dark:#2C3E50; --line:#E0E6ED; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:'Segoe UI', system-ui, Arial; color:var(--dark); background:white; }
+    .navbar { background:white; box-shadow:0 2px 10px rgba(0,0,0,.08); position:sticky; top:0; z-index:10; }
+    .nav-content { max-width:1200px; margin:0 auto; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
+    .logo { font-size:22px; font-weight:700; color:var(--viking-blue); }
+    .nav-links a { margin-left:18px; color:var(--dark); text-decoration:none; font-weight:500; }
+    .nav-links a:hover { color:var(--viking-blue); }
+
+    header.hero { background:linear-gradient(135deg,#96bf48,#1A4D7A); color:white; padding:64px 24px; text-align:center; }
+    header.hero h1 { font-size:40px; margin:0 0 12px; }
+    header.hero p { font-size:18px; opacity:.95; margin:0; }
+
+    .container { max-width:1200px; margin:0 auto; padding:48px 24px; }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+    .card { border:1px solid var(--line); border-radius:12px; background:white; padding:24px; }
+    .card h3 { margin:0 0 12px; color:var(--viking-blue); }
+    .row { display:flex; gap:12px; }
+    .field { flex:1; display:flex; flex-direction:column; margin-bottom:12px; }
+    .field label { font-size:12px; color:#596579; margin-bottom:6px; }
+    input[type="text"], input[type="number"], textarea { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px; }
+    textarea { resize:vertical; min-height:72px; }
+    .actions { display:flex; gap:12px; }
+    button { background:var(--viking-blue); color:white; border:none; border-radius:8px; padding:12px 16px; font-weight:600; cursor:pointer; }
+    button.alt { background:#44546a; }
+    button.warn { background:#C0392B; }
+    .note { font-size:13px; color:#596579; margin-top:6px; }
+    .status { margin-top:16px; padding:12px; background:#0f172a; color:#e2e8f0; border-radius:8px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:13px; white-space:pre-wrap; }
+  .section-title { font-size:24px; margin:32px 0 16px; color:var(--viking-blue); }
+  .hidden { display:none; }
+  .mt24 { margin-top:24px; }
+
+    @media (max-width: 900px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="logo">⚔️ DrakkarPress</div>
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="servicios-web.html">Servicios</a>
+        <a href="contact.html">Contacto</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Integración Shopify</h1>
+    <p>Crear productos, actualizar inventario y sincronizar pedidos desde DrakkarPress usando tu tienda Shopify.</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>Configuración de API</h3>
+      <div class="row">
+        <div class="field">
+          <label>Backend API Base URL</label>
+          <input id="apiBase" type="text" value="http://localhost:8080" placeholder="https://api.drakkarpress.com" title="Base URL del backend" />
+          <div class="note">Producción: https://api.drakkarpress.com</div>
+        </div>
+        <div class="field">
+          <label>Bearer Token (JWT)</label>
+          <input id="apiToken" type="text" placeholder="Pega tu token de sesión" />
+          <div class="note">Necesitas rol AUTHOR/ADMIN para algunos endpoints.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Productos y Stock</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Crear / Actualizar Producto</h3>
+        <div class="field"><label>Título</label><input id="pTitle" type="text" placeholder="Ej: La Saga del Norte" /></div>
+        <div class="field"><label>Descripción</label><textarea id="pBody" placeholder="Descripción larga del producto"></textarea></div>
+        <div class="row">
+          <div class="field"><label>Precio (USD)</label><input id="pPrice" type="number" step="0.01" value="9.99" placeholder="9.99" title="Precio del producto" /></div>
+          <div class="field"><label>SKU</label><input id="pSku" type="text" placeholder="SKU-001" /></div>
+        </div>
+        <div class="actions">
+          <button onclick="createProduct()">Crear/Actualizar</button>
+        </div>
+        <div id="statusCreate" class="status hidden"></div>
+      </div>
+
+      <div class="card">
+        <h3>Actualizar Inventario</h3>
+        <div class="field"><label>Product ID</label><input id="invProductId" type="text" placeholder="gid://shopify/Product/1234567890" /></div>
+  <div class="field"><label>Cantidad</label><input id="invQty" type="number" value="10" placeholder="10" title="Cantidad a establecer en inventario" /></div>
+        <div class="actions">
+          <button onclick="updateInventory()">Actualizar</button>
+        </div>
+        <div id="statusInv" class="status hidden"></div>
+      </div>
+    </div>
+
+    <div class="grid mt24">
+      <div class="card">
+        <h3>Eliminar Producto</h3>
+        <div class="field"><label>Product ID</label><input id="delProductId" type="text" placeholder="gid://shopify/Product/1234567890" /></div>
+        <div class="actions">
+          <button class="warn" onclick="deleteProduct()">Eliminar</button>
+        </div>
+        <div id="statusDelete" class="status hidden"></div>
+      </div>
+
+      <div class="card">
+        <h3>Actualizar Fulfillment (Tracking)</h3>
+        <div class="field"><label>Order ID</label><input id="ordId" type="text" placeholder="gid://shopify/Order/1234567890" /></div>
+        <div class="row">
+          <div class="field"><label>Tracking Number</label><input id="ordTrack" type="text" placeholder="1Z999AA10123456784" /></div>
+          <div class="field"><label>Tracking URL</label><input id="ordUrl" type="text" placeholder="https://tracking.example.com/1Z999AA10123456784" /></div>
+        </div>
+        <div class="actions">
+          <button onclick="updateFulfillment()">Actualizar</button>
+        </div>
+        <div id="statusFulfill" class="status hidden"></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Webhooks</h2>
+    <div class="card">
+      <p>Configura en Shopify un webhook para <strong>orders/create</strong> apuntando a:</p>
+      <p><code><span id="whUrl">http://localhost:8080</span>/api/shopify/webhooks/orders</code></p>
+      <p class="note">El backend verifica la firma HMAC con <code>X-Shopify-Hmac-SHA256</code>.</p>
+    </div>
+  </div>
+
+  <script>
+    function baseHeaders() {
+      const token = document.getElementById('apiToken').value.trim();
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      return headers;
+    }
+    function api(path) {
+      const base = document.getElementById('apiBase').value.replace(/\/$/, '');
+      return base + path;
+    }
+    function showStatus(id, data) {
+      const el = document.getElementById(id);
+      el.style.display = 'block';
+      try { el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2); }
+      catch { el.textContent = String(data); }
+    }
+    function initWebhookUrl() {
+      const base = document.getElementById('apiBase').value.replace(/\/$/, '');
+      document.getElementById('whUrl').textContent = base;
+    }
+
+    async function createProduct() {
+      const body = {
+        title: document.getElementById('pTitle').value,
+        body_html: document.getElementById('pBody').value,
+        price: parseFloat(document.getElementById('pPrice').value || '0'),
+        sku: document.getElementById('pSku').value
+      };
+      try {
+        const res = await fetch(api('/api/shopify/products'), {
+          method: 'POST', headers: baseHeaders(), body: JSON.stringify(body)
+        });
+        const json = await res.json().catch(()=>({}));
+        showStatus('statusCreate', { status: res.status, data: json });
+      } catch (e) { showStatus('statusCreate', String(e)); }
+    }
+
+    async function updateInventory() {
+      const id = encodeURIComponent(document.getElementById('invProductId').value);
+      const qty = encodeURIComponent(document.getElementById('invQty').value);
+      try {
+        const res = await fetch(api(`/api/shopify/products/${id}/inventory?quantity=${qty}`), {
+          method: 'PUT', headers: baseHeaders()
+        });
+        const json = await res.json().catch(()=>({}));
+        showStatus('statusInv', { status: res.status, data: json });
+      } catch (e) { showStatus('statusInv', String(e)); }
+    }
+
+    async function deleteProduct() {
+      const id = encodeURIComponent(document.getElementById('delProductId').value);
+      try {
+        const res = await fetch(api(`/api/shopify/products/${id}`), {
+          method: 'DELETE', headers: baseHeaders()
+        });
+        const json = await res.json().catch(()=>({}));
+        showStatus('statusDelete', { status: res.status, data: json });
+      } catch (e) { showStatus('statusDelete', String(e)); }
+    }
+
+    async function updateFulfillment() {
+      const orderId = encodeURIComponent(document.getElementById('ordId').value);
+      const trackingNumber = encodeURIComponent(document.getElementById('ordTrack').value);
+      const trackingUrl = encodeURIComponent(document.getElementById('ordUrl').value);
+      try {
+        const res = await fetch(api(`/api/shopify/orders/${orderId}/fulfillment?trackingNumber=${trackingNumber}&trackingUrl=${trackingUrl}`), {
+          method: 'POST', headers: baseHeaders()
+        });
+        const json = await res.json().catch(()=>({}));
+        showStatus('statusFulfill', { status: res.status, data: json });
+      } catch (e) { showStatus('statusFulfill', String(e)); }
+    }
+
+    document.getElementById('apiBase').addEventListener('input', initWebhookUrl);
+    initWebhookUrl();
+  </script>
+</body>
+</html>

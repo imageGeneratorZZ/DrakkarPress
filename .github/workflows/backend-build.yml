@@ -1,0 +1,31 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build with Maven
+        working-directory: backend
+        run: mvn -B -q clean package -DskipTests
+
+      - name: Archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: drakkarpress-backend-jar
+          path: backend/target/drakkarpress-platform-1.0.0.jar
