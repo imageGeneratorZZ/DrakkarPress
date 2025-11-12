@@ -53,8 +53,9 @@ services:
     image: caddy:2-alpine
     container_name: drakkarpress-caddy
     environment:
-      # Email for ACME/Let’s Encrypt registration
+      # Email for ACME/Let’s Encrypt registration (set via env)
       ACME_AGREE: true
+      API_HOST: ${API_HOST:-api.localhost}
     ports:
       - "80:80"
       - "443:443"
