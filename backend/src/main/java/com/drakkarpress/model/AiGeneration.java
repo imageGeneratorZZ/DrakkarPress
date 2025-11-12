@@ -21,7 +21,8 @@ import java.util.UUID;
 public class AiGeneration {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @org.hibernate.annotations.UuidGenerator
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

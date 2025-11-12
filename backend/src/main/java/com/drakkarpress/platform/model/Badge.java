@@ -25,7 +25,8 @@ import java.util.UUID;
 public class Badge {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @org.hibernate.annotations.UuidGenerator
     private UUID id;
 
     @Column(nullable = false, unique = true, length = 50)
