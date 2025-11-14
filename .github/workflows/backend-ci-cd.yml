@@ -1,0 +1,88 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "backend/**"
+  workflow_dispatch:
+    inputs:
+      deploy_enabled:
+        description: "Deploy to server after build"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+      server_dir:
+        description: "Absolute path on server where the repo is cloned"
+        required: false
+        default: "~/apps/drakkarpress"
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/drakkarpress-backend
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=short
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_enabled == 'true' }}
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Deploy over SSH (docker compose up)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_KEY }}
+            port: ${{ secrets.SSH_PORT || '22' }}
+            script: |
+              set -euo pipefail
+              cd "${{ inputs.server_dir }}"
+              if [ -d .git ]; then
+                git fetch --all --prune
+                git reset --hard origin/main
+              fi
+              docker compose -f backend/docker-compose.prod.yml up -d --build
