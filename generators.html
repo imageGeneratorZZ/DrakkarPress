@@ -349,14 +349,14 @@
         <div class="generator-section">
             <div class="section-header">
                 <h2>🎨 GENERADORA 1: Creación de Contenido</h2>
-                <p>Generadores creativos con 25+ géneros combinables - Ficción, No Ficción, Técnico y Especializado</p>
+                <p>Generadores creativos con 26+ géneros combinables - Ficción, No Ficción, Técnico y Especializado</p>
                 <div>
                     <span class="badge">🚀 Ideas</span>
                     <span class="badge">📚 Títulos</span>
                     <span class="badge">👤 Personajes</span>
                     <span class="badge">🍳 Recetas</span>
                     <span class="badge">📊 Informes</span>
-                    <span class="badge">🎭 25+ Géneros</span>
+                    <span class="badge">🎭 26+ Géneros</span>
                 </div>
             </div>
 
@@ -377,6 +377,14 @@
                                     </div>
                                     <input type="range" id="genre-romance" min="0" max="100" value="0" 
                                            oninput="updateGenrePercentage('romance')">
+                                </div>
+                                <div class="genre-slider">
+                                    <div class="genre-label">
+                                        <span>Amores Tóxicos 💔</span>
+                                        <span class="genre-percentage"><span id="amorestoxicos-pct">0</span>%</span>
+                                    </div>
+                                    <input type="range" id="genre-amorestoxicos" min="0" max="100" value="0" 
+                                           oninput="updateGenrePercentage('amorestoxicos')">
                                 </div>
                                 <div class="genre-slider">
                                     <div class="genre-label">
@@ -955,7 +963,7 @@
         function getGenreMix() {
             const genres = [
                 // Ficción
-                'romance', 'erotica', 'thriller', 'fantasia', 'scifi', 'terror', 
+                'romance', 'amorestoxicos', 'erotica', 'thriller', 'fantasia', 'scifi', 'terror', 
                 'misterio', 'historica', 'aventura', 'drama', 'comedia',
                 // No Ficción
                 'biografia', 'autoayuda', 'negocios', 'divulgacion',
@@ -992,6 +1000,7 @@
         function getGenreNames() {
             const genreNames = {
                 'romance': '❤️ Romance',
+                'amorestoxicos': '💔 Amores Tóxicos',
                 'erotica': '🔥 Erótica',
                 'thriller': '🕵️ Thriller',
                 'fantasia': '🧙 Fantasía',
