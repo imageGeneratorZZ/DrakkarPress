@@ -156,7 +156,7 @@ GET  /api/ai/status
 ### ✅ Componentes Activos:
 - **PostgreSQL 15**: Puerto 5432 (✓ Healthy)
 - **Spring Boot Backend**: Puerto 8080 (⏳ Compilando)
-- **Java 17**: Proceso activo (PID: 11228)
+- **Java 21**: Proceso activo (PID: 11228)
 - **Memoria**: ~394MB
 - **CPU**: ~220s de uso
 
@@ -261,7 +261,7 @@ Resultado: Thriller psicológico oscuro sin contenido adulto
 
 ### Tecnologías Usadas:
 - **Frontend**: HTML5, CSS3, JavaScript vanilla
-- **Backend**: Spring Boot 3.2.0, Java 17
+- **Backend**: Spring Boot 3.2.0, Java 21
 - **Base de Datos**: PostgreSQL 15
 - **AI Integration**: WebClient → Investigatron API
 

@@ -31,7 +31,7 @@ DrakkarPress utiliza una arquitectura de microservicios basada en Java (Spring B
 ## Stack Tecnológico
 
 ### Backend
-- **Framework:** Java 17+ con Spring Boot 3.x
+- **Framework:** Java 21+ con Spring Boot 3.x
 - **Arquitectura:** Microservicios
 - **API Gateway:** Spring Cloud Gateway
 - **Autenticación:** Spring Security + JWT (compartido entre todos los portales)

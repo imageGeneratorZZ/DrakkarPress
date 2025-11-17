@@ -390,7 +390,7 @@
 ## 💡 NOTAS IMPORTANTES
 
 ### Tecnologías Confirmadas
-- **Backend:** Spring Boot 3.2.0 + Java 17
+- **Backend:** Spring Boot 3.2.0 + Java 21
 - **BD:** PostgreSQL 14+ (con extensiones UUID y pgcrypto)
 - **Auth:** JWT (io.jsonwebtoken 0.12.3)
 - **Pagos:** Stripe Java SDK

@@ -23,14 +23,18 @@ function Show-Status {
         Write-Host "DETENIDO" -ForegroundColor White
     }
     
-    # Java Local
-    $javaPath = "C:\Users\SuperUsuario\DrakkarPress.com\backend\.java\jdk-17.0.10+7\bin\java.exe"
-    if (Test-Path $javaPath) {
-        Write-Host "  ✓ Java 17 Local:  " -NoNewline -ForegroundColor Green
+    # Java Local/Usuario (priorizar portable 21)
+    $localJava = Join-Path $PSScriptRoot ".java\\jdk-21.0.8\\bin\\java.exe"
+    $userJava = "C:\\Users\\SuperUsuario\\.jdk\\jdk-21.0.8\\bin\\java.exe"
+    if (Test-Path $localJava) {
+        Write-Host "  ✓ Java 21 Local:  " -NoNewline -ForegroundColor Green
+        Write-Host "DISPONIBLE" -ForegroundColor White
+    } elseif (Test-Path $userJava) {
+        Write-Host "  ✓ Java 21 Usuario:" -NoNewline -ForegroundColor Green
         Write-Host "DISPONIBLE" -ForegroundColor White
     } else {
-        Write-Host "  ✗ Java 17 Local:  " -NoNewline -ForegroundColor Red
-        Write-Host "NO ENCONTRADO" -ForegroundColor White
+        Write-Host "  ✗ Java 21 (faltante): " -NoNewline -ForegroundColor Red
+        Write-Host "Instala Temurin 21" -ForegroundColor White
     }
     
     # Maven Wrapper

@@ -4,12 +4,12 @@
 
 ## 📦 Prerequisitos
 
-### 1. Java 17+
+### 1. Java 21+
 ```powershell
 # Verificar instalación
 java -version
 
-# Debe mostrar: java version "17" o superior
+# Debe mostrar: java version "21" o superior
 ```
 
 ### 2. Maven 3.9+

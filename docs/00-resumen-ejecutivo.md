@@ -39,7 +39,7 @@
 ## 🏗️ Arquitectura Técnica
 
 ### Backend
-- **Lenguaje:** Java 17+
+- **Lenguaje:** Java 21+
 - **Framework:** Spring Boot 3.x
 - **Arquitectura:** Microservicios
 - **Base de Datos:** PostgreSQL 15+

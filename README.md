@@ -178,7 +178,7 @@ $env:PGPASSWORD='drakkarpress'; psql -h localhost -p 5432 -U drakkarpress -d dra
 
 ### Backend
 ```
-☕ Java 17
+☕ Java 21
 🍃 Spring Boot 3.2.0
 🗄️ PostgreSQL 14+
 🔐 JWT Auth (io.jsonwebtoken 0.12.3)

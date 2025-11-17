@@ -70,7 +70,7 @@
 1. ✅ **Usar delombok**: `mvn lombok:delombok` + compilar
 2. ✅ **Generar código manual**: Usar IDE para getters/setters
 3. ✅ **Actualizar Lombok**: Probar versión 1.18.32
-4. ✅ **Configurar processor explícito**: Java 17+ requiere `-processor`
+4. ✅ **Configurar processor explícito**: Java 21+ requiere `-processor`
 
 ---
 

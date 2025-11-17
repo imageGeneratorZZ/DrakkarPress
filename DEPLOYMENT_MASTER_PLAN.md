@@ -6,6 +6,7 @@
 - Desktop App (Electron) funcional en local
 - Frontend HTML/CSS/JS listo
 - Backend Spring Boot con Java 21
+- Validación Java 21 (loop completo Iteración 1, 17 Nov 2025)
 - Repositorio GitHub configurado
 
 ### 🎯 Objetivo:

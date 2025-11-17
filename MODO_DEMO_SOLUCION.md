@@ -199,7 +199,7 @@ El backend está compilando...
 ### Compilación en Progreso:
 ```
 ✓ PostgreSQL: Activo
-✓ Java 17: Proceso corriendo
+✓ Java 21: Proceso corriendo
 ⏳ Maven: Descargando dependencias
 ⏳ Spring Boot: Iniciando
 ⏳ API Endpoints: Pendientes

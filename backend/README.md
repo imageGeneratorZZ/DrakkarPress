@@ -6,7 +6,7 @@
 
 ## 📋 Resumen
 
-Backend robusto de **DrakkarPress** construido con **Spring Boot 3.2.0** y **Java 17**. Proporciona APIs REST para gestionar autores, libros, ventas, comisiones, integración con IA (Investigatron) y servicios de marketing (OdrBrand).
+Backend robusto de **DrakkarPress** construido con **Spring Boot 3.2.0** y **Java 21 (LTS)**. Proporciona APIs REST para gestionar autores, libros, ventas, comisiones, integración con IA (Investigatron) y servicios de marketing (OdrBrand).
 
 ---
 
@@ -244,7 +244,7 @@ POST   /api/reviews/{id}/helpful   # Marcar como útil
 ## 🚀 Instalación y Ejecución
 
 ### Requisitos
-- Java 17+
+- Java 21+
 - Maven 3.6+
 - PostgreSQL 14+
 

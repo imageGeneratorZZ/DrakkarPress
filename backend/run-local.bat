@@ -1,13 +1,25 @@
 @echo off
-REM Script de inicio de DrakkarPress con Java 17 local
+setlocal
+REM Script de inicio de DrakkarPress con Java 21
 
 echo ============================================================
-echo   DrakkarPress Backend - Iniciando con Java 17 Local
+echo   DrakkarPress Backend - Iniciando con Java 21
 echo ============================================================
 echo.
 
-REM Configurar JAVA_HOME local
-set "JAVA_HOME=%~dp0.java\jdk-17.0.10+7"
+REM Resolver JAVA_HOME (portable primero, luego instalacion global)
+set "LOCAL_JAVA=%~dp0.java\jdk-21.0.8"
+set "USER_JAVA=C:\Users\SuperUsuario\.jdk\jdk-21.0.8"
+
+if exist "%LOCAL_JAVA%\bin\java.exe" (
+    set "JAVA_HOME=%LOCAL_JAVA%"
+) else if exist "%USER_JAVA%\bin\java.exe" (
+    set "JAVA_HOME=%USER_JAVA%"
+) else (
+    echo [ERROR] No se encontro un JDK 21. Instala Temurin 21 o copia el portable a .java\jdk-21.0.8
+    exit /b 1
+)
+
 set "PATH=%JAVA_HOME%\bin;%PATH%"
 
 echo Verificando Java...
@@ -32,7 +44,7 @@ echo   (Primera vez: descarga dependencias - 3-5 minutos)
 echo ============================================================
 echo.
 
-REM Usar Maven Wrapper con Java 17 local
+REM Usar Maven Wrapper con Java 21
 call mvnw.cmd clean spring-boot:run
 
 if %errorlevel% neq 0 (
@@ -43,3 +55,4 @@ if %errorlevel% neq 0 (
 )
 
 pause
+endlocal

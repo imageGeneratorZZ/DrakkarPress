@@ -3,7 +3,7 @@
 ## Prerequisites
 
 1. **PostgreSQL 12+** installed on your system
-2. **Java 17** or higher
+2. **Java 21** or higher
 3. **Maven 3.8+**
 
 ## Database Setup

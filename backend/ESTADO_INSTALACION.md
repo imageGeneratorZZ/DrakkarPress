@@ -21,13 +21,13 @@
 
 Para ejecutar la aplicación Spring Boot, necesitas instalar:
 
-### 1. Java 17 o superior (Tienes Java 8)
+### 1. Java 21 o superior (Tienes Java 8)
 
 **Descargar e instalar:**
-- https://adoptium.net/temurin/releases/?version=17
+- https://adoptium.net/temurin/releases/?version=21
 
 **Pasos:**
-1. Descarga el instalador MSI de Java 17
+1. Descarga el instalador MSI de Java 21
 2. Ejecuta el instalador
 3. Marca la opción "Add to PATH"
 4. Reinicia el terminal de PowerShell
@@ -35,7 +35,7 @@ Para ejecutar la aplicación Spring Boot, necesitas instalar:
 **Verificar instalación:**
 ```powershell
 java -version
-# Debe mostrar: openjdk version "17.x.x" o superior
+# Debe mostrar: openjdk version "21.x.x" o superior
 ```
 
 ### 2. Apache Maven 3.8+
@@ -64,7 +64,7 @@ mvn -version
 # Debe mostrar: Apache Maven 3.x.x
 ```
 
-## 🚀 Después de Instalar Java 17 y Maven
+## 🚀 Después de Instalar Java 21 y Maven
 
 ### Opción 1: Script Automático
 ```powershell
@@ -152,7 +152,7 @@ SELECT * FROM users;
 
 ## ⏭️ Próximos Pasos
 
-1. **Instalar Java 17** (Requerido)
+1. **Instalar Java 21** (Requerido)
 2. **Instalar Maven** (Requerido)
 3. **Reiniciar terminal PowerShell**
 4. **Ejecutar:** `cd "C:\Users\SuperUsuario\DrakkarPress.com\backend"; mvn spring-boot:run`
@@ -163,7 +163,7 @@ SELECT * FROM users;
 Si tienes problemas:
 
 1. Verifica que PostgreSQL esté corriendo: `docker ps`
-2. Verifica Java 17: `java -version`
+2. Verifica Java 21: `java -version`
 3. Verifica Maven: `mvn -version`
 4. Revisa logs: `docker logs drakkarpress-postgres`
 5. Revisa configuración en `.env`

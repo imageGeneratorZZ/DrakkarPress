@@ -13,7 +13,7 @@
 
 ### 2. Backend Spring Boot
 - ✅ Estructura completa del proyecto Maven
-- ✅ Java 17 instalado localmente (portable)
+- ✅ Java 21 instalado localmente (portable)
 - ✅ Maven Wrapper configurado
 - ✅ 7 Entidades JPA (User, Book, Sale, Review, UserLibrary, AiGeneration, MarketingCampaign)
 - ✅ Repositorios JPA con queries personalizadas
@@ -42,7 +42,7 @@
 ### 5. Scripts de Automatización
 - ✅ install-dependencies.ps1 (instalación de Java y Maven)
 - ✅ setup-database.ps1 (configuración de PostgreSQL)
-- ✅ run-local.bat (inicio con Java 17 local)
+- ✅ run-local.bat (inicio con Java 21 local)
 - ✅ monitor.ps1 (monitor en tiempo real)
 - ✅ status.ps1 (verificación rápida)
 - ✅ wait-and-run.ps1 (auto-inicio cuando Maven esté listo)
@@ -67,7 +67,7 @@
 
 ### LO QUE ESTÁ FUNCIONANDO AHORA:
 1. ✅ PostgreSQL corriendo en Docker
-2. ✅ Java 17 disponible (versión portable local)
+2. ✅ Java 21 disponible (versión portable local)
 3. ✅ Maven Wrapper configurado
 4. ⏳ Backend compilando e iniciando
 5. ✅ Monitor en tiempo real activo
@@ -175,7 +175,7 @@ Password: admin123
 
 ## 📊 TECNOLOGÍAS UTILIZADAS
 
-- **Backend**: Spring Boot 3.2.0, Java 17
+- **Backend**: Spring Boot 3.2.0, Java 21
 - **Base de Datos**: PostgreSQL 15
 - **ORM**: Hibernate/JPA
 - **Pool de Conexiones**: HikariCP

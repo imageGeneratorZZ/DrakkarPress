@@ -19,10 +19,21 @@ Write-Host "[2/4] Java:" -ForegroundColor Yellow
 try {
     $java = java -version 2>&1 | Select-Object -First 1
     Write-Host "      $java" -ForegroundColor Gray
-    if ($java -match "1.8") {
-        Write-Host "      NECESITA ACTUALIZACION a Java 17`n" -ForegroundColor Red
+    $match = [regex]::Match($java, '"(?<ver>[^\"]+)"')
+    if ($match.Success) {
+        $numeric = ($match.Groups['ver'].Value -replace '[^0-9\.]').Trim()
+        try {
+            $version = [version]$numeric
+            if ($version.Major -lt 21) {
+                Write-Host "      NECESITA ACTUALIZACION a Java 21`n" -ForegroundColor Red
+            } else {
+                Write-Host "      OK (Java $numeric)`n" -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "      No se pudo interpretar la version de Java. Asegura Temurin 21.`n" -ForegroundColor Yellow
+        }
     } else {
-        Write-Host "      OK`n" -ForegroundColor Green
+        Write-Host "      No se pudo identificar la version. Verifica Java 21.`n" -ForegroundColor Yellow
     }
 } catch {
     Write-Host "      NO INSTALADO`n" -ForegroundColor Red

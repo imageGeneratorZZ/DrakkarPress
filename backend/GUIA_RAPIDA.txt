@@ -8,7 +8,7 @@
   • Base de datos 'drakkarpress' creada
 
 ❌ TE FALTA:
-  • Java 17 (tienes Java 8)
+   • Java 21 (tienes Java 8)
   • Maven 3.8+
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -33,9 +33,9 @@
 ║                          OPCION 2: INSTALACION MANUAL                        ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-JAVA 17:
+JAVA 21:
 --------
-1. Descarga desde: https://adoptium.net/temurin/releases/?version=17
+1. Descarga desde: https://adoptium.net/temurin/releases/?version=21
 2. Descarga el instalador .msi para Windows x64
 3. Ejecuta el instalador
 4. Marca la opción "Add to PATH"
@@ -57,7 +57,7 @@ MAVEN:
 
 VERIFICAR:
 ----------
-java -version     # Debe mostrar: openjdk version "17.x.x"
+java -version     # Debe mostrar: openjdk version "21.x.x"
 mvn -version      # Debe mostrar: Apache Maven 3.x.x
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -141,14 +141,14 @@ ERROR: "Port 8080 already in use"
 
 ERROR: Java version incompatible
 ---------------------------------
-• Necesitas Java 17 o superior
-• Solución: Instala Java 17 desde adoptium.net
+• Necesitas Java 21 o superior
+• Solución: Instala Java 21 desde adoptium.net
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                             ¡LISTO PARA USAR!                                ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-Después de instalar Java 17 y Maven, simplemente ejecuta:
+Después de instalar Java 21 y Maven, simplemente ejecuta:
 
     mvn spring-boot:run
 

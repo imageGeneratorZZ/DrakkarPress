@@ -165,7 +165,7 @@ Cada usuario **Premium** elige una runa nórdica que representa su identidad com
 ### Backend
 ```
 Spring Boot 3.2.0
-├─ Java 17
+├─ Java 21
 ├─ PostgreSQL 14+
 ├─ JWT Auth (io.jsonwebtoken)
 ├─ Stripe Integration

@@ -7,16 +7,23 @@ echo    DrakkarPress Backend - Quick Start
 echo ===========================================================
 echo.
 
-REM Check if Java is installed
+REM Check if Java 21+ is installed
 echo Checking Java installation...
-java -version >nul 2>&1
-if %errorlevel% neq 0 (
+for /f "tokens=2 delims=\"" %%i in ('java -version 2^>^&1 ^| findstr /i "version"') do set JAVA_VERSION=%%i
+if not defined JAVA_VERSION (
     echo ERROR: Java is not installed or not in PATH
-    echo Please install Java 17 or higher from: https://adoptium.net/
+    echo Please install Java 21 (Temurin) from: https://adoptium.net/
     pause
     exit /b 1
 )
-echo Java is installed
+set "JAVA_VERSION=%JAVA_VERSION:"=%"
+for /f "tokens=1 delims=." %%j in ("%JAVA_VERSION%") do set JAVA_MAJOR=%%j
+if %JAVA_MAJOR% LSS 21 (
+    echo ERROR: Detected Java %JAVA_MAJOR%. Please install Temurin 21 or newer.
+    pause
+    exit /b 1
+)
+echo Java %JAVA_VERSION% detected
 echo.
 
 REM Check if Maven is installed (prefer mvnw wrapper)

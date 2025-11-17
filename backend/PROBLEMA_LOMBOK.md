@@ -82,7 +82,7 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.m2\repository\com\drakkarpress"
 3. VS Code detectará Lombok automáticamente
 4. Para cada clase:
    - Click derecho → Source Action → Generate Getters and Setters
-   - O: Remover @Data y usar Java Records (Java 17+)
+    - O: Remover @Data y usar Java Records (Java 21+)
 
 ### Opción C: Remover Lombok Completamente
 Ejecutar el script que creé:
@@ -93,7 +93,7 @@ cd C:\Users\SuperUsuario\DrakkarPress.com\backend
 
 Luego usar un IDE para generar todos los getters/setters manualmente.
 
-### Opción D: Convertir a Records (Java 17+)
+### Opción D: Convertir a Records (Java 21+)
 Para DTOs inmutables, convertir de:
 ```java
 @Data

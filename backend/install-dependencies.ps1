@@ -1,4 +1,4 @@
-# Script para instalar Maven y Java 17 en DrakkarPress
+# Script para instalar Maven y Java 21 en DrakkarPress
 # DEBE EJECUTARSE COMO ADMINISTRADOR
 
 Write-Host "==========================================================" -ForegroundColor Cyan
@@ -48,13 +48,13 @@ refreshenv
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 $env:Path += ";C:\ProgramData\chocolatey\bin"
 
-# Instalar Java 17
-Write-Host "Paso 2: Instalando Java 17 (Temurin)..." -ForegroundColor Yellow
+# Instalar Java 21
+Write-Host "Paso 2: Instalando Java 21 (Temurin)..." -ForegroundColor Yellow
 try {
-    & C:\ProgramData\chocolatey\bin\choco.exe install temurin17 -y
-    Write-Host "[OK] Java 17 instalado correctamente" -ForegroundColor Green
+    & C:\ProgramData\chocolatey\bin\choco.exe install temurin21 -y
+    Write-Host "[OK] Java 21 instalado correctamente" -ForegroundColor Green
 } catch {
-    Write-Host "[ERROR] Fallo al instalar Java 17: $_" -ForegroundColor Red
+    Write-Host "[ERROR] Fallo al instalar Java 21: $_" -ForegroundColor Red
 }
 
 Write-Host ""
@@ -110,7 +110,7 @@ Write-Host "Proximos pasos:" -ForegroundColor Cyan
 Write-Host "1. Cierra TODAS las ventanas de PowerShell" -ForegroundColor White
 Write-Host "2. Abre PowerShell nuevamente (NO necesitas ser admin)" -ForegroundColor White
 Write-Host "3. Navega a: cd 'C:\Users\SuperUsuario\DrakkarPress.com\backend'" -ForegroundColor White
-Write-Host "4. Verifica: java -version (debe mostrar version 17)" -ForegroundColor White
+Write-Host "4. Verifica: java -version (debe mostrar version 21)" -ForegroundColor White
 Write-Host "5. Verifica: mvn -version (debe mostrar version 3.x)" -ForegroundColor White
 Write-Host "6. Ejecuta: mvn spring-boot:run" -ForegroundColor White
 Write-Host ""
