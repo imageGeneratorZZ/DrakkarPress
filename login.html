@@ -458,23 +458,36 @@
                     throw new Error(error.message || 'Email o contraseña incorrectos');
                 }
 
-                const data = await response.json();
+                const response_data = await response.json();
+                const data = response_data.data || response_data; // Soporte para ambos formatos
                 
                 // Guardar token en localStorage
-                if (data.token) {
-                    localStorage.setItem('drakkarpress_token', data.token);
+                const token = data.accessToken || data.token;
+                if (token) {
+                    localStorage.setItem('drakkarpress_token', token);
                     if (data.refreshToken) {
                         localStorage.setItem('drakkarpress_refresh_token', data.refreshToken);
                     }
+                    // Guardar info del usuario
+                    localStorage.setItem('drakkarpress_user', JSON.stringify({
+                        userId: data.userId,
+                        email: data.email,
+                        username: data.username,
+                        displayName: data.displayName,
+                        userNumber: data.userNumber,
+                        membershipPlan: data.membershipPlan
+                    }));
                 }
 
                 // Éxito
                 alertSuccess.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
                 alertSuccess.style.display = 'block';
 
-                // Redirigir según el rol
+                // Redirigir según el rol del usuario guardado o determinar desde email
                 setTimeout(() => {
-                    const role = data.role || 'reader';
+                    // Intentar determinar rol desde la URL si viene del registro
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let role = urlParams.get('role') || 'writer';
                     switch(role.toLowerCase()) {
                         case 'writer':
                             window.location.href = 'escritores.html';

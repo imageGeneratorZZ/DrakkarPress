@@ -42,10 +42,13 @@ export async function getCurrentUser() {
     const token = getToken();
     
     if (!token) {
+        console.log('No hay token disponible');
         return null;
     }
 
     try {
+        console.log('Cargando perfil de usuario desde:', `${API_BASE_URL}/api/auth/me`);
+        
         const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
             method: 'GET',
             headers: {
@@ -54,16 +57,25 @@ export async function getCurrentUser() {
             }
         });
 
+        console.log('Respuesta del servidor:', response.status);
+
         if (!response.ok) {
             if (response.status === 401) {
                 // Token inválido o expirado
+                console.warn('Token inválido o expirado');
                 removeToken();
                 return null;
             }
+            const errorText = await response.text();
+            console.error('Error del servidor:', errorText);
             throw new Error('Error al obtener datos del usuario');
         }
 
-        const user = await response.json();
+        const responseData = await response.json();
+        console.log('Datos recibidos:', responseData);
+        
+        // La respuesta viene en formato ApiResponse<data>
+        const user = responseData.data || responseData;
         
         // Guardar en localStorage para acceso rápido
         localStorage.setItem('drakkarpress_user', JSON.stringify(user));
@@ -118,7 +130,12 @@ export async function logout() {
  */
 export function requireAuth() {
     if (!isAuthenticated()) {
-        window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+        const currentPath = window.location.pathname;
+        // Evitar loops infinitos
+        if (currentPath.includes('login.html')) {
+            return;
+        }
+        window.location.href = 'login.html?redirect=' + encodeURIComponent(currentPath);
     }
 }
 
@@ -258,13 +275,19 @@ export function addLogoutButton() {
  */
 export async function initAuth() {
     // Verificar si está en página de login/register
-    if (window.location.pathname.includes('login.html') || 
-        window.location.pathname.includes('register.html')) {
+    const pathname = window.location.pathname.toLowerCase();
+    const isAuthPage = pathname.includes('login.html') || 
+                       pathname.includes('register.html') ||
+                       pathname.endsWith('login') ||
+                       pathname.endsWith('register');
+    
+    if (isAuthPage) {
         // Si ya está autenticado, redirigir al dashboard
         if (isAuthenticated()) {
             const user = getCachedUser();
             if (user) {
-                redirectToDashboard(user.role);
+                // Por defecto ir a escritores.html, el backend determinará el rol real
+                window.location.href = '/escritores.html';
             }
         }
         return;

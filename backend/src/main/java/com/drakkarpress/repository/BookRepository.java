@@ -57,3 +57,13 @@ spring:
     port: 587
     username: tu-email@gmail.com
     password: tu-app-password
+
+{
+  "success": true,
+  "message": "...",
+  "data": {
+    "accessToken": "...",
+    "refreshToken": "...",
+    ...
+  }
+}
