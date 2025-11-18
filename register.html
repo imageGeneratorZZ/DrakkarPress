@@ -582,8 +582,11 @@
                 alert('Por favor selecciona primero cómo quieres participar');
                 return;
             }
-            const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
-            window.location.href = `${apiUrl}/oauth2/authorization/${provider}?role=${selectedRole}`;
+            alert('⚠️ Registro con ' + provider + ' está temporalmente deshabilitado.\n\nPor favor usa el formulario de registro tradicional con email.');
+            return;
+            // OAuth2 deshabilitado temporalmente en backend
+            // const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+            // window.location.href = `${apiUrl}/oauth2/authorization/${provider}?role=${selectedRole}`;
         }
 
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
@@ -664,7 +667,7 @@
                 const result = await response.json();
                 
                 // Éxito
-                alert('✅ ¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+                alert('✅ ¡Cuenta creada exitosamente!\n\n⚠️ Nota: Los emails de verificación están temporalmente deshabilitados.\nPuedes iniciar sesión inmediatamente.');
                 window.location.href = 'login.html?message=registered';
 
             } catch (error) {

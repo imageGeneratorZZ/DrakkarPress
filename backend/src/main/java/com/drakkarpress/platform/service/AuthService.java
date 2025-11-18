@@ -122,8 +122,13 @@ public class AuthService {
         // Guardar sesión
         createSession(user.getId(), accessToken, refreshToken);
 
-        // Enviar email de bienvenida con información de fase
-        emailService.sendWelcomeEmail(user, pricing);
+        // Enviar email de bienvenida (async) - TEMPORALMENTE DESHABILITADO
+        try {
+            emailService.sendWelcomeEmail(user, pricing);
+        } catch (Exception e) {
+            // Ignorar errores de email para permitir registro sin SMTP configurado
+            System.out.println("⚠️  Email no enviado (SMTP no configurado): " + e.getMessage());
+        }
 
         return new AuthResponse(
                 accessToken,

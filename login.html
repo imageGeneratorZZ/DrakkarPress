@@ -417,8 +417,11 @@
     <script src="assets/js/config.js"></script>
     <script>
         function oauthLogin(provider) {
-            const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
-            window.location.href = `${apiUrl}/oauth2/authorization/${provider}`;
+            alert('⚠️ OAuth2 (Login con ' + provider + ') está temporalmente deshabilitado.\n\nPor favor usa email + contraseña para iniciar sesión.');
+            return;
+            // OAuth2 deshabilitado temporalmente en backend
+            // const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+            // window.location.href = `${apiUrl}/oauth2/authorization/${provider}`;
         }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {

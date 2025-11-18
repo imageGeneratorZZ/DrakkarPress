@@ -46,3 +46,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     
     Optional<Book> findByIsbn(String isbn);
 }
+
+POST /api/auth/register
+POST /api/auth/login
+POST /ai/generate-complete-book
