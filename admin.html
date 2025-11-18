@@ -230,6 +230,7 @@
   </div>
 
   <script src="assets/js/config.js"></script>
+  <script src="assets/js/error-handler.js"></script>
   <script src="assets/js/auth-v2.js"></script>
   <script>
     const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
@@ -287,40 +288,64 @@
       const form = e.target;
       const data = new FormData(form);
       const status = document.getElementById('luluStatus');
-
-      const payload = {
-        title: data.get('title'),
-        coverUrl: data.get('coverUrl'),
-        interiorUrl: data.get('interiorUrl'),
-        quantity: parseInt(data.get('quantity')),
-        pageCount: parseInt(data.get('pageCount') || 100),
-        trimSize: data.get('trimSize'),
-        shippingAddress: {
-          name: data.get('shipName'),
-          email: data.get('shipEmail'),
-          street1: data.get('shipStreet1'),
-          city: data.get('shipCity'),
-          state: data.get('shipState'),
-          zip: data.get('shipZip'),
-          country: data.get('shipCountry')
-        }
-      };
-
       try {
         const token = localStorage.getItem('drakkarpress_token');
-        const res = await fetch(`${API_BASE_URL}/api/lulu/print-jobs`, {
+
+        // 1) Crear/registrar libro en Lulu (POST /api/lulu/books)
+        const bookSpec = {
+          title: data.get('title'),
+          author: 'DrakkarPress',
+          description: '',
+          language: 'ES',
+          bindingType: 'PERFECT_BOUND',
+          coverFinish: 'GLOSS',
+          trimSize: (data.get('trimSize') === 'US_TRADE') ? 'US_TRADE_6X9' : (data.get('trimSize') || 'US_TRADE_6X9'),
+          paperType: 'WHITE',
+          pageCount: parseInt(data.get('pageCount') || 100),
+          pdfUrl: data.get('interiorUrl'),
+          coverUrl: data.get('coverUrl')
+        };
+
+        const resBook = await fetch(`${API_BASE_URL}/api/lulu/books`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(bookSpec)
         });
-        const json = await res.json();
-        if (json.success || json.data?.jobId) {
-          status.className = 'status success';
-          status.textContent = '✅ Print job creado: ' + (json.data?.jobId || json.jobId);
-          form.reset();
-        } else {
-          throw new Error(json.message || json.error || 'Error desconocido');
+        const bookJson = await resBook.json();
+        if (!resBook.ok) {
+          throw new Error(bookJson.error || bookJson.message || 'No se pudo crear el libro en Lulu');
         }
+
+        const luluBookId = bookJson.luluBookId || bookJson.data?.luluBookId || bookJson.id;
+        if (!luluBookId) {
+          throw new Error('No se recibió luluBookId');
+        }
+
+        // 2) Crear print job (POST /api/lulu/print-jobs?luluBookId=..&quantity=..)
+        const quantity = parseInt(data.get('quantity')) || 1;
+        const shippingAddress = {
+          name: data.get('shipName'),
+          street1: data.get('shipStreet1'),
+          city: data.get('shipCity'),
+          stateCode: data.get('shipState'),
+          postalCode: data.get('shipZip'),
+          countryCode: data.get('shipCountry')
+        };
+
+        const resJob = await fetch(`${API_BASE_URL}/api/lulu/print-jobs?luluBookId=${encodeURIComponent(luluBookId)}&quantity=${quantity}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(shippingAddress)
+        });
+        const jobJson = await resJob.json();
+        if (!resJob.ok) {
+          throw new Error(jobJson.error || jobJson.message || 'No se pudo crear el print job');
+        }
+
+        const jobId = jobJson.orderId || jobJson.data?.orderId;
+        status.className = 'status success';
+        status.textContent = `✅ Print job creado: ${jobId || 'OK'}`;
+        form.reset();
       } catch (err) {
         status.className = 'status error';
         status.textContent = '❌ Error: ' + err.message;

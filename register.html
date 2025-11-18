@@ -615,16 +615,21 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
             
-            // Construir objeto de registro
+            // Construir objeto para backend actual (RegisterRequest): email, username, password, displayName
+            const email = data.email;
+            // Derivar username de email o de nombre+apellido
+            const baseUsername = (email?.split('@')[0] || `${data.firstName}${data.lastName}` || 'user')
+                .toLowerCase()
+                .replace(/[^a-z0-9_\.\-]/g, '')
+                .slice(0, 24);
+            const suffix = Math.floor(Math.random() * 900 + 100); // 3 dígitos para minimizar colisiones
+            const username = `${baseUsername}${suffix}`;
+
             const registerData = {
-                email: data.email,
+                email,
+                username,
                 password: data.password,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                role: selectedRole.toUpperCase(),
-                country: data.country,
-                phone: data.phone || null,
-                newsletter: data.newsletter === 'on'
+                displayName: `${data.firstName} ${data.lastName}`.trim()
             };
 
             // Agregar campos específicos del rol
@@ -669,12 +674,12 @@
                 console.log('Registro exitoso:', result);
                 
                 // Éxito
-                alert('✅ ¡Cuenta creada exitosamente!\n\nPuedes iniciar sesión ahora.');
-                window.location.href = `login.html?message=registered&role=${selectedRole}`;
+                window.showToast?.('✅ ¡Cuenta creada exitosamente! Inicia sesión para continuar.', 'success');
+                window.location.href = `login.html?message=registered${selectedRole ? `&role=${selectedRole}` : ''}`;
 
             } catch (error) {
                 console.error('Error en registro:', error);
-                alert('❌ Error: ' + error.message);
+                window.showToast?.('❌ ' + (error.message || 'Error al crear la cuenta'), 'error');
                 
                 btnSubmit.disabled = false;
                 btnSubmit.textContent = originalText;
