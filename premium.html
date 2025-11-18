@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membresías Premium - DrakkarPress</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .pricing-section {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .pricing-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pricing-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .frequency-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+
+        .frequency-btn {
+            padding: 12px 30px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .frequency-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .frequency-btn:hover:not(.active) {
+            background: #f0f4ff;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid #667eea;
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .plan-description {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .price {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .price-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .price-currency {
+            font-size: 1.5rem;
+            margin-right: 5px;
+            color: #667eea;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #a0aec0;
+            margin-left: 8px;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .features-list li {
+            padding: 12px 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .cta-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="assets/images/logo-drakkar.png" alt="DrakkarPress" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="display:none;">DrakkarPress</span>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="escritores.html">Escritores</a></li>
+                    <li><a href="imprentas.html">Imprentas</a></li>
+                    <li><a href="revendedores.html">Revendedores</a></li>
+                    <li><a href="premium.html" class="active">Premium</a></li>
+                    <li><a href="login.html">Iniciar Sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="pricing-header">
+            <h1>Elige tu Plan Premium</h1>
+            <p>Desbloquea todo el potencial de DrakkarPress con acceso ilimitado a todas las herramientas de IA</p>
+        </div>
+
+        <!-- Frequency Toggle -->
+        <div class="frequency-toggle">
+            <button class="frequency-btn active" data-frequency="ANNUAL" onclick="selectFrequency('ANNUAL')">
+                Anual (Ahorra 20%)
+            </button>
+            <button class="frequency-btn" data-frequency="MONTHLY" onclick="selectFrequency('MONTHLY')">
+                Mensual
+            </button>
+            <button class="frequency-btn" data-frequency="LIFETIME" onclick="selectFrequency('LIFETIME')">
+                Lifetime
+            </button>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="pricing-cards">
+            <!-- Fundador Plan -->
+            <div class="pricing-card featured">
+                <span class="badge">🔥 MEJOR PRECIO</span>
+                <h2 class="plan-name">Fundador</h2>
+                <p class="plan-description">Para los primeros 100 usuarios que creen en nuestra visión</p>
+                
+                <div class="price" id="price-fundador">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">49</span>
+                    <span class="price-period">/año</span>
+                </div>
+                <span class="discount-badge">Ahorra $60 USD</span>
+
+                <ul class="features-list">
+                    <li>✨ Generación ilimitada de libros con IA</li>
+                    <li>🎨 Portadas personalizadas con DALL-E</li>
+                    <li>📚 Biblioteca sin límites</li>
+                    <li>🚀 Acceso anticipado a nuevas funciones</li>
+                    <li>🏆 Badge exclusivo de "Fundador"</li>
+                    <li>💎 Precio bloqueado de por vida</li>
+                    <li>⚡ Soporte prioritario</li>
+                </ul>
+
+                <button class="cta-button" onclick="checkout('PREMIUM_PHASE_1')" id="btn-fundador">
+                    Ser Fundador
+                </button>
+            </div>
+
+            <!-- Early Adopter Plan -->
+            <div class="pricing-card">
+                <h2 class="plan-name">Early Adopter</h2>
+                <p class="plan-description">Para los siguientes 400 usuarios que se unan temprano</p>
+                
+                <div class="price" id="price-early">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">99</span>
+                    <span class="price-period">/año</span>
+                </div>
+                <span class="discount-badge">Ahorra $20 USD</span>
+
+                <ul class="features-list">
+                    <li>✨ Generación ilimitada de libros con IA</li>
+                    <li>🎨 Portadas personalizadas con DALL-E</li>
+                    <li>📚 Biblioteca sin límites</li>
+                    <li>🎯 Badge de "Early Adopter"</li>
+                    <li>💼 Prioridad en el soporte</li>
+                    <li>🔒 Precio preferencial garantizado</li>
+                </ul>
+
+                <button class="cta-button" onclick="checkout('PREMIUM_PHASE_2')" id="btn-early">
+                    Unirme Ahora
+                </button>
+            </div>
+
+            <!-- Premium Standard Plan -->
+            <div class="pricing-card">
+                <h2 class="plan-name">Premium</h2>
+                <p class="plan-description">Plan estándar con todas las funciones premium</p>
+                
+                <div class="price" id="price-premium">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">119</span>
+                    <span class="price-period">/año</span>
+                </div>
+
+                <ul class="features-list">
+                    <li>✨ Generación ilimitada de libros con IA</li>
+                    <li>🎨 Portadas personalizadas con DALL-E</li>
+                    <li>📚 Biblioteca sin límites</li>
+                    <li>💬 Soporte por email</li>
+                    <li>🔄 Actualizaciones regulares</li>
+                </ul>
+
+                <button class="cta-button" onclick="checkout('PREMIUM_PHASE_3')" id="btn-premium">
+                    Comenzar Ahora
+                </button>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5rem;">Preguntas Frecuentes</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">¿Qué incluye la membresía Premium?</div>
+                <div class="faq-answer">
+                    Acceso completo a todas las herramientas de IA: generación ilimitada de libros, creación de portadas con DALL-E, 
+                    biblioteca sin límites, y todas las funciones futuras que añadamos.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Qué es el precio "bloqueado de por vida"?</div>
+                <div class="faq-answer">
+                    Los usuarios Fundadores pagarán siempre $49/año, sin importar cuánto suban los precios en el futuro. 
+                    Es nuestro regalo por creer en nosotros desde el principio.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Puedo cancelar en cualquier momento?</div>
+                <div class="faq-answer">
+                    Sí, puedes cancelar cuando quieras. Si cancelas, tu membresía seguirá activa hasta el final del período pagado.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Hay reembolsos?</div>
+                <div class="faq-answer">
+                    Ofrecemos garantía de reembolso de 14 días. Si no estás satisfecho, te devolvemos tu dinero sin preguntas.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Qué métodos de pago aceptan?</div>
+                <div class="faq-answer">
+                    Aceptamos todas las tarjetas de crédito y débito a través de Stripe (Visa, Mastercard, American Express, etc.).
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="assets/js/config.js"></script>
+    <script type="module">
+        import { API_BASE_URL } from './assets/js/config.js';
+
+        let selectedFrequency = 'ANNUAL';
+
+        // Pricing data
+        const pricing = {
+            PREMIUM_PHASE_1: {
+                MONTHLY: { amount: 9, period: '/mes', discount: null },
+                ANNUAL: { amount: 49, period: '/año', discount: 'Ahorra $60 USD' },
+                LIFETIME: { amount: 299, period: 'Pago único', discount: 'Acceso de por vida' }
+            },
+            PREMIUM_PHASE_2: {
+                MONTHLY: { amount: 12, period: '/mes', discount: null },
+                ANNUAL: { amount: 99, period: '/año', discount: 'Ahorra $20 USD' },
+                LIFETIME: { amount: 599, period: 'Pago único', discount: 'Acceso de por vida' }
+            },
+            PREMIUM_PHASE_3: {
+                MONTHLY: { amount: 15, period: '/mes', discount: null },
+                ANNUAL: { amount: 119, period: '/año', discount: null },
+                LIFETIME: { amount: 799, period: 'Pago único', discount: 'Acceso de por vida' }
+            }
+        };
+
+        window.selectFrequency = function(frequency) {
+            selectedFrequency = frequency;
+            
+            // Update buttons
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.frequency === frequency) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update prices
+            updatePrices(frequency);
+        };
+
+        function updatePrices(frequency) {
+            // Update Fundador
+            const fundadorPrice = pricing.PREMIUM_PHASE_1[frequency];
+            document.querySelector('#price-fundador .price-amount').textContent = fundadorPrice.amount;
+            document.querySelector('#price-fundador .price-period').textContent = fundadorPrice.period;
+            
+            // Update Early Adopter
+            const earlyPrice = pricing.PREMIUM_PHASE_2[frequency];
+            document.querySelector('#price-early .price-amount').textContent = earlyPrice.amount;
+            document.querySelector('#price-early .price-period').textContent = earlyPrice.period;
+            
+            // Update Premium
+            const premiumPrice = pricing.PREMIUM_PHASE_3[frequency];
+            document.querySelector('#price-premium .price-amount').textContent = premiumPrice.amount;
+            document.querySelector('#price-premium .price-period').textContent = premiumPrice.period;
+        }
+
+        window.checkout = async function(planType) {
+            const token = localStorage.getItem('drakkarpress_token');
+            
+            if (!token) {
+                alert('Debes iniciar sesión para comprar una membresía');
+                window.location.href = 'login.html?redirect=premium.html';
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/payments/create-checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        planType: planType,
+                        frequency: selectedFrequency
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.data.checkoutUrl) {
+                    // Redirect to Stripe Checkout
+                    window.location.href = result.data.checkoutUrl;
+                } else {
+                    alert('Error al crear sesión de pago: ' + (result.message || 'Error desconocido'));
+                    document.getElementById('loadingOverlay').classList.remove('active');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar el pago. Por favor intenta de nuevo.');
+                document.getElementById('loadingOverlay').classList.remove('active');
+            }
+        };
+
+        // Check if user is authenticated
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('drakkarpress_token');
+            if (!token) {
+                console.log('Usuario no autenticado - mostrando precios públicos');
+            }
+
+            // Check for cancelled checkout
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('cancelled') === 'true') {
+                alert('Checkout cancelado. ¡Vuelve cuando estés listo!');
+            }
+        });
+    </script>
+</body>
+</html>

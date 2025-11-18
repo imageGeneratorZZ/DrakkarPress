@@ -42,6 +42,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/pricing/**").permitAll()
+                .requestMatchers("/api/payments/webhook").permitAll()
+                .requestMatchers("/api/payments/session/**").permitAll()
                 .requestMatchers("/api/runes/public/**").permitAll()
                 .requestMatchers("/api/badges/public/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

@@ -67,3 +67,13 @@ spring:
     ...
   }
 }
+
+// ANTES (❌ No funcionaba)
+const data = await response.json();
+localStorage.setItem('drakkarpress_token', data.token); // ❌ data.token es undefined
+
+// AHORA (✅ Funciona)
+const response_data = await response.json();
+const data = response_data.data || response_data;
+const token = data.accessToken || data.token;
+localStorage.setItem('drakkarpress_token', token); // ✅ Token guardado correctamente
