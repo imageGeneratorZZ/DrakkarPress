@@ -65,15 +65,15 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <div class="welcome">¡Hola, Imprenta Gutenberg! 🖨️</div>
-                <p style="color:#666;margin-top:5px;">📍 Punto de Venta Local · 124,583 libros disponibles · Madrid, España</p>
+                <div class="welcome">¡Hola! 🖨️</div>
+                <p style="color:#666;margin-top:5px;">📍 Punto de Venta Local · 124,583 libros disponibles</p>
             </div>
             <div style="display:flex;align-items:center;gap:15px;">
                 <div style="text-align:right;">
-                    <div style="font-weight:600;">Imprenta Gutenberg</div>
-                    <div style="font-size:14px;color:#666;">�️ Visible en Google Maps · 30% comisión por venta</div>
+                    <div style="font-weight:600;" data-user-name>Cargando...</div>
+                    <div style="font-size:14px;color:#666;" data-user-role>🗺️ Visible en Google Maps · 30% comisión por venta</div>
                 </div>
-                <div class="avatar">IG</div>
+                <div class="avatar">??</div>
             </div>
         </div>
 
@@ -389,5 +389,21 @@
             </div>
         </div>
     </main>
+
+    <script type="module">
+        import { updateUserUI, addLogoutButton } from './assets/js/auth.js';
+
+        // Cargar perfil del usuario al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const user = await updateUserUI();
+                if (user) {
+                    console.log('Usuario cargado:', user);
+                }
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+            }
+        });
+    </script>
 </body>
 </html>

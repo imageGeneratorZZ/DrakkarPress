@@ -61,15 +61,15 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <div class="welcome">¡Hola, FitGym Madrid! �</div>
-                <p style="color:#666;margin-top:5px;">🏋️ Gimnasio · Especializado en Fitness & Salud · ID: #AFI-2847</p>
+                <div class="welcome">¡Hola! 💼</div>
+                <p style="color:#666;margin-top:5px;">Revendedor · ID: <span data-user-number>Cargando...</span></p>
             </div>
             <div style="display:flex;align-items:center;gap:15px;">
                 <div style="text-align:right;">
-                    <div style="font-weight:600;">FitGym Madrid</div>
-                    <div style="font-size:14px;color:#666;">📍 Av. Castellana 125 · Afiliado 2024</div>
+                    <div style="font-weight:600;" data-user-name>Cargando...</div>
+                    <div style="font-size:14px;color:#666;" data-user-email>email@ejemplo.com</div>
                 </div>
-                <div class="avatar">FG</div>
+                <div class="avatar">??</div>
             </div>
         </div>
 
@@ -344,6 +344,22 @@
             navigator.clipboard.writeText(link);
             alert('✅ Enlace copiado al portapapeles');
         }
+    </script>
+
+    <script type="module">
+        import { updateUserUI, addLogoutButton } from './assets/js/auth.js';
+
+        // Cargar perfil del usuario al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const user = await updateUserUI();
+                if (user) {
+                    console.log('Usuario cargado:', user);
+                }
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+            }
+        });
     </script>
 </body>
 </html>

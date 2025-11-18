@@ -81,6 +81,22 @@ public class AuthController {
     }
 
     /**
+     * Get current user
+     * GET /api/auth/me
+     */
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<Object>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7); // Remove "Bearer "
+            Object userInfo = authService.getCurrentUser(token);
+            return ResponseEntity.ok(ApiResponse.success("User info retrieved", userInfo));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    /**
      * Health check
      * GET /api/auth/health
      */

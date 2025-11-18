@@ -98,15 +98,15 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <div class="welcome">¡Hola, María González! 👋</div>
+                <div class="welcome">¡Hola! 👋</div>
                 <p style="color: #666; margin-top: 5px;">Tu panel de socio escritor - Navegamos juntos</p>
             </div>
             <div class="user-info">
                 <div>
-                    <div style="font-weight: 600; text-align: right;">María González</div>
-                    <div style="font-size: 14px; color: #666;">Autor Bestseller</div>
+                    <div style="font-weight: 600; text-align: right;" data-user-name>Cargando...</div>
+                    <div style="font-size: 14px; color: #666;" data-user-role>Escritor</div>
                 </div>
-                <div class="avatar">MG</div>
+                <div class="avatar">??</div>
             </div>
         </div>
 
@@ -322,7 +322,22 @@
         </div>
     </main>
 
-    <script>
+    <script type="module">
+        import { updateUserUI, addLogoutButton } from './assets/js/auth.js';
+
+        // Cargar perfil del usuario al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const user = await updateUserUI();
+                if (user) {
+                    console.log('Usuario cargado:', user);
+                    // Aquí puedes cargar estadísticas reales del usuario
+                }
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+            }
+        });
+
         // Configuración de Privacidad
         function savePrivacySettings() {
             const settings = {

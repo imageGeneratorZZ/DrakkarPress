@@ -291,4 +291,49 @@ public class AuthService {
             throw new RuntimeException("Error hashing token", e);
         }
     }
+
+    /**
+     * Obtener información del usuario actual
+     */
+    public Object getCurrentUser(String accessToken) {
+        try {
+            // Validar token y obtener userId
+            UUID userId = tokenProvider.getUserIdFromToken(accessToken);
+            
+            // Buscar usuario
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            // Obtener membresías del usuario (podría tener varias)
+            var memberships = membershipRepository.findByUserId(user.getId());
+            Membership activeMembership = memberships.stream()
+                    .filter(m -> "ACTIVE".equals(m.getStatus()))
+                    .findFirst()
+                    .orElse(null);
+            
+            // Construir respuesta con datos del usuario
+            return new java.util.HashMap<String, Object>() {{
+                put("id", user.getId());
+                put("email", user.getEmail());
+                put("username", user.getUsername());
+                put("fullName", user.getFullName());
+                put("userNumber", user.getUserNumber());
+                put("country", user.getCountry());
+                put("bio", user.getBio());
+                put("profilePictureUrl", user.getProfilePictureUrl());
+                put("languagePreference", user.getLanguagePreference());
+                put("isEmailVerified", user.getIsEmailVerified());
+                put("membership", activeMembership != null ? new java.util.HashMap<String, Object>() {{
+                    put("plan", activeMembership.getPlan());
+                    put("status", activeMembership.getStatus());
+                    put("createdAt", activeMembership.getCreatedAt());
+                }} : null);
+                put("createdAt", user.getCreatedAt());
+                put("lastLoginAt", user.getLastLoginAt());
+            }};
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get user info: " + e.getMessage());
+        }
+    }
 }

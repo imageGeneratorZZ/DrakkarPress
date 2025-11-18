@@ -50,3 +50,10 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 POST /api/auth/register
 POST /api/auth/login
 POST /ai/generate-complete-book
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tu-email@gmail.com
+    password: tu-app-password
