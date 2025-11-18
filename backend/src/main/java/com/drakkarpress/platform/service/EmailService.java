@@ -1,5 +1,7 @@
 package com.drakkarpress.platform.service;
 
+import com.drakkarpress.platform.model.Book;
+import com.drakkarpress.platform.model.BookPurchase;
 import com.drakkarpress.platform.model.User;
 import com.drakkarpress.platform.model.PaymentTransaction;
 import jakarta.mail.MessagingException;
@@ -227,5 +229,62 @@ public class EmailService {
         
         return "¡Bienvenido! Eres el usuario #" + userNumber + ". " +
                "Tu precio regular es $" + pricing.monthlyPrice + "/mes o $" + pricing.annualPrice + "/año.";
+    }
+
+    /**
+     * Enviar confirmación de compra de ebook con link de descarga
+     */
+    public void sendEbookPurchaseConfirmation(com.drakkarpress.platform.model.BookPurchase purchase) {
+        try {
+            User user = purchase.getUser();
+            com.drakkarpress.platform.model.Book book = purchase.getBook();
+
+            String downloadExpires = purchase.getDownloadExpiresAt() != null ? 
+                purchase.getDownloadExpiresAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "Sin expiración";
+
+            String htmlContent = "<!DOCTYPE html>" +
+                "<html><head><meta charset='UTF-8'><style>" +
+                "body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }" +
+                ".container { max-width: 600px; margin: 0 auto; padding: 20px; }" +
+                ".header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }" +
+                ".content { background: #f9f9f9; padding: 30px; }" +
+                ".button { display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }" +
+                ".details { background: white; padding: 20px; margin: 20px 0; border-radius: 5px; }" +
+                "</style></head><body><div class='container'>" +
+                "<div class='header'><h1>📚 ¡Gracias por tu compra!</h1></div>" +
+                "<div class='content'>" +
+                "<p>Hola <strong>" + (user.getFullName() != null ? user.getFullName() : user.getUsername()) + "</strong>,</p>" +
+                "<p>Tu compra ha sido procesada exitosamente. Ya puedes descargar tu ebook:</p>" +
+                "<div class='details'>" +
+                "<h3>" + book.getTitle() + "</h3>" +
+                "<p><strong>Autor:</strong> " + book.getAuthor() + "</p>" +
+                "<p><strong>Formato:</strong> " + purchase.getFormatName() + "</p>" +
+                "<p><strong>Precio:</strong> " + purchase.getFormattedPrice() + "</p>" +
+                "</div>" +
+                "<center><a href='" + purchase.getDownloadLink() + "' class='button'>⬇️ Descargar Ahora</a></center>" +
+                "<p style='margin-top: 30px;'><strong>⚠️ Importante:</strong></p><ul>" +
+                "<li>Puedes descargar este libro hasta " + purchase.getDownloadLimit() + " veces</li>" +
+                "<li>El link expira el " + downloadExpires + "</li>" +
+                "<li>También puedes descargarlo desde tu <a href='" + frontendUrl + "/my-books.html'>Biblioteca Personal</a></li>" +
+                "</ul>" +
+                "<p>Si tienes problemas, contáctanos a " + fromEmail + "</p>" +
+                "<p style='margin-top: 30px;'>¡Disfruta tu lectura! 📖<br>El equipo de " + appName + "</p>" +
+                "</div></div></body></html>";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(fromEmail);
+            helper.setTo(user.getEmail());
+            helper.setSubject("📚 Tu ebook está listo para descargar - " + book.getTitle());
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+            System.out.println("✅ Email de ebook enviado a: " + user.getEmail());
+
+        } catch (MessagingException e) {
+            System.err.println("❌ Error enviando email de ebook: " + e.getMessage());
+            throw new RuntimeException("Error enviando email", e);
+        }
     }
 }
