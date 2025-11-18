@@ -1,0 +1,16 @@
+Client ID
+
+ddc72267b2a7244f8f7858961ec7d325
+
+
+
+Secret
+
+
+
+shpss\_c97f87141309d68780aa04814a04113f
+
+
+
+
+

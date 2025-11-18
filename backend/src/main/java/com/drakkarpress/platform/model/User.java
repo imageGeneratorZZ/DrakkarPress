@@ -22,7 +22,7 @@ import java.util.UUID;
  * - user_number: para tracking de fases (1-1000, 1001-10000, 10001+)
  * - Relaciones: membresías, runas, badges, roles, conexiones
  */
-@Entity
+@Entity(name = "PlatformUser")
 @Table(name = "users", indexes = {
     @Index(name = "idx_users_email", columnList = "email", unique = true),
     @Index(name = "idx_users_username", columnList = "username", unique = true),

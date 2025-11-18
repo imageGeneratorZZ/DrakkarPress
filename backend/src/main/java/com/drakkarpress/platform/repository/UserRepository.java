@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Buscar usuario por email o username
      */
-    @Query("SELECT u FROM User u WHERE u.email = :identifier OR u.username = :identifier")
+    @Query("SELECT u FROM PlatformUser u WHERE u.email = :identifier OR u.username = :identifier")
     Optional<User> findByEmailOrUsername(@Param("identifier") String identifier);
 
     /**
@@ -43,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Buscar usuarios por fase
      */
-    @Query("SELECT u FROM User u WHERE u.userNumber <= :maxUserNumber AND u.isActive = true")
+    @Query("SELECT u FROM PlatformUser u WHERE u.userNumber <= :maxUserNumber AND u.isActive = true")
     List<User> findUsersByPhase(@Param("maxUserNumber") Long maxUserNumber);
 
     /**
@@ -59,7 +59,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Buscar usuarios con membresía premium activa
      */
-    @Query("SELECT u FROM User u JOIN u.membership m WHERE m.isActive = true AND m.plan != 'FREE'")
+    @Query("SELECT u FROM PlatformUser u JOIN u.membership m WHERE m.isActive = true AND m.plan != 'FREE'")
     List<User> findPremiumUsers();
 
     /**
@@ -75,12 +75,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Último user_number registrado
      */
-    @Query("SELECT MAX(u.userNumber) FROM User u")
+    @Query("SELECT MAX(u.userNumber) FROM PlatformUser u")
     Optional<Long> findMaxUserNumber();
 
     /**
      * Buscar usuarios recientes
      */
-    @Query("SELECT u FROM User u WHERE u.createdAt >= :since ORDER BY u.createdAt DESC")
+    @Query("SELECT u FROM PlatformUser u WHERE u.createdAt >= :since ORDER BY u.createdAt DESC")
     List<User> findRecentUsers(@Param("since") LocalDateTime since);
 }

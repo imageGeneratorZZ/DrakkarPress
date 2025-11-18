@@ -79,3 +79,6 @@ Respaldo_Externorium/
 
 # Directorio drakkarpress-platform (repositorio separado)
 drakkarpress-platform/
+
+# Local Netlify folder
+.netlify

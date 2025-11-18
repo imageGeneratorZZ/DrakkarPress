@@ -29,76 +29,77 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(length = 255)
+    @Column(name = "password_hash", length = 255)
     private String passwordHash;
 
-    @Column(length = 100)
+    @Column(name = "first_name", length = 100)
     private String firstName;
 
-    @Column(length = 100)
+    @Column(name = "last_name", length = 100)
     private String lastName;
 
-    @Column(length = 20)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(length = 50)
+    @Column(name = "oauth_provider", length = 50)
     private String oauthProvider;
 
-    @Column(length = 255)
+    @Column(name = "oauth_id", length = 255)
     private String oauthId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 20)
     private UserRole role;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "subscription", nullable = false, length = 20)
     @Builder.Default
     private SubscriptionType subscription = SubscriptionType.FREE;
 
-    @Column(length = 500)
+    @Column(name = "avatar", length = 500)
     private String avatar;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
 
-    @Column(length = 255)
+    @Column(name = "website", length = 255)
     private String website;
 
-    @Column(nullable = false)
+    @Column(name = "enabled", nullable = false)
     @Builder.Default
     private Boolean enabled = true;
 
-    @Column(nullable = false)
+    @Column(name = "verified", nullable = false)
     @Builder.Default
     private Boolean verified = false;
 
-    @Column(length = 100)
+    @Column(name = "verification_token", length = 100)
     private String verificationToken;
 
-    @Column
+    @Column(name = "verification_token_expiry")
     private LocalDateTime verificationTokenExpiry;
 
-    @Column(length = 100)
+    @Column(name = "reset_password_token", length = 100)
     private String resetPasswordToken;
 
-    @Column
+    @Column(name = "reset_password_token_expiry")
     private LocalDateTime resetPasswordTokenExpiry;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column
+    @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)

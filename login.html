@@ -414,10 +414,11 @@
         </div>
     </div>
 
+    <script src="assets/js/config.js"></script>
     <script>
         function oauthLogin(provider) {
-            // Aquí iría la lógica de OAuth
-            window.location.href = `/api/auth/oauth/${provider}`;
+            const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+            window.location.href = `${apiUrl}/oauth2/authorization/${provider}`;
         }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -437,27 +438,58 @@
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const remember = document.querySelector('input[name="remember"]').checked;
 
             try {
-                // Simulación de llamada al backend
-                // En producción: const response = await fetch('/api/auth/login', {...})
+                const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
                 
-                await new Promise(resolve => setTimeout(resolve, 1500)); // Simular delay
+                const response = await fetch(`${apiUrl}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-                // Simulación de éxito
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Email o contraseña incorrectos');
+                }
+
+                const data = await response.json();
+                
+                // Guardar token en localStorage
+                if (data.token) {
+                    localStorage.setItem('drakkarpress_token', data.token);
+                    if (data.refreshToken) {
+                        localStorage.setItem('drakkarpress_refresh_token', data.refreshToken);
+                    }
+                }
+
+                // Éxito
                 alertSuccess.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
                 alertSuccess.style.display = 'block';
 
-                // Redirigir según el rol (esto vendría del backend)
+                // Redirigir según el rol
                 setTimeout(() => {
-                    // Aquí normalmente leerías el rol del usuario desde la respuesta
-                    window.location.href = 'index.html'; // o el portal correspondiente
+                    const role = data.role || 'reader';
+                    switch(role.toLowerCase()) {
+                        case 'writer':
+                            window.location.href = 'escritores.html';
+                            break;
+                        case 'printer':
+                            window.location.href = 'imprentas.html';
+                            break;
+                        case 'reseller':
+                            window.location.href = 'revendedores.html';
+                            break;
+                        default:
+                            window.location.href = 'index.html';
+                    }
                 }, 1000);
 
             } catch (error) {
                 // Manejo de errores
-                alertError.textContent = error.message || 'Email o contraseña incorrectos';
+                alertError.textContent = error.message || 'Error al iniciar sesión. Verifica tu conexión.';
                 alertError.style.display = 'block';
                 
                 btnLogin.disabled = false;

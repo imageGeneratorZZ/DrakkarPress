@@ -188,7 +188,7 @@ PLATFORM_STATS_BASELINE_AI_GENERATIONS=124583
 
 [[redirects]]
   from = "/api/*"
-  to = "https://api.drakkarpress.com/:splat"
+  to = "https://<tu-servicio>.up.railway.app/:splat"
   status = 200
   force = true
 
@@ -321,3 +321,55 @@ java -jar target\*.jar
 **Tiempo**: ~2 días
 
 ¿Empezamos? 🚀
+
+---
+
+## 📣 Integraciones de Marketing y SEO
+
+### Google Merchant Center (Shopping)
+- [ ] Verificar y reclamar `drakkarpress.com` (método Search Console/DNS)
+- [ ] Crear feed inicial (Sheets o API) con columnas `id`, `title`, `description`, `link`, `image_link`, `availability`, `price`, `gtin/isbn`
+- [ ] Configurar políticas de envío/impuestos y vincular con Google Ads
+- [ ] Subir productos destacados (bestsellers) y revisar estado “Aprobado”
+- [ ] Implementar etiqueta de conversiones/remarketing (o GTM) en frontend
+
+### Google Search Console
+- [ ] Verificar dominio completo vía registro TXT en DNS
+- [ ] Publicar `sitemap.xml` en la raíz del sitio y enviarlo en Search Console
+- [ ] Revisar informes de Cobertura/Core Web Vitals y corregir issues
+- [ ] Configurar propiedades adicionales (www, api) si usas método URL-prefix
+- [ ] Documentar el estado final en esta guía y en `docs/05-sitemap.md`
+
+---
+
+## 🧪 Subida de Plataforma para Testing (Herramientas + UI)
+
+1. **Backend (Railway/Render)**
+  - `cd backend` → `railway login` → `railway link` → `railway up`
+  - Define variables: `SPRING_DATASOURCE_URL`, `JWT_SECRET`, `OPENAI_API_KEY`, `CORS_ALLOWED_ORIGINS`, etc.
+  - Ejecuta `railway run ./init-db.sql` si necesitas sembrar datos.
+2. **Base de Datos**
+  - Crea instancia PostgreSQL (Railway/Neon/Supabase) y actualiza credenciales.
+  - Confirma acceso remoto y backups básicos.
+3. **Frontend (Netlify/Vercel)**
+  - `cd ..` → `netlify login` → `netlify deploy --prod` (o `vercel deploy`).
+  - Configura redirect `/api/*` hacia la URL del backend.
+4. **DNS + SSL**
+  - Registros: `A @` → Netlify, `CNAME www` → `drakkarpress.netlify.app`, `CNAME api` → `*.railway.app`.
+  - Verifica SSL automático en ambas plataformas.
+5. **Smoke Tests**
+  - Probar login/registro, catálogo, checkout, endpoints `/api/health`.
+  - Validar herramientas internas (panel autores, generadores IA) con datos demo.
+
+Checklist completado = plataforma online lista para presentar y continuar con Merchant/Search Console.
+
+---
+
+## Shopify Config
+
+- Storefront URL: https://{{shop-name}}.myshopify.com
+- Storefront Access Token: {{SHOPIFY_STOREFRONT_TOKEN}}
+- Admin API Key: {{SHOPIFY_ADMIN_API_KEY}}
+- Admin API Password: {{SHOPIFY_ADMIN_API_PASSWORD}}
+- Webhook Secret: {{SHOPIFY_WEBHOOK_SECRET}}
+- Example Product Handle: {{product-handle}}

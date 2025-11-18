@@ -556,6 +556,7 @@
         </div>
     </div>
 
+    <script src="assets/js/config.js"></script>
     <script>
         let selectedRole = '';
 
@@ -581,11 +582,11 @@
                 alert('Por favor selecciona primero cómo quieres participar');
                 return;
             }
-            // Aquí iría la lógica de OAuth
-            window.location.href = `/api/auth/oauth/${provider}?role=${selectedRole}`;
+            const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+            window.location.href = `${apiUrl}/oauth2/authorization/${provider}?role=${selectedRole}`;
         }
 
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             if (!selectedRole) {
@@ -606,22 +607,73 @@
                 return;
             }
 
-            // Aquí iría la lógica de envío al backend
+            // Preparar datos
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
             
-            console.log('Datos a enviar:', data);
-            alert('¡Registro exitoso! Te hemos enviado un email de verificación.');
-            
-            // Redirigir según el rol
-            const redirects = {
-                'writer': 'escritores.html',
-                'reseller': 'revendedores.html',
-                'printer': 'imprentas.html',
-                'reader': 'index.html'
+            // Construir objeto de registro
+            const registerData = {
+                email: data.email,
+                password: data.password,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                role: selectedRole.toUpperCase(),
+                country: data.country,
+                phone: data.phone || null,
+                newsletter: data.newsletter === 'on'
             };
-            
-            // window.location.href = redirects[selectedRole] || 'index.html';
+
+            // Agregar campos específicos del rol
+            if (selectedRole === 'writer') {
+                registerData.penName = data.penName;
+                registerData.genres = data.genres;
+                registerData.bio = data.bio;
+            } else if (selectedRole === 'reseller') {
+                registerData.businessName = data.businessName;
+                registerData.platforms = data.platforms;
+                registerData.audience = data.audience;
+            } else if (selectedRole === 'printer') {
+                registerData.printerName = data.printerName;
+                registerData.city = data.city;
+                registerData.postalCode = data.postalCode;
+                registerData.capacity = data.capacity;
+            }
+
+            // Deshabilitar botón
+            const btnSubmit = this.querySelector('.btn-primary');
+            const originalText = btnSubmit.textContent;
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = '⏳ Creando cuenta...';
+
+            try {
+                const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+                
+                const response = await fetch(`${apiUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(registerData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Error al crear la cuenta');
+                }
+
+                const result = await response.json();
+                
+                // Éxito
+                alert('✅ ¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+                window.location.href = 'login.html?message=registered';
+
+            } catch (error) {
+                console.error('Error en registro:', error);
+                alert('❌ Error: ' + error.message);
+                
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = originalText;
+            }
         });
     </script>
 </body>

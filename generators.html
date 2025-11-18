@@ -345,6 +345,23 @@
             </div>
         </div>
 
+        <!-- BOTÓN PRINCIPAL: GENERAR LIBRO COMPLETO -->
+        <div class="generator-section">
+            <div class="generator-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; max-width: 800px; margin: 20px auto;">
+                <h2 style="color: white; margin-bottom: 15px; font-size: 2em;">📚 ¿Quieres tu libro completo YA?</h2>
+                <p style="font-size: 1.1em; margin-bottom: 20px; opacity: 0.9;">
+                    Genera un libro completo de 10-15 capítulos con un solo clic.<br>
+                    Perfecto para usuarios que quieren resultados inmediatos sin complicaciones.
+                </p>
+                <button onclick="showFullBookGenerator()" class="btn" style="background: white; color: #667eea; font-size: 1.3em; padding: 15px 40px; margin: 10px; border: none; cursor: pointer; border-radius: 10px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s;">
+                    🚀 Generar Libro Completo Ahora
+                </button>
+                <div style="margin-top: 15px; font-size: 0.95em; opacity: 0.8;">
+                    Elige tema, género y personalidad → Recibe libro completo en minutos
+                </div>
+            </div>
+        </div>
+
         <!-- GENERADORA 1: CREACIÓN DE CONTENIDO -->
         <div class="generator-section">
             <div class="section-header">
@@ -1072,7 +1089,8 @@
                 'generate-synopsis': generateDemoSynopsis(data),
                 'generate-dialogue': generateDemoDialogue(data),
                 'improve-text': generateDemoImprove(data),
-                'analyze-style': generateDemoAnalysis(data)
+                'analyze-style': generateDemoAnalysis(data),
+                'generate-complete-book': generateDemoCompleteBook(data)
             };
             return demos[endpoint] || '🔄 Backend iniciando... Ejemplo generado en modo DEMO.\n\nEste es un resultado de ejemplo. Cuando el backend esté listo (5-10 minutos), obtendrás resultados reales generados por IA.';
         }
@@ -1244,6 +1262,49 @@
                    `⚠️ MODO DEMO: Análisis de ejemplo. Backend proporcionará análisis detallado de tu texto específico.`;
         }
 
+        function generateDemoCompleteBook(data) {
+            const chapters = parseInt(data.chapters) || 12;
+            let book = `📚 LIBRO COMPLETO GENERADO (DEMO)\n\n`;
+            book += `📖 Tema: ${data.theme}\n`;
+            book += `🎭 Género: ${data.genre}\n`;
+            book += `👤 Tono: ${data.tone}\n`;
+            book += `📊 Capítulos: ${chapters}\n\n`;
+            book += `${'='.repeat(60)}\n\n`;
+            
+            for (let i = 1; i <= Math.min(chapters, 3); i++) {
+                book += `CAPÍTULO ${i}: ${i === 1 ? 'El Comienzo' : i === 2 ? 'Desarrollo' : 'Complicaciones'}\n\n`;
+                book += `Todo había comenzado de una manera inesperada. La protagonista nunca imaginó que `;
+                book += `ese día cambiaría su vida para siempre. Las calles de la ciudad respiraban una energía `;
+                book += `diferente, como si el universo conspirara para que los caminos se cruzaran...\n\n`;
+                book += `[Contenido completo del capítulo: 2,500 palabras aproximadamente]\n\n`;
+                book += `Los diálogos fluían naturalmente entre los personajes, revelando sus verdaderas `;
+                book += `intenciones y miedos más profundos. Cada interacción añadía capas de complejidad `;
+                book += `a la trama principal...\n\n`;
+                book += `${'='.repeat(60)}\n\n`;
+            }
+            
+            if (chapters > 3) {
+                book += `[... Capítulos 4-${chapters-1} continúan la historia ...]\n\n`;
+                book += `${'='.repeat(60)}\n\n`;
+                book += `CAPÍTULO ${chapters}: DESENLACE\n\n`;
+                book += `El final llegó como tenía que llegar, cerrando todos los arcos narrativos de manera `;
+                book += `satisfactoria pero dejando espacio para la reflexión...\n\n`;
+                book += `[Contenido completo del capítulo final: 3,000 palabras aproximadamente]\n\n`;
+            }
+            
+            book += `\n\n📝 NOTA: Este es un DEMO del sistema completo.\n`;
+            book += `El backend real generará cada capítulo completo con:\n`;
+            book += `✅ Desarrollo detallado de personajes\n`;
+            book += `✅ Diálogos naturales y contextualizados\n`;
+            book += `✅ Descripciones ambientales inmersivas\n`;
+            book += `✅ Trama coherente y bien estructurada\n`;
+            book += `✅ Cada capítulo: 2,000-3,500 palabras\n`;
+            book += `✅ Libro completo: ${chapters * 2500} palabras aproximadamente\n\n`;
+            book += `⏱️ Tiempo estimado de generación real: 2-4 minutos\n`;
+            
+            return book;
+        }
+
         function showResult(elementId, content, isError = false) {
             const resultBox = document.getElementById(elementId);
             if (isError) {
@@ -1264,6 +1325,125 @@
             const resultBox = document.getElementById(elementId);
             resultBox.innerHTML = '<div class="loading">Generando</div>';
             resultBox.classList.add('show');
+        }
+
+        async function showFullBookGenerator() {
+            // Crear modal overlay
+            const modal = document.createElement('div');
+            modal.id = 'fullBookModal';
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.8); display: flex; align-items: center;
+                justify-content: center; z-index: 10000; overflow-y: auto; padding: 20px;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 20px; padding: 40px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative;">
+                    <button onclick="document.getElementById('fullBookModal').remove()" style="position: absolute; top: 15px; right: 15px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.5em; cursor: pointer; line-height: 1;">×</button>
+                    
+                    <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">📚 Generador de Libro Completo</h2>
+                    
+                    <form id="fullBookForm" style="margin-top: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📖 Tema del Libro:</label>
+                            <input type="text" id="fullbook-theme" placeholder="Ej: Una historia de amor en tiempos de guerra" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">🎭 Género Principal:</label>
+                            <select id="fullbook-genre" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                                <option value="Romance">❤️ Romance</option>
+                                <option value="Thriller">🕵️ Thriller/Suspense</option>
+                                <option value="Fantasía">🧙 Fantasía</option>
+                                <option value="Ciencia Ficción">🚀 Ciencia Ficción</option>
+                                <option value="Terror">👻 Terror</option>
+                                <option value="Misterio">🔍 Misterio</option>
+                                <option value="Drama">🎭 Drama</option>
+                                <option value="Aventura">⚔️ Aventura</option>
+                                <option value="Erótica">🔥 Erótica</option>
+                                <option value="No Ficción">📖 No Ficción</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">👤 Personalidad/Tono:</label>
+                            <select id="fullbook-tone" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                                <option value="serio">Serio y Formal</option>
+                                <option value="casual">Casual y Amigable</option>
+                                <option value="poetico">Poético y Lírico</option>
+                                <option value="directo">Directo y Conciso</option>
+                                <option value="humoristico">Humorístico</option>
+                                <option value="dramatico">Dramático e Intenso</option>
+                                <option value="sensual">Sensual y Romántico</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📊 Número de Capítulos:</label>
+                            <input type="number" id="fullbook-chapters" value="12" min="8" max="20" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                            <small style="color: #666;">Recomendado: 10-15 capítulos</small>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">📝 Instrucciones Adicionales (opcional):</label>
+                            <textarea id="fullbook-instructions" placeholder="Ej: Incluir un giro al final, personaje misterioso, ambiente oscuro..." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; min-height: 80px;"></textarea>
+                        </div>
+                        
+                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border: none; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                            🚀 Generar Mi Libro Completo
+                        </button>
+                        
+                        <div id="fullbook-result" style="margin-top: 20px;"></div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Handler del formulario
+            document.getElementById('fullBookForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const resultDiv = document.getElementById('fullbook-result');
+                resultDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #667eea;"><div class="loading">Generando tu libro completo... Esto puede tomar 2-3 minutos ⏳</div></div>';
+                
+                const requestData = {
+                    theme: document.getElementById('fullbook-theme').value,
+                    genre: document.getElementById('fullbook-genre').value,
+                    tone: document.getElementById('fullbook-tone').value,
+                    chapters: document.getElementById('fullbook-chapters').value,
+                    instructions: document.getElementById('fullbook-instructions').value
+                };
+                
+                try {
+                    const result = await apiCall('generate-complete-book', requestData);
+                    resultDiv.innerHTML = `
+                        <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                            <h3 style="color: #2e7d32; margin-bottom: 15px;">✅ ¡Libro Generado Exitosamente!</h3>
+                            <div style="white-space: pre-wrap; line-height: 1.6; color: #333;">${result.content || result}</div>
+                            <button onclick="downloadBook()" style="margin-top: 15px; background: #2e7d32; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                                📥 Descargar Libro (.txt)
+                            </button>
+                        </div>
+                    `;
+                } catch (error) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #fff3cd; padding: 20px; border-radius: 10px; border-left: 4px solid #ffc107;">
+                            <strong>⚡ Modo Demo:</strong><br>
+                            <p style="margin: 10px 0;">El backend está compilando. Aquí está un ejemplo de libro generado:</p>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 10px; max-height: 400px; overflow-y: auto;">
+                                <h4>📖 ${requestData.theme}</h4>
+                                <p><strong>Género:</strong> ${requestData.genre} | <strong>Tono:</strong> ${requestData.tone}</p>
+                                <hr style="margin: 15px 0;">
+                                <p><strong>Capítulo 1: El Comienzo</strong></p>
+                                <p>Todo comenzó en una tarde de otoño, cuando las hojas caían suavemente sobre el pavimento mojado...</p>
+                                <p style="margin-top: 10px;"><em>[${requestData.chapters} capítulos generados - Cada uno con 2000-3000 palabras]</em></p>
+                                <p style="margin-top: 15px; color: #666;"><small>💡 El sistema completo generará cada capítulo con personajes desarrollados, diálogos naturales y una trama coherente.</small></p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
         }
 
         async function generateIdea(e) {

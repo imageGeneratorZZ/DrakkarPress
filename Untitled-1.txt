@@ -1,0 +1,7 @@
+Type: A
+Name: @
+Value: 75.2.60.5
+
+Type: CNAME
+Name: www
+Value: drakkarpress-platform.netlify.app
