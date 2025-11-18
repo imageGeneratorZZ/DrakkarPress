@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - DrakkarPress</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .admin-container { max-width: 1400px; margin: 80px auto; padding: 0 20px; }
+    .tabs { display:flex; gap:10px; margin-bottom:30px; border-bottom:2px solid #eee; }
+    .tab { padding:12px 24px; cursor:pointer; border:none; background:transparent; font-weight:600; color:#666; border-bottom:3px solid transparent; transition: all .3s; }
+    .tab.active { color:#4F46E5; border-bottom-color:#4F46E5; }
+    .tab:hover { color:#4F46E5; }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .card { background:#fff; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:24px; margin-bottom:20px; }
+    .form-row { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:16px; }
+    .form-group label { display:block; font-weight:600; margin-bottom:6px; color:#333; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; }
+    .form-group textarea { min-height:80px; resize:vertical; }
+    .btn { padding:12px 20px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition: all .3s; }
+    .btn-primary { background:#4F46E5; color:#fff; }
+    .btn-primary:hover { background:#4338CA; transform: translateY(-2px); box-shadow:0 8px 20px rgba(79,70,229,.3); }
+    .btn-secondary { background:#e5e7eb; color:#374151; }
+    .btn-danger { background:#ef4444; color:#fff; }
+    .table { width:100%; border-collapse:collapse; }
+    .table th, .table td { padding:12px; text-align:left; border-bottom:1px solid #eee; }
+    .table th { background:#f9fafb; font-weight:700; }
+    .badge { padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+    .badge-success { background:#d1fae5; color:#065f46; }
+    .badge-warning { background:#fef3c7; color:#92400e; }
+    .badge-danger { background:#fee2e2; color:#991b1b; }
+    .status { margin-top:20px; padding:12px; border-radius:8px; display:none; }
+    .status.success { background:#d1fae5; color:#065f46; display:block; }
+    .status.error { background:#fee2e2; color:#991b1b; display:block; }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">DrakkarPress</a>
+        <ul class="nav-menu">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="shop.html">Tienda</a></li>
+          <li><a href="escritores.html" data-auth-required>Dashboard</a></li>
+          <li><span id="navUserInfo" style="display:none; color:#4F46E5; font-weight:600;"></span></li>
+          <li><a href="#" id="navLogout" style="display:none;">Cerrar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="admin-container">
+    <h1>🛠️ Administración</h1>
+    
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('shopify')">Shopify</button>
+      <button class="tab" onclick="showTab('lulu')">Lulu POD</button>
+      <button class="tab" onclick="showTab('books')">Libros</button>
+      <button class="tab" onclick="showTab('orders')">Órdenes</button>
+    </div>
+
+    <!-- Shopify Panel -->
+    <div id="shopify" class="panel active">
+      <div class="card">
+        <h2>Sincronizar Producto a Shopify</h2>
+        <form id="shopifyForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Título *</label>
+              <input type="text" name="title" required placeholder="Título del libro">
+            </div>
+            <div class="form-group">
+              <label>SKU *</label>
+              <input type="text" name="sku" required placeholder="ISBN o código único">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea name="description" placeholder="Descripción del producto"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Precio (USD) *</label>
+              <input type="number" step="0.01" name="price" required placeholder="29.99">
+            </div>
+            <div class="form-group">
+              <label>Cantidad</label>
+              <input type="number" name="quantity" value="999" placeholder="999 (POD)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>URL de Imagen</label>
+            <input type="url" name="imageUrl" placeholder="https://example.com/cover.jpg">
+          </div>
+          <button type="submit" class="btn btn-primary">🛒 Sincronizar a Shopify</button>
+        </form>
+        <div id="shopifyStatus" class="status"></div>
+      </div>
+    </div>
+
+    <!-- Lulu Panel -->
+    <div id="lulu" class="panel">
+      <div class="card">
+        <h2>Crear Print Job en Lulu</h2>
+        <form id="luluForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Título del Libro *</label>
+              <input type="text" name="title" required>
+            </div>
+            <div class="form-group">
+              <label>Cantidad *</label>
+              <input type="number" name="quantity" value="1" min="1" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>URL Portada *</label>
+              <input type="url" name="coverUrl" required placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label>URL Interior *</label>
+              <input type="url" name="interiorUrl" required placeholder="https://...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Páginas</label>
+              <input type="number" name="pageCount" value="100">
+            </div>
+            <div class="form-group">
+              <label>Tamaño</label>
+              <select name="trimSize">
+                <option value="US_TRADE">US Trade (6x9")</option>
+                <option value="US_LETTER">US Letter (8.5x11")</option>
+                <option value="A5">A5</option>
+              </select>
+            </div>
+          </div>
+          <h3>Dirección de Envío</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre *</label>
+              <input type="text" name="shipName" required>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="shipEmail" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Calle *</label>
+            <input type="text" name="shipStreet1" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ciudad *</label>
+              <input type="text" name="shipCity" required>
+            </div>
+            <div class="form-group">
+              <label>Estado/Provincia *</label>
+              <input type="text" name="shipState" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Código Postal *</label>
+              <input type="text" name="shipZip" required>
+            </div>
+            <div class="form-group">
+              <label>País *</label>
+              <input type="text" name="shipCountry" value="US" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">📖 Crear Print Job</button>
+        </form>
+        <div id="luluStatus" class="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>Consultar Estado de Job</h2>
+        <form id="luluTrackingForm">
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label>Job ID</label>
+              <input type="text" name="jobId" required placeholder="lulu_job_12345">
+            </div>
+            <div style="display:flex; align-items:flex-end;">
+              <button type="submit" class="btn btn-secondary">🔍 Consultar</button>
+            </div>
+          </div>
+        </form>
+        <div id="luluTrackingResult" style="margin-top:20px;"></div>
+      </div>
+    </div>
+
+    <!-- Books Panel -->
+    <div id="books" class="panel">
+      <div class="card">
+        <h2>Gestión de Libros</h2>
+        <button class="btn btn-primary" onclick="loadBooks()">🔄 Recargar</button>
+        <table class="table" style="margin-top:20px;">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>Precio Digital</th>
+              <th>Precio Físico</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="booksTable">
+            <tr><td colspan="6" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Orders Panel -->
+    <div id="orders" class="panel">
+      <div class="card">
+        <h2>Órdenes Pendientes</h2>
+        <p style="color:#666;">Próximamente: integración con webhooks de Shopify para procesar órdenes automáticamente.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/auth-v2.js"></script>
+  <script>
+    const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+
+    document.getElementById('shopifyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const status = document.getElementById('shopifyStatus');
+
+      const payload = {
+        title: data.get('title'),
+        description: data.get('description'),
+        vendor: 'DrakkarPress',
+        productType: 'Book',
+        tags: ['book', 'drakkarpress'],
+        variant: {
+          sku: data.get('sku'),
+          price: data.get('price'),
+          quantity: data.get('quantity')
+        },
+        images: data.get('imageUrl') ? [data.get('imageUrl')] : []
+      };
+
+      try {
+        const token = localStorage.getItem('drakkarpress_token');
+        const res = await fetch(`${API_BASE_URL}/api/shopify/products`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success || res.ok) {
+          status.className = 'status success';
+          status.textContent = '✅ Producto sincronizado a Shopify: ' + (json.productId || json.data?.productId || 'OK');
+          form.reset();
+        } else {
+          throw new Error(json.message || json.error || 'Error desconocido');
+        }
+      } catch (err) {
+        status.className = 'status error';
+        status.textContent = '❌ Error: ' + err.message;
+      }
+    });
+
+    document.getElementById('luluForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const status = document.getElementById('luluStatus');
+
+      const payload = {
+        title: data.get('title'),
+        coverUrl: data.get('coverUrl'),
+        interiorUrl: data.get('interiorUrl'),
+        quantity: parseInt(data.get('quantity')),
+        pageCount: parseInt(data.get('pageCount') || 100),
+        trimSize: data.get('trimSize'),
+        shippingAddress: {
+          name: data.get('shipName'),
+          email: data.get('shipEmail'),
+          street1: data.get('shipStreet1'),
+          city: data.get('shipCity'),
+          state: data.get('shipState'),
+          zip: data.get('shipZip'),
+          country: data.get('shipCountry')
+        }
+      };
+
+      try {
+        const token = localStorage.getItem('drakkarpress_token');
+        const res = await fetch(`${API_BASE_URL}/api/lulu/print-jobs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success || json.data?.jobId) {
+          status.className = 'status success';
+          status.textContent = '✅ Print job creado: ' + (json.data?.jobId || json.jobId);
+          form.reset();
+        } else {
+          throw new Error(json.message || json.error || 'Error desconocido');
+        }
+      } catch (err) {
+        status.className = 'status error';
+        status.textContent = '❌ Error: ' + err.message;
+      }
+    });
+
+    document.getElementById('luluTrackingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const jobId = e.target.jobId.value;
+      const result = document.getElementById('luluTrackingResult');
+
+      try {
+        const token = localStorage.getItem('drakkarpress_token');
+        const res = await fetch(`${API_BASE_URL}/api/lulu/print-jobs/${jobId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const json = await res.json();
+        const data = json.data || json;
+        result.innerHTML = `
+          <div class="card">
+            <h3>Estado del Job: ${jobId}</h3>
+            <p><strong>Estado:</strong> <span class="badge badge-${data.status === 'SHIPPED' ? 'success' : 'warning'}">${data.status || 'UNKNOWN'}</span></p>
+            ${data.trackingNumber ? `<p><strong>Tracking:</strong> ${data.trackingNumber}</p>` : ''}
+            ${data.trackingUrl ? `<p><a href="${data.trackingUrl}" target="_blank">Ver Tracking →</a></p>` : ''}
+          </div>
+        `;
+      } catch (err) {
+        result.innerHTML = `<div class="status error">❌ Error: ${err.message}</div>`;
+      }
+    });
+
+    async function loadBooks() {
+      const tbody = document.getElementById('booksTable');
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Cargando...</td></tr>';
+      
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/public/books`);
+        const json = await res.json();
+        const books = json.data || json || [];
+        
+        if (books.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">No hay libros</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = books.map(b => `
+          <tr>
+            <td>${b.title}</td>
+            <td>${b.author || '—'}</td>
+            <td>$${(b.priceDigital || 0).toFixed(2)}</td>
+            <td>$${(b.pricePhysical || 0).toFixed(2)}</td>
+            <td><span class="badge badge-${b.status === 'PUBLISHED' ? 'success' : 'warning'}">${b.status}</span></td>
+            <td>
+              <button class="btn btn-secondary" onclick="syncToShopify('${b.id}', '${b.title}', ${b.pricePhysical})">→ Shopify</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function syncToShopify(bookId, title, price) {
+      if (!confirm(`¿Sincronizar "${title}" a Shopify?`)) return;
+      
+      try {
+        const token = localStorage.getItem('drakkarpress_token');
+        const res = await fetch(`${API_BASE_URL}/api/shopify/products`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            title,
+            description: `Libro físico de DrakkarPress: ${title}`,
+            vendor: 'DrakkarPress',
+            productType: 'Book',
+            tags: ['book', 'drakkarpress', 'pod'],
+            variant: { sku: `BOOK-${bookId}`, price: price || 29.99, quantity: 999 }
+          })
+        });
+        const json = await res.json();
+        alert(json.success ? '✅ Sincronizado' : '❌ Error: ' + (json.error || json.message));
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    // Auto-cargar libros al abrir tab
+    document.querySelector('[onclick="showTab(\'books\')"]').addEventListener('click', loadBooks);
+  </script>
+</body>
+</html>
