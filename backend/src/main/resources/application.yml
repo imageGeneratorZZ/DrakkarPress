@@ -1,6 +1,9 @@
 spring:
   application:
     name: drakkarpress-platform
+  main:
+    # Allow overriding beans when multiple configurations define same bean name (needed for legacy configs)
+    allow-bean-definition-overriding: true
   
   # Database Configuration
   datasource:
@@ -26,59 +29,67 @@ spring:
         jdbc:
           batch_size: 20
   
-  # OAuth2 Configuration
-  security:
-    oauth2:
-      client:
-        registration:
-          # Google OAuth
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
-          
-          # Facebook OAuth
-          facebook:
-            client-id: ${FACEBOOK_CLIENT_ID}
-            client-secret: ${FACEBOOK_CLIENT_SECRET}
-            scope:
-              - email
-              - public_profile
-          
-          # GitHub OAuth
-          github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            scope:
-              - user:email
-              - read:user
-          
-          # Twitter OAuth
-          twitter:
-            client-id: ${TWITTER_CLIENT_ID}
-            client-secret: ${TWITTER_CLIENT_SECRET}
-            scope:
-              - users.read
-              - tweet.read
-          
-          # Apple OAuth
-          apple:
-            client-id: ${APPLE_CLIENT_ID}
-            client-secret: ${APPLE_CLIENT_SECRET}
-            scope:
-              - name
-              - email
-          
-          # Microsoft OAuth
-          microsoft:
-            client-id: ${MICROSOFT_CLIENT_ID}
-            client-secret: ${MICROSOFT_CLIENT_SECRET}
-            scope:
-              - openid
-              - profile
-              - email
+  # OAuth2 Configuration (temporarily disabled - uncomment and configure when needed)
+  # security:
+  #   oauth2:
+  #     client:
+  #       registration:
+  #         # Google OAuth
+  #         google:
+  #           client-id: ${GOOGLE_CLIENT_ID}
+  #           client-secret: ${GOOGLE_CLIENT_SECRET}
+  #           scope:
+  #             - email
+  #             - profile
+  #         
+  #         # Facebook OAuth
+  #         facebook:
+  #           client-id: ${FACEBOOK_CLIENT_ID}
+  #           client-secret: ${FACEBOOK_CLIENT_SECRET}
+  #           scope:
+  #             - email
+  #             - public_profile
+  #         
+  #         # GitHub OAuth
+  #         github:
+  #           client-id: ${GITHUB_CLIENT_ID}
+  #           client-secret: ${GITHUB_CLIENT_SECRET}
+  #           scope:
+  #             - user:email
+  #             - read:user
+  #         
+  #         # Twitter OAuth
+  #         twitter:
+  #           client-id: ${TWITTER_CLIENT_ID}
+  #           client-secret: ${TWITTER_CLIENT_SECRET}
+  #           scope:
+  #             - users.read
+  #             - tweet.read
+  #         
+  #         # Apple OAuth
+  #         apple:
+  #           provider: apple
+  #           client-id: ${APPLE_CLIENT_ID}
+  #           client-secret: ${APPLE_CLIENT_SECRET}
+  #           scope:
+  #             - name
+  #             - email
+  #         
+  #         # Microsoft OAuth
+  #         microsoft:
+  #           client-id: ${MICROSOFT_CLIENT_ID}
+  #           client-secret: ${MICROSOFT_CLIENT_SECRET}
+  #           scope:
+  #             - openid
+  #             - profile
+  #             - email
+  #
+  #       provider:
+  #         apple:
+  #           authorization-uri: https://appleid.apple.com/auth/authorize
+  #           token-uri: https://appleid.apple.com/auth/token
+  #           jwk-set-uri: https://appleid.apple.com/auth/keys
+  #           user-name-attribute: sub
   
   # Mail Configuration
   mail:
@@ -179,7 +190,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
   file:
-    name: logs/drakkarpress.log
+    name: ${LOGGING_FILE_NAME:/tmp/drakkarpress.log}
     max-size: 10MB
     max-history: 30
 

@@ -30,5 +30,18 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=5 \
 
 USER appuser
 
-# Run
-ENTRYPOINT ["java","-XX:+UseContainerSupport","-XX:MaxRAMPercentage=75.0","-jar","/app/app.jar"]
+# Run with memory-optimized JVM flags for Railway free tier (512MB)
+ENTRYPOINT ["java",\
+  "-XX:+UseContainerSupport",\
+  "-XX:MaxRAMPercentage=75.0",\
+  "-XX:InitialRAMPercentage=50.0",\
+  "-XX:MinRAMPercentage=50.0",\
+  "-XX:+UseSerialGC",\
+  "-XX:MaxMetaspaceSize=128m",\
+  "-XX:CompressedClassSpaceSize=32m",\
+  "-Xss256k",\
+  "-XX:+TieredCompilation",\
+  "-XX:TieredStopAtLevel=1",\
+  "-Djava.security.egd=file:/dev/./urandom",\
+  "-Dspring.backgroundpreinitializer.ignore=true",\
+  "-jar","/app/app.jar"]

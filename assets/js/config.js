@@ -1,6 +1,6 @@
 (function (window) {
     const DEFAULT_API_URL = "http://localhost:8080";
-    const PRODUCTION_API_URL = "https://api.drakkarpress.com";
+    const PRODUCTION_API_URL = "https://overflowing-consideration-production.up.railway.app";
     const DEFAULT_STATS_REFRESH_INTERVAL_MS = 60_000;
 
     const hostname = (window.location && window.location.hostname || "").toLowerCase();
