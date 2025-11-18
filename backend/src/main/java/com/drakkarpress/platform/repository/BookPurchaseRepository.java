@@ -58,7 +58,7 @@ public interface BookPurchaseRepository extends JpaRepository<BookPurchase, UUID
     /**
      * Total de ventas de un libro
      */
-    @Query("SELECT COALESCE(SUM(bp.pricePaid), 0) FROM BookPurchase bp WHERE bp.bookId = :bookId AND bp.status = 'COMPLETED'")
+    @Query("SELECT COALESCE(SUM(bp.pricePaid), 0) FROM BookPurchase bp WHERE bp.book.id = :bookId AND bp.status = 'COMPLETED'")
     Double getTotalSalesByBook(UUID bookId);
 
     /**

@@ -649,9 +649,9 @@
             btnSubmit.textContent = '⏳ Creando cuenta...';
 
             try {
-                const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+                const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
                 
-                const response = await fetch(`${apiUrl}/api/auth/register`, {
+                const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -665,10 +665,11 @@
                 }
 
                 const result = await response.json();
+                console.log('Registro exitoso:', result);
                 
                 // Éxito
-                alert('✅ ¡Cuenta creada exitosamente!\n\n⚠️ Nota: Los emails de verificación están temporalmente deshabilitados.\nPuedes iniciar sesión inmediatamente.');
-                window.location.href = 'login.html?message=registered';
+                alert('✅ ¡Cuenta creada exitosamente!\n\nPuedes iniciar sesión ahora.');
+                window.location.href = `login.html?message=registered&role=${selectedRole}`;
 
             } catch (error) {
                 console.error('Error en registro:', error);

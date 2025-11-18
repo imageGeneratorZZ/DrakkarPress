@@ -82,3 +82,12 @@ STRIPE_API_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 FRONTEND_URL=https://drakkarpress.com
+
+1. Usuario ve shop.html
+2. Click "Comprar PDF"
+3. Redirect a Stripe Checkout
+4. Paga con tarjeta
+5. Webhook activa compra
+6. Email automático con link de descarga
+7. Usuario descarga o va a my-books.html
+8. Puede regenerar link si expira

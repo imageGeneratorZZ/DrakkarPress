@@ -416,6 +416,7 @@
 
     <script src="assets/js/config.js"></script>
     <script>
+        const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
         function oauthLogin(provider) {
             alert('⚠️ OAuth2 (Login con ' + provider + ') está temporalmente deshabilitado.\n\nPor favor usa email + contraseña para iniciar sesión.');
             return;
@@ -443,9 +444,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const apiUrl = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
-                
-                const response = await fetch(`${apiUrl}/api/auth/login`, {
+                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -485,22 +484,18 @@
 
                 // Redirigir según el rol del usuario guardado o determinar desde email
                 setTimeout(() => {
-                    // Intentar determinar rol desde la URL si viene del registro
                     const urlParams = new URLSearchParams(window.location.search);
-                    let role = urlParams.get('role') || 'writer';
-                    switch(role.toLowerCase()) {
-                        case 'writer':
-                            window.location.href = 'escritores.html';
-                            break;
-                        case 'printer':
-                            window.location.href = 'imprentas.html';
-                            break;
-                        case 'reseller':
-                            window.location.href = 'revendedores.html';
-                            break;
-                        default:
-                            window.location.href = 'index.html';
+                    const redirect = urlParams.get('redirect');
+                    if (redirect) {
+                        window.location.href = redirect;
+                        return;
                     }
+                    // Fallback por rol si no hay redirect explícito
+                    let role = urlParams.get('role') || 'writer';
+                    if (role.toLowerCase() === 'writer') { window.location.href = 'escritores.html'; return; }
+                    if (role.toLowerCase() === 'printer') { window.location.href = 'imprentas.html'; return; }
+                    if (role.toLowerCase() === 'reseller') { window.location.href = 'revendedores.html'; return; }
+                    window.location.href = 'index.html';
                 }, 1000);
 
             } catch (error) {

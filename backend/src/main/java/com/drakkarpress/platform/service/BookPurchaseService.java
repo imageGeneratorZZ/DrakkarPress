@@ -1,11 +1,11 @@
 package com.drakkarpress.platform.service;
 
-import com.drakkarpress.platform.model.Book;
+import com.drakkarpress.model.Book;
 import com.drakkarpress.platform.model.BookPurchase;
 import com.drakkarpress.platform.model.PaymentTransaction;
 import com.drakkarpress.platform.model.User;
 import com.drakkarpress.platform.repository.BookPurchaseRepository;
-import com.drakkarpress.platform.repository.BookRepository;
+import com.drakkarpress.repository.BookRepository;
 import com.drakkarpress.platform.repository.PaymentTransactionRepository;
 import com.drakkarpress.platform.repository.UserRepository;
 import com.stripe.Stripe;

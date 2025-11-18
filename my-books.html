@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Biblioteca - DrakkarPress</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .library { max-width: 1100px; margin: 80px auto; padding: 0 20px; }
+    .table { width:100%; border-collapse: collapse; background:#fff; box-shadow:0 10px 30px rgba(0,0,0,.08); border-radius:12px; overflow:hidden; }
+    .table th, .table td { padding: 14px 12px; border-bottom:1px solid #eee; text-align:left; }
+    .table th { background:#f9fafb; font-weight:700; color:#333; }
+    .badge { padding:4px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; font-weight:700; font-size:12px; }
+    .actions { display:flex; gap:8px; }
+    .btn { border:none; background:#4F46E5; color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; }
+    .btn.alt { background:#e5e7eb; color:#111827; }
+    .empty { text-align:center; color:#6b7280; padding:40px; }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">DrakkarPress</a>
+        <ul class="nav-menu">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="shop.html">Tienda</a></li>
+          <li><a href="premium.html">Premium</a></li>
+          <li><a href="login.html" data-guest-only>Iniciar Sesión</a></li>
+          <li><a href="register.html" data-guest-only>Registrarse</a></li>
+          <li><span id="navUserInfo" style="display:none; color:#4F46E5; font-weight:600;"></span></li>
+          <li><a href="#" id="navLogout" style="display:none;">Cerrar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="library">
+    <h1>Mi Biblioteca</h1>
+    <p>Descarga tus ebooks adquiridos. Puedes regenerar el enlace si caducó.</p>
+    <div id="content"></div>
+  </section>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/auth-v2.js"></script>
+  <script>
+    const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+
+    const content = document.getElementById('content');
+
+    function fmtDate(v) {
+      if (!v) return '—';
+      try { return new Date(v).toLocaleString(); } catch { return String(v); }
+    }
+
+    function row(p) {
+      const title = (p.book && p.book.title) || (p.bookTitle || '—');
+      const cover = (p.book && p.book.coverImageUrl) || 'assets/images/cover-placeholder.png';
+      const link = p.downloadLink;
+      const expired = p.expiresAt ? (new Date(p.expiresAt).getTime() < Date.now()) : false;
+      return `
+        <tr>
+          <td style="display:flex; align-items:center; gap:10px;">
+            <img src="${cover}" alt="${title}" style="width:40px; height:54px; object-fit:cover; border-radius:6px; background:#f2f2f2;" />
+            <div>
+              <div style="font-weight:700;">${title}</div>
+              <div style="color:#6b7280; font-size:12px;">${p.book && p.book.author ? p.book.author : ''}</div>
+            </div>
+          </td>
+          <td><span class="badge">${p.format || 'EBOOK'}</span></td>
+          <td>${fmtDate(p.expiresAt)}</td>
+          <td>
+            <div class="actions">
+              ${link && !expired ? `<a class="btn" href="${link}" target="_blank" rel="noopener">Descargar</a>` : ''}
+              <button class="btn alt" onclick='regenerate(${p.id})'>Regenerar</button>
+            </div>
+          </td>
+        </tr>`;
+    }
+
+    function table(purchases) {
+      if (!purchases.length) {
+        return `<div class="empty">Aún no tienes compras. Visita la <a href="shop.html">Tienda</a>.</div>`;
+      }
+      return `
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Libro</th>
+              <th>Formato</th>
+              <th>Caduca</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${purchases.map(row).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    async function load() {
+      const token = localStorage.getItem('drakkarpress_token');
+      if (!token) { window.location.href = 'login.html?redirect=my-books.html'; return; }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/books/my-library`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          const list = json.data || [];
+          content.innerHTML = table(list);
+        } else {
+          content.innerHTML = `<div class="empty">${json.message || 'No se pudo cargar la biblioteca'}</div>`;
+        }
+      } catch (e) {
+        console.error(e);
+        content.innerHTML = `<div class="empty">Error de red cargando biblioteca</div>`;
+      }
+    }
+
+    window.regenerate = async (purchaseId) => {
+      const token = localStorage.getItem('drakkarpress_token');
+      if (!token) { window.location.href = 'login.html?redirect=my-books.html'; return; }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/books/purchase/${purchaseId}/regenerate-link`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const json = await res.json();
+        if (json.success) {
+          await load();
+        } else {
+          alert(json.message || 'No se pudo regenerar el enlace');
+        }
+      } catch (e) {
+        console.error(e); alert('Error de red al regenerar');
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

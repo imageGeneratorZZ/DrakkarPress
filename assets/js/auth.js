@@ -1,55 +1,64 @@
 /**
- * Sistema de Autenticación y Gestión de Sesión
- * Carga perfil de usuario desde el backend
+ * Sistema de Autenticación y Gestión de Sesión - DrakkarPress
+ * Compatible con config.js global (sin ES modules)
  */
+(function(window) {
+    'use strict';
 
-// Importar configuración
-import { API_BASE_URL } from './config.js';
+    const TOKEN_KEY = 'drakkarpress_token';
+    const REFRESH_TOKEN_KEY = 'drakkarpress_refresh_token';
+    const USER_KEY = 'drakkarpress_user';
 
-/**
- * Obtener token del localStorage
- */
-export function getToken() {
-    return localStorage.getItem('drakkarpress_token');
-}
-
-/**
- * Guardar token en localStorage
- */
-export function saveToken(token) {
-    localStorage.setItem('drakkarpress_token', token);
-}
-
-/**
- * Eliminar token del localStorage
- */
-export function removeToken() {
-    localStorage.removeItem('drakkarpress_token');
-    localStorage.removeItem('drakkarpress_user');
-}
-
-/**
- * Verificar si el usuario está autenticado
- */
-export function isAuthenticated() {
-    return !!getToken();
-}
-
-/**
- * Obtener datos del usuario actual desde el backend
- */
-export async function getCurrentUser() {
-    const token = getToken();
-    
-    if (!token) {
-        console.log('No hay token disponible');
-        return null;
+    function getApiBaseUrl() {
+        return window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
     }
 
-    try {
-        console.log('Cargando perfil de usuario desde:', `${API_BASE_URL}/api/auth/me`);
+    /**
+     * Obtener token del localStorage
+     */
+    function getToken() {
+        return localStorage.getItem(TOKEN_KEY);
+    }
+
+    /**
+     * Guardar token en localStorage
+     */
+    function saveToken(token) {
+        localStorage.setItem(TOKEN_KEY, token);
+    }
+
+    /**
+     * Eliminar token del localStorage
+     */
+    function removeToken() {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+    }
+
+    /**
+     * Verificar si el usuario está autenticado
+     */
+    function isAuthenticated() {
+        return !!getToken();
+    }
+
+/**
+     * Obtener datos del usuario actual desde el backend
+     */
+    async function getCurrentUser() {
+        const token = getToken();
+        const API_BASE_URL = getApiBaseUrl();
         
-        const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        if (!token) {
+            console.log('No hay token disponible');
+            return null;
+        }
+
+        try {
+            console.log('Cargando perfil de usuario desde:', `${API_BASE_URL}/api/auth/me`);
+            
+            const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
