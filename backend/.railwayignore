@@ -6,6 +6,7 @@ README*
 CHANGELOG*
 LICENSE*
 docs/
+migrations/
 
 # Development files
 .git/
@@ -13,6 +14,7 @@ docs/
 .env
 .env.*
 *.local
+*.example
 
 # IDE
 .idea/
@@ -23,20 +25,50 @@ docs/
 .settings/
 .project
 .classpath
+.factorypath
 
 # Build artifacts (already built in Docker)
 target/
 build/
 *.log
+*.class
+*.jar
+*.war
+*.ear
 
 # Test files
 src/test/
+test/
 
-# Maven wrapper (use Docker's Maven)
+# Maven wrapper and cache (use Docker's Maven)
 .mvn/
 mvnw
 mvnw.cmd
+.m2/
 
 # OS files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Scripts and configs not needed in container
+*.sh
+*.ps1
+*.bat
+docker-compose*.yml
+Caddyfile
+generate-*.ps1
+monitor.ps1
+install-*.ps1

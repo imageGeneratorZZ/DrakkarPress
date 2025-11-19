@@ -1,18 +1,90 @@
-target
-.mvn
-.idea
-.java
-.git
-.github
-logs
+# Docker ignore - reduce build context size dramatically
+
+# Build outputs (we build inside Docker)
+target/
+build/
+out/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+
+# Git
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# Documentation (saves MB)
+*.md
+README*
+CHANGELOG*
+LICENSE*
+docs/
+migrations/
+
+# IDE files
+.idea/
+.vscode/
 *.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+.factorypath
+
+# Test files (not needed in production build)
+src/test/
+test/
+
+# Maven wrapper and local repo
+.mvn/
+mvnw
+mvnw.cmd
+.m2/
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
 *.log
-.DS_Store
-*.swp
-node_modules
-dist
-build
-env/
+
+# Environment files
 .env
-.env.local
-.env.production
+.env.*
+*.local
+*.example
+
+# Scripts (not needed in container)
+*.sh
+*.ps1
+*.bat
+docker-compose*.yml
+Caddyfile
+generate-*.ps1
+setup-*.ps1
+install-*.ps1
+monitor.ps1
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*.old
+
+# Railway configs (not needed in Docker build)
+railway.json
+railway.toml
+.railwayignore

@@ -1,7 +1,7 @@
 ## Multi-stage Dockerfile for DrakkarPress Backend (Spring Boot 3.5, Java 21)
 
 # -------- Build stage --------
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
 WORKDIR /workspace
 
 # Copy pom first for better layer caching
@@ -13,21 +13,25 @@ RUN mvn dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
-# Build (skip tests for faster image builds; enable in CI if needed)
-RUN mvn -B -DskipTests clean package
+# Build and clean Maven cache to save space
+RUN mvn -B -DskipTests clean package && \
+    rm -rf ~/.m2/repository
 
 # -------- Runtime stage --------
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Add non-root user
-RUN useradd -r -u 1001 appuser
+# Add non-root user (Alpine uses adduser instead of useradd)
+RUN adduser -D -u 1001 appuser
 
 # Copy fat jar from build
 COPY --from=build /workspace/target/*.jar /app/app.jar
 
 # Expose application port
 EXPOSE 8080
+
+# Install curl for healthcheck
+RUN apk add --no-cache curl
 
 # Healthcheck for Railway
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
