@@ -4,12 +4,17 @@
 FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /workspace
 
-# Copy pom and source
+# Copy pom first for better layer caching
 COPY pom.xml .
+
+# Download dependencies (cached if pom.xml hasn't changed)
+RUN mvn dependency:go-offline -B
+
+# Copy source code
 COPY src ./src
 
 # Build (skip tests for faster image builds; enable in CI if needed)
-RUN mvn -B -DskipTests package
+RUN mvn -B -DskipTests clean package
 
 # -------- Runtime stage --------
 FROM eclipse-temurin:21-jre
@@ -24,9 +29,9 @@ COPY --from=build /workspace/target/*.jar /app/app.jar
 # Expose application port
 EXPOSE 8080
 
-# Healthcheck (optional: adjust endpoint if needed)
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=5 \
-  CMD curl -fsS http://localhost:8080/actuator/health || exit 1
+# Healthcheck for Railway
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 USER appuser
 

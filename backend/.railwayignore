@@ -1,0 +1,42 @@
+# Railway ignore file - exclude from deployments
+
+# Documentation
+*.md
+README*
+CHANGELOG*
+LICENSE*
+docs/
+
+# Development files
+.git/
+.gitignore
+.env
+.env.*
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+
+# Build artifacts (already built in Docker)
+target/
+build/
+*.log
+
+# Test files
+src/test/
+
+# Maven wrapper (use Docker's Maven)
+.mvn/
+mvnw
+mvnw.cmd
+
+# OS files
+.DS_Store
+Thumbs.db
