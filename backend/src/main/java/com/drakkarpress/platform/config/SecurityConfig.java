@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/payments/session/**").permitAll()
                 .requestMatchers("/api/runes/public/**").permitAll()
                 .requestMatchers("/api/badges/public/**").permitAll()
+                .requestMatchers("/api/health/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/shopify/webhooks/**").permitAll()
                 .requestMatchers("/api/books/purchase/checkout").authenticated()
