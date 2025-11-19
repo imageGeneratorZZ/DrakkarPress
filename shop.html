@@ -106,10 +106,12 @@
       const token = localStorage.getItem('drakkarpress_token');
       if (!token) { window.location.href = `login.html?redirect=shop.html`; return; }
       try {
+        const dedicationRaw = window.prompt('Dedicatoria personalizada (opcional, máximo 500 caracteres):', '');
+        const dedication = dedicationRaw && dedicationRaw.trim().length > 0 ? dedicationRaw.trim().substring(0,500) : undefined;
         const res = await fetch(`${API_BASE_URL}/api/books/purchase/checkout`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ bookId, format })
+          body: JSON.stringify({ bookId, format, dedication })
         });
         const json = await res.json();
         if (json.success && json.data && json.data.url) {

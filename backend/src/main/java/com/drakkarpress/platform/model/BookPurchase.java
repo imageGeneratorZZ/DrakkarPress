@@ -149,6 +149,13 @@ public class BookPurchase {
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
+    /**
+     * Mensaje de dedicatoria personalizado ingresado por el comprador.
+     * Se muestra en el email de confirmación y puede servir para ediciones físicas futuras.
+     */
+    @Column(name = "dedication_message", length = 500)
+    private String dedicationMessage;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -299,8 +306,9 @@ public class BookPurchase {
             Book book,
             BigDecimal price,
             String format,
-            UUID transactionId) {
-        
+            UUID transactionId,
+            String dedicationMessage) {
+
         return BookPurchase.builder()
                 .user(user)
                 .book(book)
@@ -313,6 +321,7 @@ public class BookPurchase {
                 .downloadCount(0)
                 .downloadLimit(10) // Límite por defecto
                 .emailSent(false)
+                .dedicationMessage(dedicationMessage != null && !dedicationMessage.isBlank() ? dedicationMessage.trim() : null)
                 .build();
     }
 }

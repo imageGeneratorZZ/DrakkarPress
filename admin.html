@@ -59,6 +59,7 @@
       <button class="tab" onclick="showTab('lulu')">Lulu POD</button>
       <button class="tab" onclick="showTab('books')">Libros</button>
       <button class="tab" onclick="showTab('orders')">Órdenes</button>
+      <button class="tab" onclick="showTab('purchases')">Compras/Dedicatorias</button>
     </div>
 
     <!-- Shopify Panel -->
@@ -224,6 +225,47 @@
       <div class="card">
         <h2>Órdenes Pendientes</h2>
         <p style="color:#666;">Próximamente: integración con webhooks de Shopify para procesar órdenes automáticamente.</p>
+      </div>
+    </div>
+
+    <!-- Purchases with Dedications Panel -->
+    <div id="purchases" class="panel">
+      <div class="card">
+        <h2>📚 Compras de Ebooks y Dedicatorias</h2>
+        <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+          <input type="text" id="searchPurchase" placeholder="Buscar por usuario, libro..." style="flex:1; min-width:240px; padding:10px; border:1px solid #ddd; border-radius:8px;" />
+          <select id="filterStatus" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <option value="">Todos los estados</option>
+            <option value="COMPLETED">Completadas</option>
+            <option value="PENDING">Pendientes</option>
+            <option value="REFUNDED">Reembolsadas</option>
+          </select>
+          <select id="filterDedication" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <option value="">Todas</option>
+            <option value="with">Con dedicatoria</option>
+            <option value="without">Sin dedicatoria</option>
+          </select>
+          <button class="btn btn-primary" onclick="loadPurchases()">🔄 Recargar</button>
+        </div>
+        <div style="max-height:600px; overflow-y:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Libro</th>
+                <th>Formato</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Dedicatoria</th>
+                <th>Descargas</th>
+              </tr>
+            </thead>
+            <tbody id="purchasesTable">
+              <tr><td colspan="8" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -431,6 +473,94 @@
         alert('❌ Error: ' + err.message);
       }
     }
+
+    async function loadPurchases() {
+      const token = localStorage.getItem('drakkarpress_token');
+      if (!token) {
+        window.showToast('Debes estar autenticado', 'error');
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/admin/purchases`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Error cargando compras');
+        const json = await res.json();
+        const purchases = json.success ? json.data : [];
+        
+        // Aplicar filtros
+        const search = document.getElementById('searchPurchase').value.toLowerCase().trim();
+        const statusFilter = document.getElementById('filterStatus').value;
+        const dedicationFilter = document.getElementById('filterDedication').value;
+        
+        let filtered = purchases;
+        if (search) {
+          filtered = filtered.filter(p => 
+            (p.user?.email || '').toLowerCase().includes(search) ||
+            (p.book?.title || '').toLowerCase().includes(search)
+          );
+        }
+        if (statusFilter) {
+          filtered = filtered.filter(p => p.status === statusFilter);
+        }
+        if (dedicationFilter === 'with') {
+          filtered = filtered.filter(p => p.dedicationMessage && p.dedicationMessage.trim().length > 0);
+        } else if (dedicationFilter === 'without') {
+          filtered = filtered.filter(p => !p.dedicationMessage || p.dedicationMessage.trim().length === 0);
+        }
+        
+        const tbody = document.getElementById('purchasesTable');
+        if (filtered.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#999;">No hay compras que coincidan</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = filtered.map(p => {
+          const statusBadge = p.status === 'COMPLETED' ? 'badge-success' : 
+                             p.status === 'PENDING' ? 'badge-warning' : 'badge-danger';
+          const dedicationText = p.dedicationMessage && p.dedicationMessage.trim().length > 0 
+            ? `<div style="max-width:300px; white-space:pre-line; font-size:12px; padding:8px; background:#fff8e1; border-left:3px solid #ffc107; border-radius:4px;">
+                <strong>✒️ Dedicatoria:</strong><br/>
+                <em>${escapeHtml(p.dedicationMessage)}</em>
+               </div>`
+            : '<span style="color:#999;">—</span>';
+          const date = p.createdAt ? new Date(p.createdAt).toLocaleDateString('es-ES', {year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : '—';
+          return `
+            <tr>
+              <td>${escapeHtml(p.user?.email || 'N/A')}</td>
+              <td style="font-weight:600;">${escapeHtml(p.book?.title || 'N/A')}</td>
+              <td><span class="badge" style="background:#e0e7ff; color:#3730a3;">${p.fileFormat || 'PDF'}</span></td>
+              <td>$${(p.pricePaid || 0).toFixed(2)}</td>
+              <td><span class="badge ${statusBadge}">${p.status}</span></td>
+              <td style="font-size:12px;">${date}</td>
+              <td>${dedicationText}</td>
+              <td style="text-align:center;">${p.downloadCount || 0} / ${p.downloadLimit || '∞'}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        window.showToast('Error cargando compras: ' + err.message, 'error');
+        document.getElementById('purchasesTable').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#e11d48;">❌ Error cargando compras</td></tr>';
+      }
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Auto-search on filter change
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchPurchase');
+      const statusFilter = document.getElementById('filterStatus');
+      const dedicationFilter = document.getElementById('filterDedication');
+      if (searchInput) searchInput.addEventListener('input', loadPurchases);
+      if (statusFilter) statusFilter.addEventListener('change', loadPurchases);
+      if (dedicationFilter) dedicationFilter.addEventListener('change', loadPurchases);
+    });
 
     // Auto-cargar libros al abrir tab
     document.querySelector('[onclick="showTab(\'books\')"]').addEventListener('click', loadBooks);

@@ -42,16 +42,17 @@ public class BookPurchaseController {
             @RequestBody Map<String, String> request) {
         
         try {
+            String dedication = request.getOrDefault("dedication", null);
             String token = authHeader.substring(7);
             UUID userId = tokenProvider.getUserIdFromToken(token);
             
             UUID bookId = UUID.fromString(request.get("bookId"));
             String format = request.getOrDefault("format", "PDF");
 
-            log.info("Creando checkout para ebook - Usuario: {} - Libro: {} - Formato: {}", 
-                     userId, bookId, format);
+            log.info("Creando checkout para ebook - Usuario: {} - Libro: {} - Formato: {} - Dedicatoria: {}", 
+                     userId, bookId, format, dedication != null ? (dedication.length() > 40 ? dedication.substring(0,40)+"…" : dedication) : "(sin)");
 
-            Map<String, Object> checkout = purchaseService.createEbookCheckout(userId, bookId, format);
+            Map<String, Object> checkout = purchaseService.createEbookCheckout(userId, bookId, format, dedication);
 
             return ResponseEntity.ok(ApiResponse.success("Checkout creado", checkout));
 

@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/shopify/webhooks/**").permitAll()
                 .requestMatchers("/api/books/purchase/checkout").authenticated()
                 .requestMatchers("/api/books/my-library").authenticated()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "AUTHOR")
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

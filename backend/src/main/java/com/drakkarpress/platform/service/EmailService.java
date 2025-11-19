@@ -242,6 +242,18 @@ public class EmailService {
             String downloadExpires = purchase.getDownloadExpiresAt() != null ? 
                 purchase.getDownloadExpiresAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "Sin expiración";
 
+            String dedicationBlock = "";
+            if (purchase.getDedicationMessage() != null && !purchase.getDedicationMessage().isBlank()) {
+                String safeDedication = purchase.getDedicationMessage().trim();
+                if (safeDedication.length() > 450) {
+                    safeDedication = safeDedication.substring(0, 450) + "…";
+                }
+                dedicationBlock = "<div style='background:#fff8e1;padding:15px;border-left:4px solid #ffc107;margin:20px 0;border-radius:4px'>" +
+                        "<h3 style='margin-top:0'>✒️ Dedicatoria Personalizada</h3>" +
+                        "<p style='white-space:pre-line;font-style:italic'>" + safeDedication.replace("<", "&lt;").replace(">", "&gt;") + "</p>" +
+                        "</div>";
+            }
+
             String htmlContent = "<!DOCTYPE html>" +
                 "<html><head><meta charset='UTF-8'><style>" +
                 "body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }" +
@@ -262,6 +274,7 @@ public class EmailService {
                 "<p><strong>Precio:</strong> " + purchase.getFormattedPrice() + "</p>" +
                 "</div>" +
                 "<center><a href='" + purchase.getDownloadLink() + "' class='button'>⬇️ Descargar Ahora</a></center>" +
+                dedicationBlock +
                 "<p style='margin-top: 30px;'><strong>⚠️ Importante:</strong></p><ul>" +
                 "<li>Puedes descargar este libro hasta " + purchase.getDownloadLimit() + " veces</li>" +
                 "<li>El link expira el " + downloadExpires + "</li>" +

@@ -63,7 +63,7 @@ public class BookPurchaseService {
      * Crea sesión de checkout para comprar ebook
      */
     @Transactional
-    public Map<String, Object> createEbookCheckout(UUID userId, UUID bookId, String format) {
+    public Map<String, Object> createEbookCheckout(UUID userId, UUID bookId, String format, String dedicationMessage) {
         try {
             Stripe.apiKey = stripeApiKey;
 
@@ -100,8 +100,8 @@ public class BookPurchaseService {
             transaction = paymentRepository.save(transaction);
 
             // Crear registro de compra
-            BookPurchase purchase = BookPurchase.createEbookPurchase(
-                    user, book, price, format, transaction.getId());
+                BookPurchase purchase = BookPurchase.createEbookPurchase(
+                    user, book, price, format, transaction.getId(), dedicationMessage);
             purchase = purchaseRepository.save(purchase);
 
             // URLs de retorno
