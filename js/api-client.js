@@ -120,6 +120,31 @@ class DrakkarAPI {
             return { success: false, message: 'Error de conexión' };
         }
     }
+
+    // Social login demo (Google/Facebook)
+    async socialLogin(provider) {
+        try {
+            const externalToken = 'demo-' + Date.now();
+            const response = await fetch(`${API_BASE_URL}/auth/social`, {
+                method: 'POST',
+                headers: this.getHeaders(false),
+                body: JSON.stringify({ provider, externalToken })
+            });
+            const data = await response.json();
+            console.log('[DrakkarAPI] Respuesta social login:', data);
+            if (data.success && data.data) {
+                this.token = data.data.token;
+                this.user = { id: data.data.userId, email: data.data.provider + '@social', username: data.data.username };
+                localStorage.setItem('drakkar_token', this.token);
+                localStorage.setItem('drakkar_user', JSON.stringify(this.user));
+                return { success: true, user: this.user };
+            }
+            return { success: false, message: data.message || 'Error social login' };
+        } catch (e) {
+            console.error('Error social login:', e);
+            return { success: false, message: 'Error de conexión' };
+        }
+    }
 }
 
 // Instancia global

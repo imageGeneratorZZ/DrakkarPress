@@ -1,107 +1,102 @@
 package com.drakkarpress.platform.controller;
 
-import com.drakkarpress.platform.dto.request.LoginRequest;
-import com.drakkarpress.platform.dto.request.RefreshTokenRequest;
-import com.drakkarpress.platform.dto.request.RegisterRequest;
-import com.drakkarpress.platform.dto.response.ApiResponse;
-import com.drakkarpress.platform.dto.response.AuthResponse;
-import com.drakkarpress.platform.service.AuthService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.drakkarpress.platform.dto.ApiResponse;
+import com.drakkarpress.platform.model.User;
+import com.drakkarpress.platform.repository.PlatformUserRepository;
+import com.drakkarpress.platform.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final PlatformUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    /**
-     * Registro
-     * POST /api/auth/register
-     */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            AuthResponse response = authService.register(request);
-            return ResponseEntity.ok(ApiResponse.success("User registered successfully", response));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
+    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@RequestBody RegisterRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Email ya registrado"));
         }
+        User user = User.builder()
+                .email(request.email())
+                .username(request.username())
+                .passwordHash(passwordEncoder.encode(request.password()))
+                .userNumber(System.currentTimeMillis())
+                .build();
+        user = userRepository.save(user);
+        String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
+        return ResponseEntity.ok(ApiResponse.ok("Registro exitoso", Map.of(
+                "token", token,
+                "userId", user.getId()
+        )));
     }
 
-    /**
-     * Login
-     * POST /api/auth/login
-     */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            AuthResponse response = authService.login(request);
-            return ResponseEntity.ok(ApiResponse.success("Login successful", response));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(e.getMessage()));
+    public ResponseEntity<ApiResponse<Map<String, Object>>> login(@RequestBody LoginRequest request) {
+        var userOpt = userRepository.findByEmail(request.email());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(ApiResponse.error("Credenciales inválidas"));
         }
+        User user = userOpt.get();
+        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+            return ResponseEntity.status(401).body(ApiResponse.error("Credenciales inválidas"));
+        }
+        String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
+        return ResponseEntity.ok(ApiResponse.ok("Login exitoso", Map.of(
+                "token", token,
+                "userId", user.getId()
+        )));
     }
 
-    /**
-     * Refresh token
-     * POST /api/auth/refresh
-     */
-    @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshTokenRequest request) {
-        try {
-            AuthResponse response = authService.refreshToken(request);
-            return ResponseEntity.ok(ApiResponse.success("Token refreshed successfully", response));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(e.getMessage()));
+    // Social login demo (Google/Facebook) - flujo mock para interfaz
+    @SuppressWarnings("null")
+    @PostMapping("/social")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> social(@RequestBody SocialLoginRequest request) {
+        String provider = request.provider().toLowerCase();
+        if (!(provider.equals("google") || provider.equals("facebook"))) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Proveedor no soportado"));
         }
+        if (request.externalToken() == null || request.externalToken().length() < 5) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Token externo inválido"));
+        }
+
+        // Si no llega email lo generamos determinísticamente para que el mismo usuario se reutilice
+        final String email = (request.email() == null || request.email().isBlank())
+            ? provider + ":" + Math.abs(request.externalToken().hashCode()) + "@social.drakkar"
+            : request.email();
+        final String username = (request.username() == null || request.username().isBlank())
+            ? provider + "User"
+            : request.username();
+
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            user = userRepository.save(User.builder()
+                .email(email)
+                .username(username)
+                .passwordHash(passwordEncoder.encode("SOCIAL:" + provider))
+                .userNumber(System.currentTimeMillis())
+                .build());
+        }
+
+        String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
+        return ResponseEntity.ok(ApiResponse.ok("Social login exitoso", Map.of(
+                "token", token,
+                "userId", user.getId(),
+                "username", user.getUsername(),
+                "provider", provider
+        )));
     }
 
-    /**
-     * Logout
-     * POST /api/auth/logout
-     */
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<String>> logout(@RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.substring(7); // Remove "Bearer "
-            authService.logout(token);
-            return ResponseEntity.ok(ApiResponse.success("Logout successful", null));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
-        }
-    }
-
-    /**
-     * Get current user
-     * GET /api/auth/me
-     */
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<Object>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.substring(7); // Remove "Bearer "
-            Object userInfo = authService.getCurrentUser(token);
-            return ResponseEntity.ok(ApiResponse.success("User info retrieved", userInfo));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(e.getMessage()));
-        }
-    }
-
-    /**
-     * Health check
-     * GET /api/auth/health
-     */
-    @GetMapping("/health")
-    public ResponseEntity<ApiResponse<String>> health() {
-        return ResponseEntity.ok(ApiResponse.success("Auth service is healthy", "OK"));
-    }
+    public record RegisterRequest(String email, String username, String password) {}
+    public record LoginRequest(String email, String password) {}
+    public record SocialLoginRequest(String provider, String externalToken, String email, String username) {}
 }
+// Duplicate legacy AuthController removed during JWT migration.

@@ -310,11 +310,11 @@
             </div>
 
             <div class="social-login">
-                <button class="btn-social" onclick="alert('Login con Google en desarrollo')">
+                <button class="btn-social" onclick="attemptSocial('google')">
                     <i class="fab fa-google"></i>
                     Google
                 </button>
-                <button class="btn-social" onclick="alert('Login con Facebook en desarrollo')">
+                <button class="btn-social" onclick="attemptSocial('facebook')">
                     <i class="fab fa-facebook"></i>
                     Facebook
                 </button>
@@ -430,6 +430,18 @@
         // Si ya está autenticado, redirigir
         if (api.isAuthenticated()) {
             window.location.href = '/index.html';
+        }
+
+        async function attemptSocial(provider) {
+            setLoading(true);
+            const result = await api.socialLogin(provider);
+            if (result.success) {
+                showToast('Login social exitoso (' + provider + ')', 'success');
+                setTimeout(() => location.replace('/index.html'), 600);
+            } else {
+                showToast(result.message || 'Fallo login social', 'error');
+                setLoading(false);
+            }
         }
     </script>
 </body>
