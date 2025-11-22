@@ -1,11 +1,15 @@
 # ⚔️ DrakkarPress - Plataforma Editorial Digital Completa
 
 **Versión:** 3.0 - Sistema Completo: Ebooks + POD + Pagos + Membresías  
-**Última actualización:** 18 de Noviembre, 2025
+**Última actualización:** 22 de Enero, 2025
 
 **© 2025 DrakkarPress. Todos los derechos reservados.**
 
-> **Plataforma completa para publicación digital y física: venta de ebooks con Stripe, integración Shopify para físicos, Lulu.com POD, membresías premium, y sistema de autenticación robusto. Red colaborativa de escritores con generadores IA.**
+> **Plataforma completa para publicación digital y física: venta de ebooks con Stripe, integración Shopify para físicos, Lulu.com POD, membresías premium, y sistema de autenticación robusto con JWT. Red colaborativa de escritores con generadores IA.**
+
+[![Production Status](https://img.shields.io/badge/production-live-brightgreen)](https://overflowing-consideration-production.up.railway.app)
+[![API Health](https://img.shields.io/badge/api-healthy-success)](https://overflowing-consideration-production.up.railway.app/api/health)
+[![Deploy](https://github.com/imageGeneratorZZ/DrakkarPress/actions/workflows/deploy.yml/badge.svg)](https://github.com/imageGeneratorZZ/DrakkarPress/actions/workflows/deploy.yml)
 
 ---
 
@@ -365,12 +369,181 @@ Verificaciones:
 
 ---
 
+## 🚀 Quick Start
+
+### Production API
+```bash
+# Test production health
+curl https://overflowing-consideration-production.up.railway.app/api/health
+
+# Run full E2E verification
+.\backend\verify-production.ps1 -IncludeRefresh
+```
+
+### Local Development
+```bash
+# 1. Clone repository
+git clone https://github.com/imageGeneratorZZ/DrakkarPress.git
+cd DrakkarPress
+
+# 2. Setup backend (requires Java 21 + PostgreSQL)
+cd backend
+./mvnw spring-boot:run
+
+# 3. Access API
+http://localhost:8080/api/health
+```
+
+### Frontend Integration
+See complete examples and guides:
+- **Interactive Demo**: `frontend-integration-example.html`
+- **Documentation**: `docs/FRONTEND_INTEGRATION.md`
+- **API Reference**: `docs/API_REFERENCE.md`
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [API Reference](docs/API_REFERENCE.md) | Complete API endpoint documentation |
+| [Frontend Integration](docs/FRONTEND_INTEGRATION.md) | JWT auth, token refresh, examples |
+| [Deployment Guide](docs/DEPLOYMENT.md) | Railway setup, CI/CD, troubleshooting |
+| [Architecture](ARQUITECTURA_ECOSISTEMA_COMPLETO.md) | System architecture overview |
+
+---
+
+## 🔐 Authentication
+
+DrakkarPress uses **JWT (JSON Web Tokens)** with access + refresh tokens:
+
+**Access Token**: 15-minute lifetime  
+**Refresh Token**: 30-day lifetime
+
+```javascript
+// Example: Authenticated request
+const token = localStorage.getItem('accessToken');
+const response = await fetch('/api/profile/me', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+```
+
+See `docs/FRONTEND_INTEGRATION.md` for complete auth flow and examples.
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend:**
+- Java 21
+- Spring Boot 3.5.3
+- Spring Security 6.x (JWT)
+- PostgreSQL 15+
+- Maven 3.9.6
+
+**Infrastructure:**
+- Railway (PaaS hosting)
+- Docker (containerization)
+- GitHub Actions (CI/CD)
+- Netlify (frontend hosting)
+
+**Frontend:**
+- HTML5 + CSS3 + Vanilla JavaScript
+- Responsive design
+- JWT-based authentication
+
+---
+
+## 🧪 Testing
+
+### Automated E2E Tests
+```powershell
+# Basic test (health, register, login, profile)
+.\backend\verify-production.ps1
+
+# Include refresh token test
+.\backend\verify-production.ps1 -IncludeRefresh
+
+# Full test with social login
+.\backend\verify-production.ps1 -IncludeRefresh -IncludeSocial
+```
+
+### CI/CD Pipeline
+Automated testing and deployment on every push to `main`:
+1. **Test**: Run unit tests with Maven
+2. **Deploy**: Deploy to Railway
+3. **Verify**: Health check and ping verification
+
+See workflow: `.github/workflows/deploy.yml`
+
+---
+
+## 🌐 Production URLs
+
+**Backend API**: https://overflowing-consideration-production.up.railway.app  
+**Frontend**: https://drakkarpress.netlify.app (via Netlify)  
+**Domains**: 
+- https://drakkarpress.com (primary)
+- https://www.drakkarpress.com
+
+**Health Check**: `/api/health`  
+**API Docs**: See `docs/API_REFERENCE.md`
+
+---
+
+## 💻 Development
+
+### Prerequisites
+- Java 21 (JDK 21.0.9+)
+- Maven 3.9.6+ (or use wrapper: `./mvnw`)
+- PostgreSQL 15+
+- Railway CLI (for deployments)
+
+### Environment Variables
+```env
+DATABASE_URL=jdbc:postgresql://localhost:5432/drakkarpress
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5500
+JPA_DDL_AUTO=update
+PORT=8080
+```
+
+See `docs/DEPLOYMENT.md` for complete setup guide.
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+---
+
 ## 📝 Licencia
 
 **© 2025 DrakkarPress. Todos los derechos reservados.**
 
 ---
 
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/imageGeneratorZZ/DrakkarPress/issues)
+- **API Documentation**: `docs/API_REFERENCE.md`
+- **Deployment Help**: `docs/DEPLOYMENT.md`
+- **Frontend Integration**: `docs/FRONTEND_INTEGRATION.md`
+
+---
+
 **DrakkarPress - Donde los escritores forjan su legado** ⚔️📚
 
 *"Cada palabra escrita es una runa de poder que perdura en el tiempo"*
+
+**Production Status**: ✅ Live and operational  
+**Last Deployment**: 2025-01-22  
+**API Version**: 1.0
