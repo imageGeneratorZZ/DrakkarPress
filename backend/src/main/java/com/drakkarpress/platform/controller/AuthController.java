@@ -78,23 +78,27 @@ public class AuthController {
             ? provider + "User"
             : request.username();
 
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            user = userRepository.save(User.builder()
-                .email(email)
-                .username(username)
-                .passwordHash(passwordEncoder.encode("SOCIAL:" + provider))
-                .userNumber(System.currentTimeMillis())
-                .build());
-        }
+        try {
+            User user = userRepository.findByEmail(email).orElse(null);
+            if (user == null) {
+                user = userRepository.save(User.builder()
+                    .email(email)
+                    .username(username)
+                    .passwordHash(passwordEncoder.encode("SOCIAL:" + provider))
+                    .userNumber(System.currentTimeMillis())
+                    .build());
+            }
 
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
-        return ResponseEntity.ok(ApiResponse.ok("Social login exitoso", Map.of(
-                "token", token,
-                "userId", user.getId(),
-                "username", user.getUsername(),
-                "provider", provider
-        )));
+            String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
+            return ResponseEntity.ok(ApiResponse.ok("Social login exitoso", Map.of(
+                    "token", token,
+                    "userId", user.getId(),
+                    "username", user.getUsername(),
+                    "provider", provider
+            )));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ApiResponse.error("Error en social login: " + e.getMessage()));
+        }
     }
 
     public record RegisterRequest(String email, String username, String password) {}
