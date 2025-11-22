@@ -8,11 +8,11 @@ function Invoke-Json($Method, $Url, $BodyObj, $Token) {
   if ($Token) { $Headers['Authorization'] = "Bearer $Token" }
   $Body = if ($BodyObj) { ($BodyObj | ConvertTo-Json -Depth 5) } else { $null }
   try {
-    $resp = Invoke-WebRequest -Uri $Url -Method $Method -Headers $Headers -ContentType 'application/json' -Body $Body -UseBasicParsing -TimeoutSec 15
-    return [pscustomobject]@{ Status=$resp.StatusCode; Json=(try { $resp.Content | ConvertFrom-Json } catch { $null }); Raw=$resp.Content }
-  }
-  catch {
-    $code = $null; if ($_.Exception.Response) { $code = $_.Exception.Response.StatusCode.value__ }
+    $resp = Invoke-WebRequest -Uri $Url -Method $Method -Headers $Headers -ContentType 'application/json' -Body $Body -TimeoutSec 15 -ErrorAction Stop
+    $json = $null; try { $json = $resp.Content | ConvertFrom-Json } catch {}
+    return [pscustomobject]@{ Status=[int]$resp.StatusCode; Json=$json; Raw=$resp.Content }
+  } catch {
+    $code = $null; if ($_.Exception.Response) { try { $code = $_.Exception.Response.StatusCode.value__ } catch {} }
     $raw = $null; if ($_.Exception.Response) { try { $sr = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream()); $raw = $sr.ReadToEnd() } catch {} }
     $json = $null; if ($raw) { try { $json = $raw | ConvertFrom-Json } catch {} }
     return [pscustomobject]@{ Status=$code; Json=$json; Raw=$raw }
@@ -32,19 +32,19 @@ Write-Host "[PING] Status: $($ping.Status) Marker: $($ping.Json.marker) Epoch: $
 
 # 3. Registro usuario nuevo
 $suffix = Get-Random -Maximum 1000000
-$email = "e2e+$suffix@drakkar.test"
+$email = "e2e+$suffix@example.com"
 $username = "user$suffix"
 $password = "Passw0rd!$suffix"
 $registerBody = @{ email=$email; username=$username; password=$password }
 $reg = Invoke-Json POST "$BaseUrl/api/auth/register" $registerBody $null
-Write-Host "[REGISTER] Status: $($reg.Status) User: $email TokenPresent: $([bool]$reg.Json.data.token)"
-$token = $reg.Json.data.token
-if (-not $token) { Write-Host "Registro falló, abortando login/profile" -ForegroundColor Red; exit 1 }
+$regToken = $reg.Json.data.token
+Write-Host "[REGISTER] Status: $($reg.Status) User: $email TokenPresent: $([bool]$regToken) Msg: $($reg.Json.message)"
+if (-not $regToken) { Write-Host "Registro falló, abortando login/profile" -ForegroundColor Red; Write-Host "Raw: $($reg.Raw)"; exit 1 }
 
 # 4. Login (verificar credenciales)
 $loginBody = @{ email=$email; password=$password }
 $login = Invoke-Json POST "$BaseUrl/api/auth/login" $loginBody $null
-Write-Host "[LOGIN] Status: $($login.Status) TokenMatch: $([bool]($login.Json.data.token -eq $token))"
+Write-Host "[LOGIN] Status: $($login.Status) TokenPresent: $([bool]$login.Json.data.token) Msg: $($login.Json.message)"
 $loginToken = $login.Json.data.token
 
 # 5. Profile GET (requiere endpoint; adapt if different)
