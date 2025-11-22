@@ -73,9 +73,9 @@ class DrakkarAPI {
 
             if (data.success && data.data) {
                 this.token = data.data.token;
-                // El backend actualmente no devuelve username, sólo userId y token
-                // Conservamos email para mostrar algo en la UI
-                this.user = { id: data.data.userId, email }; 
+                // El backend ahora devuelve username; si falta, derivar del email
+                const username = data.data.username || (email.split('@')[0]);
+                this.user = { id: data.data.userId, email, username }; 
                 localStorage.setItem('drakkar_token', this.token);
                 localStorage.setItem('drakkar_user', JSON.stringify(this.user));
                 console.log('[DrakkarAPI] Login OK. Token y usuario almacenados');

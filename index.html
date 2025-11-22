@@ -867,6 +867,20 @@
         // Verificar autenticación al cargar
         document.addEventListener('DOMContentLoaded', () => {
             updateUIBasedOnAuth();
+            // Si hay sesión, obtener perfil completo para sincronizar datos (bio, fullName, etc.)
+            if (api.isAuthenticated()) {
+                api.getMyProfile().then(p => {
+                    if (p && p.success && p.data) {
+                        const u = JSON.parse(localStorage.getItem('drakkar_user') || '{}');
+                        // Actualizar campos si existen
+                        if (p.data.username) u.username = p.data.username;
+                        if (p.data.fullName) u.fullName = p.data.fullName;
+                        localStorage.setItem('drakkar_user', JSON.stringify(u));
+                        api.user = u;
+                        updateUIBasedOnAuth();
+                    }
+                }).catch(e => console.warn('No se pudo cargar perfil completo', e));
+            }
         });
 
         function updateUIBasedOnAuth() {
