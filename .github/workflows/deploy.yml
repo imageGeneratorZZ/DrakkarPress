@@ -1,0 +1,91 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+      
+      - name: Run tests
+        run: ./mvnw test --batch-mode --no-transfer-progress
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: backend/target/surefire-reports/
+
+  deploy:
+    name: Deploy to Railway
+    needs: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.com/install.sh | sh
+          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+      
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+      
+      - name: Wait for deployment
+        run: sleep 30
+      
+      - name: Verify deployment
+        run: |
+          HEALTH_URL="https://overflowing-consideration-production.up.railway.app/api/health"
+          PING_URL="https://overflowing-consideration-production.up.railway.app/api/ping"
+          
+          echo "Checking health endpoint..."
+          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_URL)
+          
+          if [ "$HEALTH_STATUS" != "200" ]; then
+            echo "Health check failed with status: $HEALTH_STATUS"
+            exit 1
+          fi
+          
+          echo "Health check passed (200)"
+          
+          echo "Checking ping endpoint..."
+          PING_RESPONSE=$(curl -s $PING_URL)
+          PING_MARKER=$(echo $PING_RESPONSE | jq -r '.marker')
+          
+          if [ "$PING_MARKER" != "ping-controller-v1" ]; then
+            echo "Ping marker mismatch: $PING_MARKER"
+            exit 1
+          fi
+          
+          echo "Ping check passed (marker: $PING_MARKER)"
+          echo "Deployment verified successfully! 🚀"
