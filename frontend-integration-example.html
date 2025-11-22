@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Frontend Integration Example</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #f97316; margin-bottom: 2rem; }
+        .section { background: #1e293b; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; border-left: 4px solid #f97316; }
+        h2 { color: #fbbf24; margin-bottom: 1rem; font-size: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #94a3b8; }
+        input, textarea { width: 100%; padding: 0.75rem; background: #334155; border: 1px solid #475569; border-radius: 4px; color: #e2e8f0; margin-bottom: 1rem; }
+        button { background: #f97316; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-right: 0.5rem; }
+        button:hover { background: #ea580c; }
+        button:disabled { background: #64748b; cursor: not-allowed; }
+        .output { background: #0f172a; padding: 1rem; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.875rem; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .info { color: #38bdf8; }
+        code { background: #334155; padding: 0.2rem 0.5rem; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 DrakkarPress API Integration</h1>
+        <p style="margin-bottom: 2rem; color: #94a3b8;">Ejemplos prácticos de integración frontend con autenticación JWT</p>
+
+        <!-- Registro -->
+        <div class="section">
+            <h2>1. Registro de Usuario</h2>
+            <label>Email:</label>
+            <input type="email" id="regEmail" placeholder="usuario@ejemplo.com">
+            <label>Username:</label>
+            <input type="text" id="regUsername" placeholder="usuario123">
+            <label>Password:</label>
+            <input type="password" id="regPassword" placeholder="Contraseña segura">
+            <button onclick="register()">Registrar</button>
+            <div class="output" id="regOutput"></div>
+        </div>
+
+        <!-- Login -->
+        <div class="section">
+            <h2>2. Login</h2>
+            <label>Email:</label>
+            <input type="email" id="loginEmail" placeholder="usuario@ejemplo.com">
+            <label>Password:</label>
+            <input type="password" id="loginPassword" placeholder="Contraseña">
+            <button onclick="login()">Login</button>
+            <div class="output" id="loginOutput"></div>
+        </div>
+
+        <!-- Profile GET -->
+        <div class="section">
+            <h2>3. Ver Mi Perfil (Requiere Auth)</h2>
+            <button onclick="getProfile()">Obtener Perfil</button>
+            <div class="output" id="profileGetOutput"></div>
+        </div>
+
+        <!-- Profile UPDATE -->
+        <div class="section">
+            <h2>4. Actualizar Perfil (Requiere Auth)</h2>
+            <label>Nombre Completo:</label>
+            <input type="text" id="updateFullName" placeholder="Juan Pérez">
+            <label>Bio:</label>
+            <textarea id="updateBio" rows="3" placeholder="Escritor de fantasía épica..."></textarea>
+            <label>País:</label>
+            <input type="text" id="updateCountry" placeholder="España">
+            <button onclick="updateProfile()">Actualizar</button>
+            <div class="output" id="profileUpdateOutput"></div>
+        </div>
+
+        <!-- Refresh Token -->
+        <div class="section">
+            <h2>5. Renovar Token (Refresh)</h2>
+            <p style="color: #94a3b8; margin-bottom: 1rem;">Usa el refresh token para obtener un nuevo access token sin re-login</p>
+            <button onclick="refreshToken()">Renovar Token</button>
+            <div class="output" id="refreshOutput"></div>
+        </div>
+
+        <!-- Token Status -->
+        <div class="section">
+            <h2>📊 Estado de Autenticación</h2>
+            <button onclick="checkTokens()">Ver Tokens Almacenados</button>
+            <button onclick="clearTokens()">Limpiar Tokens</button>
+            <div class="output" id="statusOutput"></div>
+        </div>
+
+        <!-- Documentación -->
+        <div class="section">
+            <h2>📖 Guía de Implementación</h2>
+            <p style="color: #94a3b8; margin-bottom: 1rem;">
+                Todos los endpoints autenticados requieren el header <code>Authorization: Bearer YOUR_ACCESS_TOKEN</code>
+            </p>
+            <div class="output">
+<span class="info">// Ejemplo: Fetch con autenticación</span>
+const token = localStorage.getItem('accessToken');
+const response = await fetch('https://api.drakkarpress.com/api/profile/me', {
+    method: 'GET',
+    headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    }
+});
+
+<span class="info">// Manejo de token expirado (401)</span>
+if (response.status === 401) {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshResp = await fetch('https://api.drakkarpress.com/api/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken })
+    });
+    const data = await refreshResp.json();
+    localStorage.setItem('accessToken', data.data.token);
+    // Reintentar request original
+}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración API
+        const API_BASE = 'https://overflowing-consideration-production.up.railway.app';
+
+        // Helpers
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const color = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            el.innerHTML = `<span class="${color}">${message}</span>`;
+        }
+
+        async function apiCall(endpoint, method = 'GET', body = null, useAuth = false) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (useAuth) {
+                const token = localStorage.getItem('accessToken');
+                if (!token) throw new Error('No access token found. Please login first.');
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            const options = { method, headers };
+            if (body) options.body = JSON.stringify(body);
+
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            const data = await response.json();
+            
+            return { status: response.status, data };
+        }
+
+        // 1. Registro
+        async function register() {
+            try {
+                const email = document.getElementById('regEmail').value;
+                const username = document.getElementById('regUsername').value;
+                const password = document.getElementById('regPassword').value;
+
+                if (!email || !username || !password) {
+                    log('regOutput', 'Por favor completa todos los campos', 'error');
+                    return;
+                }
+
+                log('regOutput', 'Registrando...', 'info');
+                
+                const result = await apiCall('/api/auth/register', 'POST', { email, username, password });
+                
+                if (result.status === 200) {
+                    localStorage.setItem('accessToken', result.data.data.token);
+                    localStorage.setItem('refreshToken', result.data.data.refreshToken);
+                    localStorage.setItem('userId', result.data.data.userId);
+                    localStorage.setItem('username', result.data.data.username);
+                    
+                    log('regOutput', `✅ Registro exitoso!\nUsuario: ${username}\nTokens almacenados en localStorage`, 'success');
+                } else {
+                    log('regOutput', `❌ Error: ${result.data.message || 'Registro fallido'}`, 'error');
+                }
+            } catch (error) {
+                log('regOutput', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 2. Login
+        async function login() {
+            try {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    log('loginOutput', 'Por favor completa email y password', 'error');
+                    return;
+                }
+
+                log('loginOutput', 'Iniciando sesión...', 'info');
+                
+                const result = await apiCall('/api/auth/login', 'POST', { email, password });
+                
+                if (result.status === 200) {
+                    localStorage.setItem('accessToken', result.data.data.token);
+                    localStorage.setItem('refreshToken', result.data.data.refreshToken);
+                    localStorage.setItem('userId', result.data.data.userId);
+                    localStorage.setItem('username', result.data.data.username);
+                    
+                    log('loginOutput', `✅ Login exitoso!\nUsuario: ${result.data.data.username}\nTokens almacenados en localStorage`, 'success');
+                } else {
+                    log('loginOutput', `❌ Error: ${result.data.message || 'Login fallido'}`, 'error');
+                }
+            } catch (error) {
+                log('loginOutput', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 3. Get Profile
+        async function getProfile() {
+            try {
+                log('profileGetOutput', 'Obteniendo perfil...', 'info');
+                
+                const result = await apiCall('/api/profile/me', 'GET', null, true);
+                
+                if (result.status === 200) {
+                    const profile = result.data.data;
+                    log('profileGetOutput', 
+                        `✅ Perfil obtenido:\n${JSON.stringify(profile, null, 2)}`, 
+                        'success'
+                    );
+                } else if (result.status === 401) {
+                    log('profileGetOutput', '❌ Token inválido o expirado. Por favor login nuevamente.', 'error');
+                } else {
+                    log('profileGetOutput', `❌ Error: ${result.data.message}`, 'error');
+                }
+            } catch (error) {
+                log('profileGetOutput', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 4. Update Profile
+        async function updateProfile() {
+            try {
+                const fullName = document.getElementById('updateFullName').value;
+                const bio = document.getElementById('updateBio').value;
+                const country = document.getElementById('updateCountry').value;
+
+                const updateData = {};
+                if (fullName) updateData.fullName = fullName;
+                if (bio) updateData.bio = bio;
+                if (country) updateData.country = country;
+
+                if (Object.keys(updateData).length === 0) {
+                    log('profileUpdateOutput', 'Por favor completa al menos un campo', 'error');
+                    return;
+                }
+
+                log('profileUpdateOutput', 'Actualizando perfil...', 'info');
+                
+                const result = await apiCall('/api/profile/me', 'PUT', updateData, true);
+                
+                if (result.status === 200) {
+                    log('profileUpdateOutput', 
+                        `✅ Perfil actualizado:\n${JSON.stringify(result.data.data, null, 2)}`, 
+                        'success'
+                    );
+                } else if (result.status === 401) {
+                    log('profileUpdateOutput', '❌ Token inválido o expirado. Por favor login nuevamente.', 'error');
+                } else {
+                    log('profileUpdateOutput', `❌ Error: ${result.data.message}`, 'error');
+                }
+            } catch (error) {
+                log('profileUpdateOutput', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 5. Refresh Token
+        async function refreshToken() {
+            try {
+                const refreshToken = localStorage.getItem('refreshToken');
+                
+                if (!refreshToken) {
+                    log('refreshOutput', '❌ No refresh token found. Por favor login primero.', 'error');
+                    return;
+                }
+
+                log('refreshOutput', 'Renovando token...', 'info');
+                
+                const result = await apiCall('/api/auth/refresh', 'POST', { refreshToken });
+                
+                if (result.status === 200) {
+                    const newAccessToken = result.data.data.token;
+                    localStorage.setItem('accessToken', newAccessToken);
+                    
+                    log('refreshOutput', 
+                        `✅ Token renovado exitosamente!\nNuevo access token almacenado.\n\nAntes (primeros 30 chars): ${refreshToken.substring(0, 30)}...\nDespués: ${newAccessToken.substring(0, 30)}...`, 
+                        'success'
+                    );
+                } else {
+                    log('refreshOutput', `❌ Error: ${result.data.message || 'Refresh token inválido o expirado'}`, 'error');
+                }
+            } catch (error) {
+                log('refreshOutput', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Token Status
+        function checkTokens() {
+            const accessToken = localStorage.getItem('accessToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+            const username = localStorage.getItem('username');
+            const userId = localStorage.getItem('userId');
+
+            if (!accessToken) {
+                log('statusOutput', '❌ No tokens encontrados. Por favor login primero.', 'error');
+                return;
+            }
+
+            log('statusOutput', 
+                `✅ Estado de Autenticación:\n\n` +
+                `Username: ${username || 'N/A'}\n` +
+                `User ID: ${userId || 'N/A'}\n\n` +
+                `Access Token (primeros 40 chars):\n${accessToken.substring(0, 40)}...\n\n` +
+                `Refresh Token (primeros 40 chars):\n${refreshToken ? refreshToken.substring(0, 40) + '...' : 'N/A'}`,
+                'success'
+            );
+        }
+
+        function clearTokens() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            log('statusOutput', '✅ Todos los tokens eliminados de localStorage', 'success');
+        }
+
+        // Auto-check tokens on load
+        window.onload = () => {
+            const token = localStorage.getItem('accessToken');
+            if (token) {
+                console.log('✅ Access token encontrado en localStorage');
+            } else {
+                console.log('ℹ️ No access token encontrado. Por favor login.');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suite de Pruebas - DrakkarPress</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1A4D7A;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .test-section h2 {
+            color: #1A4D7A;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .test-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #1A4D7A;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #144060;
+        }
+        .btn-social-google {
+            background: #DB4437;
+            color: white;
+        }
+        .btn-social-facebook {
+            background: #4267B2;
+            color: white;
+        }
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-idle {
+            background: #e0e0e0;
+            color: #666;
+        }
+        .status-testing {
+            background: #FFF3CD;
+            color: #856404;
+        }
+        .status-success {
+            background: #D4EDDA;
+            color: #155724;
+        }
+        .status-error {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+        .log-info { color: #0066cc; }
+        .log-success { color: #28a745; }
+        .log-error { color: #dc3545; }
+        .log-warn { color: #ffc107; }
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1;
+        }
+        .endpoints {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .endpoints code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Suite de Pruebas DrakkarPress</h1>
+        <p class="subtitle">Prueba todos los endpoints y funcionalidades</p>
+
+        <div class="endpoints">
+            <strong>Backend Local:</strong> <code id="localUrl">http://localhost:12000</code><br>
+            <strong>Backend Railway:</strong> <code id="railwayUrl">https://overflowing-consideration-production.up.railway.app</code>
+        </div>
+
+        <!-- Test 1: Health Check -->
+        <div class="test-section">
+            <h2>1. Health Check</h2>
+            <div class="test-row">
+                <button class="btn btn-primary" onclick="testHealth('local')">Test Local</button>
+                <button class="btn btn-primary" onclick="testHealth('railway')">Test Railway</button>
+                <span class="status status-idle" id="status-health">Esperando...</span>
+            </div>
+            <div class="log" id="log-health"></div>
+        </div>
+
+        <!-- Test 2: Registro -->
+        <div class="test-section">
+            <h2>2. Registro de Usuario</h2>
+            <div class="test-row">
+                <input type="email" id="register-email" placeholder="Email (auto-generado)" readonly>
+                <input type="password" id="register-password" value="TestPass123!" placeholder="Password">
+                <button class="btn btn-primary" onclick="testRegister('local')">Registrar Local</button>
+                <button class="btn btn-primary" onclick="testRegister('railway')">Registrar Railway</button>
+                <span class="status status-idle" id="status-register">Esperando...</span>
+            </div>
+            <div class="log" id="log-register"></div>
+        </div>
+
+        <!-- Test 3: Login -->
+        <div class="test-section">
+            <h2>3. Login Email/Password</h2>
+            <div class="test-row">
+                <input type="email" id="login-email" placeholder="Email del registro">
+                <input type="password" id="login-password" value="TestPass123!" placeholder="Password">
+                <button class="btn btn-primary" onclick="testLogin('local')">Login Local</button>
+                <button class="btn btn-primary" onclick="testLogin('railway')">Login Railway</button>
+                <span class="status status-idle" id="status-login">Esperando...</span>
+            </div>
+            <div class="log" id="log-login"></div>
+        </div>
+
+        <!-- Test 4: Social Login -->
+        <div class="test-section">
+            <h2>4. Social Login (Demo)</h2>
+            <div class="test-row">
+                <button class="btn btn-social-google" onclick="testSocialLogin('google', 'local')">🔐 Google Local</button>
+                <button class="btn btn-social-facebook" onclick="testSocialLogin('facebook', 'local')">🔐 Facebook Local</button>
+                <button class="btn btn-social-google" onclick="testSocialLogin('google', 'railway')">🔐 Google Railway</button>
+                <button class="btn btn-social-facebook" onclick="testSocialLogin('facebook', 'railway')">🔐 Facebook Railway</button>
+                <span class="status status-idle" id="status-social">Esperando...</span>
+            </div>
+            <div class="log" id="log-social"></div>
+        </div>
+
+        <!-- Test 5: Profile -->
+        <div class="test-section">
+            <h2>5. Perfil de Usuario</h2>
+            <div class="test-row">
+                <button class="btn btn-primary" onclick="testProfileGet('local')">Ver Perfil Local</button>
+                <button class="btn btn-primary" onclick="testProfileGet('railway')">Ver Perfil Railway</button>
+                <button class="btn btn-primary" onclick="testProfileUpdate('local')">Actualizar Local</button>
+                <button class="btn btn-primary" onclick="testProfileUpdate('railway')">Actualizar Railway</button>
+                <span class="status status-idle" id="status-profile">Esperando...</span>
+            </div>
+            <div class="log" id="log-profile"></div>
+        </div>
+
+        <!-- Test 6: Test Completo -->
+        <div class="test-section">
+            <h2>6. Test Completo Automatizado</h2>
+            <div class="test-row">
+                <button class="btn btn-primary" onclick="runFullTest('local')" style="flex: 1">🚀 Test Completo LOCAL</button>
+                <button class="btn btn-primary" onclick="runFullTest('railway')" style="flex: 1">🚀 Test Completo RAILWAY</button>
+            </div>
+            <div class="log" id="log-full"></div>
+        </div>
+    </div>
+
+    <script>
+        const URLS = {
+            local: 'http://localhost:12000',
+            railway: 'https://overflowing-consideration-production.up.railway.app'
+        };
+
+        let currentToken = null;
+        let testEmail = null;
+
+        function log(section, message, type = 'info') {
+            const logEl = document.getElementById(`log-${section}`);
+            const time = new Date().toLocaleTimeString();
+            logEl.innerHTML += `<div class="log-entry log-${type}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function setStatus(section, text, status) {
+            const el = document.getElementById(`status-${section}`);
+            el.textContent = text;
+            el.className = `status status-${status}`;
+        }
+
+        async function testHealth(env) {
+            log('health', `Probando health en ${env}...`, 'info');
+            setStatus('health', 'Probando...', 'testing');
+            try {
+                const response = await fetch(`${URLS[env]}/api/health`);
+                const data = await response.json();
+                log('health', `✅ ${env}: ${JSON.stringify(data)}`, 'success');
+                setStatus('health', `${env} OK`, 'success');
+            } catch (error) {
+                log('health', `❌ ${env}: ${error.message}`, 'error');
+                setStatus('health', `${env} ERROR`, 'error');
+            }
+        }
+
+        async function testRegister(env) {
+            testEmail = `test${Date.now()}@drakkarpress.com`;
+            document.getElementById('register-email').value = testEmail;
+            document.getElementById('login-email').value = testEmail;
+            
+            log('register', `Registrando usuario ${testEmail} en ${env}...`, 'info');
+            setStatus('register', 'Registrando...', 'testing');
+            
+            try {
+                const response = await fetch(`${URLS[env]}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: testEmail,
+                        password: document.getElementById('register-password').value,
+                        username: testEmail.split('@')[0]
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentToken = data.data.token;
+                    log('register', `✅ Usuario creado: ${data.data.username}`, 'success');
+                    log('register', `Token: ${currentToken.substring(0, 20)}...`, 'info');
+                    setStatus('register', 'Registrado', 'success');
+                } else {
+                    log('register', `❌ Error: ${data.message}`, 'error');
+                    setStatus('register', 'Error', 'error');
+                }
+            } catch (error) {
+                log('register', `❌ ${error.message}`, 'error');
+                setStatus('register', 'Error', 'error');
+            }
+        }
+
+        async function testLogin(env) {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            log('login', `Login con ${email} en ${env}...`, 'info');
+            setStatus('login', 'Autenticando...', 'testing');
+            
+            try {
+                const response = await fetch(`${URLS[env]}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentToken = data.data.token;
+                    log('login', `✅ Login exitoso: ${data.data.username}`, 'success');
+                    log('login', `Token: ${currentToken.substring(0, 20)}...`, 'info');
+                    setStatus('login', 'Autenticado', 'success');
+                } else {
+                    log('login', `❌ Error: ${data.message}`, 'error');
+                    setStatus('login', 'Error', 'error');
+                }
+            } catch (error) {
+                log('login', `❌ ${error.message}`, 'error');
+                setStatus('login', 'Error', 'error');
+            }
+        }
+
+        async function testSocialLogin(provider, env) {
+            log('social', `Social login ${provider} en ${env}...`, 'info');
+            setStatus('social', `${provider}...`, 'testing');
+            
+            try {
+                const response = await fetch(`${URLS[env]}/api/auth/social`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        provider: provider,
+                        externalToken: `demo-${Date.now()}`
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentToken = data.data.token;
+                    log('social', `✅ ${provider} login OK: ${data.data.username}`, 'success');
+                    setStatus('social', `${provider} OK`, 'success');
+                } else {
+                    log('social', `❌ ${provider}: ${data.message}`, 'error');
+                    setStatus('social', 'Error', 'error');
+                }
+            } catch (error) {
+                log('social', `❌ ${provider}: ${error.message}`, 'error');
+                setStatus('social', 'Error', 'error');
+            }
+        }
+
+        async function testProfileGet(env) {
+            if (!currentToken) {
+                log('profile', '❌ No hay token. Haz login primero.', 'error');
+                return;
+            }
+            
+            log('profile', `Obteniendo perfil en ${env}...`, 'info');
+            setStatus('profile', 'Cargando...', 'testing');
+            
+            try {
+                const response = await fetch(`${URLS[env]}/api/profile/me`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    log('profile', `✅ Perfil: ${JSON.stringify(data.data)}`, 'success');
+                    setStatus('profile', 'Cargado', 'success');
+                } else {
+                    log('profile', `❌ Error: ${data.message}`, 'error');
+                    setStatus('profile', 'Error', 'error');
+                }
+            } catch (error) {
+                log('profile', `❌ ${error.message}`, 'error');
+                setStatus('profile', 'Error', 'error');
+            }
+        }
+
+        async function testProfileUpdate(env) {
+            if (!currentToken) {
+                log('profile', '❌ No hay token. Haz login primero.', 'error');
+                return;
+            }
+            
+            const updates = {
+                fullName: 'Usuario de Prueba',
+                bio: 'Bio actualizada desde suite de pruebas',
+                profilePictureUrl: 'https://i.pravatar.cc/150?u=' + Date.now()
+            };
+            
+            log('profile', `Actualizando perfil en ${env}...`, 'info');
+            setStatus('profile', 'Actualizando...', 'testing');
+            
+            try {
+                const response = await fetch(`${URLS[env]}/api/profile/me`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updates)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    log('profile', `✅ Perfil actualizado`, 'success');
+                    setStatus('profile', 'Actualizado', 'success');
+                } else {
+                    log('profile', `❌ Error: ${data.message}`, 'error');
+                    setStatus('profile', 'Error', 'error');
+                }
+            } catch (error) {
+                log('profile', `❌ ${error.message}`, 'error');
+                setStatus('profile', 'Error', 'error');
+            }
+        }
+
+        async function runFullTest(env) {
+            document.getElementById('log-full').innerHTML = '';
+            log('full', `🚀 Iniciando test completo en ${env.toUpperCase()}`, 'info');
+            
+            // 1. Health
+            log('full', '1️⃣ Verificando health...', 'info');
+            try {
+                const health = await fetch(`${URLS[env]}/api/health`);
+                const healthData = await health.json();
+                log('full', `✅ Health OK: ${healthData.status}`, 'success');
+            } catch (e) {
+                log('full', `❌ Health falló: ${e.message}`, 'error');
+                return;
+            }
+            
+            // 2. Registro
+            log('full', '2️⃣ Registrando nuevo usuario...', 'info');
+            testEmail = `test${Date.now()}@drakkarpress.com`;
+            try {
+                const reg = await fetch(`${URLS[env]}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: testEmail,
+                        password: 'TestPass123!',
+                        username: testEmail.split('@')[0]
+                    })
+                });
+                const regData = await reg.json();
+                if (regData.success) {
+                    currentToken = regData.data.token;
+                    log('full', `✅ Usuario creado: ${regData.data.username}`, 'success');
+                } else {
+                    log('full', `❌ Registro falló: ${regData.message}`, 'error');
+                    return;
+                }
+            } catch (e) {
+                log('full', `❌ Registro error: ${e.message}`, 'error');
+                return;
+            }
+            
+            // 3. Login
+            log('full', '3️⃣ Probando login...', 'info');
+            try {
+                const login = await fetch(`${URLS[env]}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: testEmail, password: 'TestPass123!' })
+                });
+                const loginData = await login.json();
+                if (loginData.success) {
+                    log('full', `✅ Login OK: ${loginData.data.username}`, 'success');
+                } else {
+                    log('full', `⚠️ Login warning: ${loginData.message}`, 'warn');
+                }
+            } catch (e) {
+                log('full', `❌ Login error: ${e.message}`, 'error');
+            }
+            
+            // 4. Social Login
+            log('full', '4️⃣ Probando social login...', 'info');
+            try {
+                const social = await fetch(`${URLS[env]}/api/auth/social`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider: 'google', externalToken: 'demo123' })
+                });
+                const socialData = await social.json();
+                if (socialData.success) {
+                    log('full', `✅ Social login OK: ${socialData.data.username}`, 'success');
+                    currentToken = socialData.data.token;
+                } else {
+                    log('full', `⚠️ Social login: ${socialData.message}`, 'warn');
+                }
+            } catch (e) {
+                log('full', `❌ Social login error: ${e.message}`, 'error');
+            }
+            
+            // 5. Profile GET
+            log('full', '5️⃣ Obteniendo perfil...', 'info');
+            try {
+                const profile = await fetch(`${URLS[env]}/api/profile/me`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                const profileData = await profile.json();
+                if (profileData.success) {
+                    log('full', `✅ Perfil obtenido: ${profileData.data.username}`, 'success');
+                } else {
+                    log('full', `⚠️ Profile GET: ${profileData.message}`, 'warn');
+                }
+            } catch (e) {
+                log('full', `❌ Profile GET error: ${e.message}`, 'error');
+            }
+            
+            // 6. Profile UPDATE
+            log('full', '6️⃣ Actualizando perfil...', 'info');
+            try {
+                const update = await fetch(`${URLS[env]}/api/profile/me`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fullName: 'Test User',
+                        bio: 'Automated test bio'
+                    })
+                });
+                const updateData = await update.json();
+                if (updateData.success) {
+                    log('full', `✅ Perfil actualizado`, 'success');
+                } else {
+                    log('full', `⚠️ Profile UPDATE: ${updateData.message}`, 'warn');
+                }
+            } catch (e) {
+                log('full', `❌ Profile UPDATE error: ${e.message}`, 'error');
+            }
+            
+            log('full', '🎉 Test completo finalizado!', 'success');
+        }
+
+        // Auto-generar email al cargar
+        window.onload = () => {
+            document.getElementById('register-email').value = `test${Date.now()}@drakkarpress.com`;
+        };
+    </script>
+</body>
+</html>

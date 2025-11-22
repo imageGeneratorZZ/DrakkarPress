@@ -1,0 +1,1 @@
+Invoke-WebRequest -Uri https://overflowing-consideration-production.up.railway.app/api/auth/social -Method POST -Body '{\"provider\":\"google\",\"externalToken\":\"demo12345\"}' -ContentType 'application/json'

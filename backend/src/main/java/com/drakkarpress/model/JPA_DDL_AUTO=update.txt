@@ -1,0 +1,1 @@
+JPA_DDL_AUTO=update
