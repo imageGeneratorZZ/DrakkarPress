@@ -337,6 +337,10 @@
 
     <script src="js/api-client.js"></script>
     <script>
+        // Forzar dominio canonical con www para evitar separar localStorage entre dominios
+        if (location.hostname === 'drakkarpress.com') {
+            location.replace(location.href.replace('drakkarpress.com', 'www.drakkarpress.com'));
+        }
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -393,12 +397,14 @@
 
             try {
                 const result = await api.login(email, password);
+                console.log('[Login] Resultado:', result);
 
                 if (result.success) {
                     showToast('¡Bienvenido de vuelta!', 'success');
+                    // Usamos replace para evitar que el usuario vuelva atrás al formulario
                     setTimeout(() => {
-                        window.location.href = '/index.html';
-                    }, 1000);
+                        location.replace('/index.html');
+                    }, 600);
                 } else {
                     showToast(result.message || 'Error al iniciar sesión', 'error');
                     setLoading(false);

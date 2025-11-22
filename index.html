@@ -860,6 +860,10 @@
 
     <script src="js/api-client.js"></script>
     <script>
+        // Canonical domain para que localStorage sea único
+        if (location.hostname === 'drakkarpress.com') {
+            location.replace(location.href.replace('drakkarpress.com', 'www.drakkarpress.com'));
+        }
         // Verificar autenticación al cargar
         document.addEventListener('DOMContentLoaded', () => {
             updateUIBasedOnAuth();
@@ -868,16 +872,14 @@
         function updateUIBasedOnAuth() {
             const user = api.getCurrentUser();
             const userProfile = document.querySelector('.user-profile span');
-            
+            const avatar = document.querySelector('.user-avatar i');
             if (user) {
-                if (userProfile) {
-                    userProfile.textContent = user.username || user.email;
-                }
-                console.log('Usuario autenticado:', user);
+                if (userProfile) userProfile.textContent = user.username || user.email || 'Usuario';
+                if (avatar) avatar.className = 'fas fa-user-shield';
+                console.log('[Index] Usuario autenticado:', user);
             } else {
-                if (userProfile) {
-                    userProfile.textContent = 'Iniciar sesión';
-                }
+                if (userProfile) userProfile.textContent = 'Iniciar sesión';
+                if (avatar) avatar.className = 'fas fa-user';
             }
         }
 
@@ -896,11 +898,11 @@
         }
 
         function showProfileMenu() {
-            const confirmed = confirm('¿Cerrar sesión?');
-            if (confirmed) {
+            const action = prompt('Escribe "logout" para cerrar sesión, cualquier otra cosa para cancelar');
+            if (action && action.toLowerCase() === 'logout') {
                 api.logout();
                 updateUIBasedOnAuth();
-                alert('Sesión cerrada exitosamente');
+                alert('Sesión cerrada');
             }
         }
 
