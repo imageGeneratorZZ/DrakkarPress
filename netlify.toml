@@ -2,18 +2,18 @@
   publish = "."
   command = "echo 'DrakkarPress Instagram Edition deployed'"
 
-# SPA redirect for all routes
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# API proxy to backend
+# API proxy to backend (MUST be BEFORE catch-all SPA redirect)
 [[redirects]]
   from = "/api/*"
   to = "https://overflowing-consideration-production.up.railway.app/api/:splat"
   status = 200
   force = true
+
+# SPA redirect for all routes (catch-all MUST be LAST)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"
