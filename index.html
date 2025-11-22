@@ -1,1471 +1,1033 @@
 <!DOCTYPE html>
-<html lang="es" data-lang="es">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="page.title">DrakkarPress - La Flota Editorial Digital</title>
+    <title>DrakkarPress - Plataforma Editorial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            /* Colores Corporativos DrakkarPress */
-            --primary-dark: #0A2540;      /* Azul Marino Vikingo (Noche Nórdica) */
-            --primary: #1A4D7A;           /* Azul Vikingo (Principal) */
-            --primary-light: #2E6BA0;     /* Azul Océano */
-            --secondary: #D4AF37;         /* Oro Nórdico (Acentos) */
-            --secondary-light: #E8C968;   /* Oro Claro */
-            --accent-teal: #00B4D8;       /* Agua Vikinga */
-            
-            /* Colores por Rol */
-            --writer: #3498DB;            /* Azul Escritor */
-            --reseller: #27AE60;          /* Verde Revendedor */
-            --printer: #E67E22;           /* Naranja Imprenta */
-            --reader: #9B59B6;            /* Morado Lector */
-            
-            /* Neutrales */
-            --text-dark: #1A1A1A;
-            --text-medium: #4A4A4A;
-            --text-light: #7A7A7A;
-            --background: #F8F9FA;
-            --white: #FFFFFF;
-            
-            /* Gradientes */
-            --gradient-primary: linear-gradient(135deg, #0A2540 0%, #1A4D7A 50%, #2E6BA0 100%);
-            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #E8C968 100%);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1A4D7A;
+            --secondary: #D4AF37;
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #262626;
+            --text-secondary: #8E8E8E;
+            --border: #DBDBDB;
+            --hover: #F7F7F7;
+            --sidebar-width: 245px;
+            --header-height: 60px;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
         }
 
-        /* Header */
-        header {
-            background: var(--gradient-primary);
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
+        /* Sidebar - Estilo Instagram */
+        .sidebar {
+            position: fixed;
+            left: 0;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            text-decoration: none;
-            color: var(--white);
-            transition: transform 0.3s;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-gold);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-        }
-
-        .logo-text {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 8px 12px 20px;
+            z-index: 100;
             display: flex;
             flex-direction: column;
         }
 
-        .logo-text .brand-name {
-            font-size: 1.5rem;
+        .sidebar-logo {
+            padding: 25px 12px 16px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-logo a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-
-        .logo-text .brand-tagline {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .nav-links {
             display: flex;
-            gap: 2rem;
             align-items: center;
+            gap: 12px;
         }
 
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--secondary-light);
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: white;
-            min-width: 220px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 8px;
-            z-index: 1;
-            top: 100%;
-            margin-top: 10px;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a {
-            color: var(--text-dark);
-            padding: 12px 20px;
-            text-decoration: none;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        .dropdown-content a:hover {
-            background: var(--background);
-        }
-
-        .btn-primary {
-            background: var(--gradient-gold);
-            color: var(--primary-dark);
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.5);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: var(--gradient-primary);
-            color: var(--white);
-            padding: 4rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 L90 90 L10 90 Z" fill="rgba(212,175,55,0.05)"/></svg>');
-            background-size: 100px 100px;
-            opacity: 0.3;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 .brand-icon {
-            color: var(--secondary);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-
-        .search-box {
-            max-width: 800px;
-            margin: 2rem auto;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1.2rem 4rem 1.2rem 1.5rem;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            top: 5px;
-            background: var(--gradient-gold);
-            color: var(--primary-dark);
-            border: none;
-            padding: 0.9rem 2rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-        }
-
-        .search-btn:hover {
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
-            transform: scale(1.05);
-        }
-
-        .filters {
             display: flex;
-            gap: 1rem;
+            align-items: center;
             justify-content: center;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: rgba(255,255,255,0.2);
             color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
+            font-size: 20px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filter-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .stats {
-            margin-top: 2rem;
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Role Cards */
-        .roles-section {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--primary);
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--gradient-gold);
-            border-radius: 2px;
-        }
-
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .role-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 4px solid;
-        }
-
-        .role-card:nth-child(1) { border-top-color: #3498DB; }
-        .role-card:nth-child(2) { border-top-color: #27AE60; }
-        .role-card:nth-child(3) { border-top-color: #E67E22; }
-        .role-card:nth-child(4) { border-top-color: #9B59B6; }
-
-        .role-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        }
-
-        .role-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .role-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .role-card ul {
-            list-style: none;
-            text-align: left;
-            margin: 1rem 0;
-        }
-
-        .role-card li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .role-card li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #27AE60;
-            font-weight: bold;
-        }
-
-        .role-card .btn {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.8rem 2rem;
-            background: var(--primary);
-            color: var(--white);
+            transition: background 0.2s;
             text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .nav-item:hover {
+            background: var(--hover);
+        }
+
+        .nav-item.active {
             font-weight: 600;
         }
 
-        .role-card .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(26, 77, 122, 0.3);
+        .nav-item i {
+            width: 24px;
+            margin-right: 16px;
+            font-size: 24px;
         }
 
-        /* Featured Books */
-        .featured-books {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
+        .nav-item.create {
+            margin-top: 8px;
+            font-weight: 600;
         }
 
-        .books-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
         }
 
-        .book-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .book-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .book-cover {
-            width: 100%;
-            height: 350px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .user-profile {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .book-info {
-            padding: 1.5rem;
-        }
-
-        .book-category {
-            color: #9B59B6;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .book-title {
-            font-size: 1.3rem;
-            margin: 0.5rem 0;
-            color: var(--primary);
-        }
-
-        .book-author {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .book-rating {
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        .book-price {
-            font-size: 1.3rem;
-            color: #27AE60;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .book-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .book-actions button {
-            flex: 1;
-            padding: 0.7rem;
-            border: none;
-            border-radius: 5px;
+            padding: 8px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            transition: background 0.2s;
         }
 
-        .btn-cart {
+        .user-profile:hover {
+            background: var(--hover);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             background: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-cart:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-fav {
-            background: var(--white);
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-fav:hover {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        /* AI Section */
-        .ai-section {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            color: white;
-            text-align: center;
-        }
-
-        .ai-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .ai-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .ai-feature {
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .ai-feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Map Section */
-        .map-section {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-            text-align: center;
-        }
-
-        .map-placeholder {
-            height: 400px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: #666;
-            margin-top: 2rem;
+            color: white;
+            margin-right: 12px;
         }
 
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: var(--white);
-            padding: 3rem 2rem;
-            margin-top: 4rem;
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
         }
 
-        .footer-content {
-            max-width: 1200px;
+        /* Top Bar */
+        .top-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            font-size: 14px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--hover);
+        }
+
+        .icon-btn i {
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FF3040;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Feed Container */
+        .feed-container {
+            max-width: 935px;
             margin: 0 auto;
+            padding: 30px 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+            gap: 24px;
         }
 
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            color: var(--secondary);
+        /* Stories Section */
+        .stories-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
         }
 
-        .footer-section ul {
-            list-style: none;
+        .stories-scroll {
+            display: flex;
+            gap: 16px;
         }
 
-        .footer-section a {
-            color: var(--white);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: all 0.3s;
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .footer-section a:hover {
-            opacity: 1;
-            color: var(--secondary-light);
+        .story-avatar {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 3px;
+            margin-bottom: 6px;
         }
 
-        .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        .story-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 3px solid var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .story-name {
+            font-size: 12px;
+            color: var(--text-primary);
+            max-width: 74px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
+        /* Post Card */
+        .post-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            justify-content: space-between;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .post-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-info span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .post-options {
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-placeholder {
+            color: var(--text-secondary);
+            font-size: 48px;
+        }
+
+        .post-actions {
+            display: flex;
+            padding: 12px 16px;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.liked {
+            color: #ED4956;
+        }
+
+        .action-btn span {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-actions .spacer {
+            flex: 1;
+        }
+
+        .post-content {
+            padding: 0 16px 16px;
+        }
+
+        .post-likes {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .post-caption strong {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .post-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 77, 122, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 99;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(26, 77, 122, 0.6);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
+            .sidebar {
+                width: 72px;
+                padding: 8px;
             }
-            .nav-links {
+
+            .sidebar-logo a span,
+            .nav-item span {
                 display: none;
             }
+
+            .sidebar-logo {
+                padding: 20px 0;
+                justify-content: center;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 12px 0;
+            }
+
+            .nav-item i {
+                margin: 0;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 72px;
+            }
+
+            .search-bar {
+                max-width: 200px;
+            }
+
+            .top-actions {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-right: none;
+                border-top: 1px solid var(--border);
+                padding: 8px;
+            }
+
+            .sidebar-logo,
+            .sidebar-footer {
+                display: none;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                padding: 8px;
+                margin: 0;
+            }
+
+            .nav-item i {
+                margin: 0;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-bottom: 72px;
+            }
+
+            .feed-container {
+                padding: 16px 8px;
+            }
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            background: linear-gradient(135deg, var(--secondary), #FFD700);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background: var(--hover);
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <a href="/" class="logo">
-                <div class="logo-icon">
-                    <svg width="40" height="40" viewBox="0 0 60 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Olas del conocimiento (base) -->
-                        <path d="M2 40 Q8 38 14 40 T26 40 T38 40 T50 40 T58 40" stroke="#3498db" stroke-width="1" opacity="0.3" fill="none"/>
-                        <path d="M2 43 Q8 41 14 43 T26 43 T38 43 T50 43 T58 43" stroke="#3498db" stroke-width="1" opacity="0.2" fill="none"/>
-                        
-                        <!-- Drakkar Principal (Centro) - Representa DrakkarPress -->
-                        <g transform="translate(30, 24)">
-                            <!-- Casco del barco -->
-                            <path d="M-8,4 L-6,0 L6,0 L8,4 Q8,6 6,6 L-6,6 Q-8,6 -8,4 Z" fill="#1A4D7A" stroke="#D4AF37" stroke-width="0.8"/>
-                            <!-- Mástil dorado (conocimiento central) -->
-                            <line x1="0" y1="0" x2="0" y2="-12" stroke="#D4AF37" stroke-width="1.5"/>
-                            <!-- Vela del conocimiento -->
-                            <path d="M0,-12 L-5,-4 L0,-2 Z" fill="#E8C968" opacity="0.7"/>
-                            <path d="M0,-12 L5,-4 L0,-2 Z" fill="#E8C968" opacity="0.5"/>
-                            <!-- Runa del conocimiento en vela -->
-                            <text x="0" y="-6" font-size="5" fill="#1A4D7A" text-anchor="middle" font-weight="bold">ᚲ</text>
-                            <!-- Cabeza de dragón -->
-                            <path d="M-8,4 L-10,2 L-9,1" stroke="#D4AF37" stroke-width="1" fill="none"/>
-                        </g>
-                        
-                        <!-- Drakkar Izquierdo (Autores) -->
-                        <g transform="translate(12, 28)">
-                            <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="0.6"/>
-                            <line x1="0" y1="0" x2="0" y2="-8" stroke="#2980b9" stroke-width="1"/>
-                            <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
-                            <text x="0" y="-4" font-size="3.5" fill="#1A4D7A" text-anchor="middle">✍</text>
-                        </g>
-                        
-                        <!-- Drakkar Derecho (Imprentas) -->
-                        <g transform="translate(48, 28)">
-                            <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#e67e22" opacity="0.7" stroke="#d35400" stroke-width="0.6"/>
-                            <line x1="0" y1="0" x2="0" y2="-8" stroke="#d35400" stroke-width="1"/>
-                            <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
-                            <text x="0" y="-4" font-size="3.5" fill="#1A4D7A" text-anchor="middle">🖨</text>
-                        </g>
-                        
-                        <!-- Drakkar Arriba Izquierda (Promotores) -->
-                        <g transform="translate(18, 18)">
-                            <path d="M-5,2 L-3,0 L3,0 L5,2 Q5,3 3,3 L-3,3 Q-5,3 -5,2 Z" fill="#27ae60" opacity="0.6" stroke="#229954" stroke-width="0.5"/>
-                            <line x1="0" y1="0" x2="0" y2="-6" stroke="#229954" stroke-width="0.8"/>
-                            <path d="M0,-6 L-2,-1 L0,-0.5 Z" fill="#ecf0f1" opacity="0.5"/>
-                        </g>
-                        
-                        <!-- Drakkar Arriba Derecha (Lectores) -->
-                        <g transform="translate(42, 18)">
-                            <path d="M-5,2 L-3,0 L3,0 L5,2 Q5,3 3,3 L-3,3 Q-5,3 -5,2 Z" fill="#9b59b6" opacity="0.6" stroke="#8e44ad" stroke-width="0.5"/>
-                            <line x1="0" y1="0" x2="0" y2="-6" stroke="#8e44ad" stroke-width="0.8"/>
-                            <path d="M0,-6 L-2,-1 L0,-0.5 Z" fill="#ecf0f1" opacity="0.5"/>
-                        </g>
-                        
-                        <!-- Estrellas guía (destino común) -->
-                        <circle cx="30" cy="5" r="1.5" fill="#D4AF37" opacity="0.8"/>
-                        <circle cx="26" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
-                        <circle cx="34" cy="8" r="0.8" fill="#E8C968" opacity="0.6"/>
-                        
-                        <!-- Líneas de conexión (unidos en el viaje) -->
-                        <path d="M12,28 Q18,22 30,24 Q42,22 48,28" stroke="#D4AF37" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2" fill="none"/>
-                        
-                        <!-- Círculo de unidad (flota unida) -->
-                        <circle cx="30" cy="24" r="23" stroke="#D4AF37" stroke-width="0.8" opacity="0.2" fill="none"/>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <span class="brand-name">DrakkarPress</span>
-                    <span class="brand-tagline">La Flota Editorial Digital</span>
-                </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="/">
+                <div class="logo-icon">⚔️</div>
+                <span>DrakkarPress</span>
             </a>
-            <div class="nav-links">
-                <a href="catalogo.html">📚 Catálogo</a>
-                
-                <div class="dropdown">
-                    <a href="#portales">Portales ▾</a>
-                    <div class="dropdown-content">
-                        <a href="escritores.html">✍️ Escritores</a>
-                        <a href="revendedores.html">💼 Afiliados</a>
-                        <a href="imprentas.html">🖨️ Imprentas</a>
-                        <a href="biblioteca.html">📖 Mi Biblioteca</a>
-                    </div>
-                </div>
-                
-                <div class="dropdown">
-                    <a href="#servicios">Servicios ▾</a>
-                    <div class="dropdown-content">
-                        <a href="servicios-marketing.html">📢 Marketing Digital</a>
-                        <a href="servicios-web.html">💻 Desarrollo Web</a>
-                        <a href="servicios-research.html">🔬 Investigación</a>
-                    </div>
-                </div>
-                
-                <a href="generators.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.6rem 1.2rem; border-radius: 20px; color: white; font-weight: bold;">
-                    🤖 Generadores IA
-                </a>
-                
-                <a href="about.html">Nosotros</a>
-                <a href="contact.html">Contacto</a>
-                <a href="login.html" class="btn-primary">Iniciar Sesión</a>
-            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>Explorar</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>Descubrir</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bookmark"></i>
+                <span>Guardados</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Mi Biblioteca</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Comunidad</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="#" class="nav-item create">
+                <i class="fas fa-plus-square"></i>
+                <span>Crear</span>
+            </a>
         </nav>
-    </header>
 
-    <!-- Hero Section with Interactive Tabs -->
-    <section class="hero">
-        <h1><span class="brand-icon">⚓</span> La Flota Editorial Digital</h1>
-        <p>Plataforma de escritores y editores con perfiles propios. Crea, publica y genera ingresos en nuestro universo colaborativo.</p>
-        
-        <!-- Interactive Role Tabs -->
-        <div class="hero-tabs">
-            <button class="tab-btn active" onclick="switchTab('escribir')">
-                <span class="tab-icon">✍️</span>
-                <span class="tab-text">¿Quieres Escribir?</span>
-            </button>
-            <button class="tab-btn" onclick="switchTab('vender')">
-                <span class="tab-icon">💼</span>
-                <span class="tab-text">¿Quieres Vender?</span>
-            </button>
-            <button class="tab-btn" onclick="switchTab('imprimir')">
-                <span class="tab-icon">🖨️</span>
-                <span class="tab-text">¿Quieres Imprimir?</span>
-            </button>
-            <button class="tab-btn" onclick="switchTab('leer')">
-                <span class="tab-icon">📚</span>
-                <span class="tab-text">¿Quieres Leer?</span>
-            </button>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span>Mi Perfil</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar libros, autores...">
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">5</span>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- Tab Content -->
-        <div class="tab-content active" id="tab-escribir">
-            <h3>🎨 Publica tus libros y construye tu marca de autor</h3>
-            <p>Crea tu perfil de escritor, publica ilimitado (con o sin IA), y gana el <strong>90% de cada venta directa</strong>. Usa nuestros generadores de IA para acelerar tu creatividad.</p>
-            <a href="escritores.html" class="tab-cta">Crear Perfil de Autor →</a>
+        <!-- Feed Container -->
+        <div class="feed-container">
+            <!-- Stories Section -->
+            <div class="stories-section">
+                <div class="stories-scroll">
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">📚</div>
+                        </div>
+                        <div class="story-name">Tu Historia</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">✍️</div>
+                        </div>
+                        <div class="story-name">Escritores</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🏆</div>
+                        </div>
+                        <div class="story-name">Top Ventas</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🎨</div>
+                        </div>
+                        <div class="story-name">Arte</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🔮</div>
+                        </div>
+                        <div class="story-name">Fantasía</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <div class="filter-chips">
+                    <div class="filter-chip active">Todo</div>
+                    <div class="filter-chip">Novedades</div>
+                    <div class="filter-chip">Fantasía</div>
+                    <div class="filter-chip">Romance</div>
+                    <div class="filter-chip">Thriller</div>
+                    <div class="filter-chip">Ciencia Ficción</div>
+                    <div class="filter-chip">Horror</div>
+                </div>
+            </div>
+
+            <!-- Post Cards -->
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>Juan Pérez <span class="premium-badge">Premium</span></h4>
+                            <span>Hace 2 horas • Fantasía</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="far fa-heart"></i>
+                        <span>234</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>45</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A 234 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>Juan Pérez</strong>
+                        ¡Acabo de publicar mi nueva novela épica! 🔥 Una historia de dragones, magia y aventuras que te mantendrá pegado hasta la última página.
+                    </div>
+                    <div class="post-time">Hace 2 horas</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>María González</h4>
+                            <span>Hace 5 horas • Romance</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn liked">
+                        <i class="fas fa-heart"></i>
+                        <span>567</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>89</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A ti y otras 566 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>María González</strong>
+                        Nueva historia romántica ambientada en París. Déjate llevar por esta historia de amor inolvidable ❤️✨
+                    </div>
+                    <div class="post-time">Hace 5 horas</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-skull"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>Carlos Díaz <span class="premium-badge">Premium</span></h4>
+                            <span>Hace 1 día • Horror</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-ghost"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="far fa-heart"></i>
+                        <span>892</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>124</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A 892 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>Carlos Díaz</strong>
+                        Mi nueva novela de terror psicológico ya está disponible. ¿Te atreves a leerla? 👻🌙
+                    </div>
+                    <div class="post-time">Hace 1 día</div>
+                </div>
+            </article>
         </div>
+    </main>
 
-        <div class="tab-content" id="tab-vender">
-            <h3>💰 Promociona libros y gana comisiones</h3>
-            <p>Conviértete en promotor afiliado y gana <strong>30% de comisión</strong> por cada libro que vendas. Elige libros de nuestro catálogo y compártelos con tu audiencia.</p>
-            <a href="revendedores.html" class="tab-cta">Ser Promotor Afiliado →</a>
-        </div>
+    <!-- Floating Action Button -->
+    <button class="fab" title="Publicar nuevo libro">
+        <i class="fas fa-plus"></i>
+    </button>
 
-        <div class="tab-content" id="tab-imprimir">
-            <h3>🏭 Produce libros físicos para nuestra red</h3>
-            <p>Únete a nuestra red de <strong>326 imprentas en 45 países</strong>. Recibe órdenes automáticas, pagos puntuales y crece con nuestra flota editorial.</p>
-            <a href="imprentas.html" class="tab-cta">Registrar mi Imprenta →</a>
-        </div>
-
-        <div class="tab-content" id="tab-leer">
-            <h3>📖 Descubre y colecciona libros únicos</h3>
-            <p>Explora nuestro catálogo de <strong>124,583 libros</strong> de autores independientes. Compra digital o físico, deja reseñas y apoya a los creadores directamente.</p>
-            <a href="catalogo.html" class="tab-cta">Explorar Catálogo →</a>
-        </div>
-
-        <div class="stats">
-            📊 <strong>124,583</strong> libros | <strong>8,421</strong> autores | <strong>326</strong> imprentas | <strong>45</strong> países
-        </div>
-    </section>
-
-    <style>
-        .hero-tabs {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 2rem auto;
-            max-width: 900px;
-        }
-
-        .tab-btn {
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            min-width: 180px;
-            backdrop-filter: blur(10px);
-        }
-
-        .tab-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .tab-btn.active {
-            background: rgba(255,255,255,0.95);
-            border-color: var(--secondary);
-            color: var(--primary-dark);
-            box-shadow: 0 8px 25px rgba(212,175,55,0.4);
-        }
-
-        .tab-icon {
-            font-size: 2rem;
-        }
-
-        .tab-text {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .tab-content {
-            display: none;
-            max-width: 700px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            color: var(--text-dark);
-            text-align: center;
-            animation: fadeInUp 0.5s;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-content h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .tab-content p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-medium);
-            margin-bottom: 1.5rem;
-        }
-
-        .tab-cta {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(26,77,122,0.3);
-        }
-
-        .tab-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26,77,122,0.4);
-        }
-
-        @media (max-width: 768px) {
-            .hero-tabs {
-                grid-template-columns: 1fr 1fr;
-            }
-            .tab-btn {
-                min-width: 140px;
-                padding: 0.8rem 1rem;
-            }
-            .tab-icon {
-                font-size: 1.5rem;
-            }
-            .tab-text {
-                font-size: 0.85rem;
-            }
-        }
-    </style>
-
+    <script src="js/api-client.js"></script>
     <script>
-        function switchTab(tab) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+        // Verificar autenticación al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUIBasedOnAuth();
+        });
 
-            // Show selected tab
-            document.getElementById('tab-' + tab).classList.add('active');
-            event.target.closest('.tab-btn').classList.add('active');
-        }
-    </script>
-
-    <!-- Universe Vision -->
-    <section style="padding: 3rem 2rem; background: linear-gradient(135deg, rgba(26,77,122,0.05) 0%, rgba(46,107,160,0.05) 100%); border-top: 3px solid var(--primary);">
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">📚 Tu Universo de Conocimiento y Legado</h2>
-            <p style="font-size: 1.2rem; color: #666; max-width: 900px; margin: 0 auto 2rem; line-height: 1.8;">
-                <strong>DrakkarPress es tu plataforma para crear y compartir conocimiento.</strong> Construye tu perfil de autor/editor, publica libros (con o sin IA generadora), 
-                genera ingresos adicionales y deja mensajes entre generaciones. Somos la <strong>red colaborativa</strong> donde escritores, promotores e imprentas navegan juntos.
-            </p>
-            <div style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-width: 700px; margin: 0 auto;">
-                <p style="font-size: 1rem; color: #666; margin-bottom: 0.5rem;">
-                    🚀 <strong>Marketing dirigido por OdrBrand:</strong> Nuestra agencia aliada maneja toda la sinergia publicitaria, 
-                    con privilegios exclusivos del 40-50% de descuento para socios de DrakkarPress.
-                </p>
-            </div>
-            <a href="login.html" style="display: inline-block; margin-top: 1.5rem; padding: 0.8rem 2rem; background: var(--gradient-gold); color: var(--primary-dark); text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 12px rgba(212,175,55,0.3);">
-                Crear Mi Perfil →
-            </a>
-        </div>
-    </section>
-
-    <!-- AI Generators Section -->
-    <section style="padding: 4rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
-                🤖 Generadores de IA para Autores
-            </h2>
-            <p style="font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.95;">
-                Herramientas inteligentes con 25+ géneros combinables para impulsar tu creatividad
-            </p>
+        function updateUIBasedOnAuth() {
+            const user = api.getCurrentUser();
+            const userProfile = document.querySelector('.user-profile span');
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin: 3rem 0;">
-                <!-- Generadora 1 -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 15px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
-                    <h3 style="color: #667eea; font-size: 1.5rem; margin-bottom: 1rem;">Generadora 1: Creación</h3>
-                    <ul style="text-align: left; list-style: none; padding: 0; line-height: 2;">
-                        <li>💡 Ideas de libros con 25+ géneros</li>
-                        <li>📚 Títulos creativos personalizados</li>
-                        <li>👤 Personajes complejos y únicos</li>
-                        <li>🍳 Recetas y libros de cocina</li>
-                        <li>📊 Informes y documentos técnicos</li>
-                        <li>🔥 Medidor de erotismo (6 niveles)</li>
-                    </ul>
-                </div>
-                
-                <!-- Generadora 2 -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 15px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
-                    <h3 style="color: #764ba2; font-size: 1.5rem; margin-bottom: 1rem;">Generadora 2: Edición</h3>
-                    <ul style="text-align: left; list-style: none; padding: 0; line-height: 2;">
-                        <li>📖 Extender capítulos (6 direcciones)</li>
-                        <li>📝 Sinopsis profesionales (4 tipos)</li>
-                        <li>💬 Diálogos realistas (7 tonos)</li>
-                        <li>✨ Mejorar texto (6 enfoques)</li>
-                        <li>🔍 Análisis de estilo literario</li>
-                        <li>🎯 Pulir y perfeccionar escritura</li>
-                    </ul>
-                </div>
-                
-                <!-- Características -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 15px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎭</div>
-                    <h3 style="color: #667eea; font-size: 1.5rem; margin-bottom: 1rem;">Combina Cualquier Género</h3>
-                    <div style="text-align: left; line-height: 2; font-size: 0.95rem;">
-                        <p style="margin-bottom: 1rem;"><strong>📚 Ficción:</strong> Romance, Erótica, Thriller, Fantasía, Sci-Fi, Terror, Misterio, Drama...</p>
-                        <p style="margin-bottom: 1rem;"><strong>📖 No Ficción:</strong> Biografía, Autoayuda, Negocios, Divulgación...</p>
-                        <p style="margin-bottom: 1rem;"><strong>🔬 Técnico:</strong> Científico, Académico, Manuales...</p>
-                        <p><strong>🍳 Especializado:</strong> Cocina, Viajes, Salud, Arte, Infantil, Poesía...</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; margin: 2rem auto; max-width: 800px; backdrop-filter: blur(10px);">
-                <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
-                    <strong>⚡ Modo DEMO Activo:</strong> Prueba los generadores AHORA con ejemplos realistas
-                </p>
-                <p style="font-size: 0.95rem; opacity: 0.9;">
-                    Backend compilando (5-10 min). Resultados de IA real disponibles pronto. ¡Explora 25+ géneros combinables!
-                </p>
-            </div>
-            
-            <a href="generators.html" style="display: inline-block; margin-top: 1rem; padding: 1rem 3rem; background: white; color: #667eea; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                🚀 Acceder a Generadores de IA
-            </a>
-        </div>
-    </section>
-
-    <!-- Roles Section -->
-    <section class="roles-section">
-        <h2 class="section-title">Crea tu Perfil en el Universo DrakkarPress</h2>
-        <p style="text-align: center; font-size: 1.1rem; color: #666; max-width: 800px; margin: 0 auto 3rem;">
-            Cada socio tiene su <strong>perfil propio</strong> dentro de nuestro universo editorial. Elige tu rol y empieza a generar ingresos, compartir conocimiento y dejar tu legado.
-        </p>
-        
-        <div class="roles-grid">
-            <!-- Escritor -->
-            <div class="role-card">
-                <div class="role-icon">✍️</div>
-                <h3>Perfil de Escritor</h3>
-                <p>Crea libros con o sin IA y publícalos en tu perfil</p>
-                <ul>
-                    <li>👤 Perfil de autor personalizado</li>
-                    <li>📚 Publica ilimitado (IA o manual)</li>
-                    <li>💰 90% para ti (venta directa)</li>
-                    <li>🤝 30% vendiendo libros de otros</li>
-                    <li>📊 Dashboard con tus métricas</li>
-                </ul>
-                <a href="escritores.html" class="btn">Crear Perfil de Autor →</a>
-            </div>
-
-            <!-- Revendedor -->
-            <div class="role-card" id="revendedores">
-                <div class="role-icon">💼</div>
-                <h3>Perfil de Promotor</h3>
-                <p>Promociona libros del universo con tu audiencia</p>
-                <ul>
-                    <li>👤 Perfil de promotor verificado</li>
-                    <li>🎯 Elige libros para tu comunidad</li>
-                    <li>💸 30% comisión por cada venta</li>
-                    <li>🔗 Links personalizados de afiliado</li>
-                    <li>📈 Analytics de tus promociones</li>
-                </ul>
-                <a href="revendedores.html" class="btn">Crear Perfil de Promotor →</a>
-            </div>
-
-            <!-- Imprenta -->
-            <div class="role-card">
-                <div class="role-icon">🏭</div>
-                <h3>Perfil de Imprenta</h3>
-                <p>Produce libros físicos para la red colaborativa</p>
-                <ul>
-                    <li>🏢 Perfil de productor verificado</li>
-                    <li>📦 Órdenes automáticas del universo</li>
-                    <li>💳 Pagos puntuales garantizados</li>
-                    <li>⭐ Sistema de ratings y reviews</li>
-                    <li>📊 Panel de órdenes en tiempo real</li>
-                </ul>
-                <a href="imprentas.html" class="btn">Crear Perfil de Imprenta →</a>
-            </div>
-
-            <!-- Cliente -->
-            <div class="role-card">
-                <div class="role-icon">📚</div>
-                <h3>Perfil de Lector</h3>
-                <p>Explora y apoya a autores del universo</p>
-                <ul>
-                    <li>👤 Biblioteca personal en la nube</li>
-                    <li>📖 eBooks y libros físicos</li>
-                    <li>⭐ Reseñas y recomendaciones</li>
-                    <li>💬 Comunidad de lectores activa</li>
-                    <li>🎁 Apoya directamente a autores indie</li>
-                </ul>
-                <a href="catalogo.html" class="btn">Explorar Catálogo →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Books -->
-    <section class="featured-books">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <h2 class="section-title" style="color: #1A4D7A;">📚 Libros Destacados</h2>
-            
-            <div class="books-grid">
-                <!-- Book 1 -->
-                <div class="book-card">
-                    <div class="book-cover" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        El Mar<br>Eterno
-                    </div>
-                    <div class="book-info">
-                        <div class="book-category">Romance</div>
-                        <h3 class="book-title">El Mar Eterno</h3>
-                        <p class="book-author">por Ana García</p>
-                        <div class="book-rating">⭐⭐⭐⭐⭐ 4.8 (234)</div>
-                        <div class="book-price">
-                            💲 $12.99 Digital<br>
-                            <small style="color: #666;">💲 $24.99 Impreso</small>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                            📍 Impresión: MX, ES, AR<br>
-                            🚚 3-5 días
-                        </div>
-                        <div class="book-actions">
-                            <button class="btn-cart">🛒 Comprar</button>
-                            <button class="btn-fav">❤️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book 2 -->
-                <div class="book-card">
-                    <div class="book-cover" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        Noches<br>en París
-                    </div>
-                    <div class="book-info">
-                        <div class="book-category">Thriller</div>
-                        <h3 class="book-title">Noches en París</h3>
-                        <p class="book-author">por Carlos López</p>
-                        <div class="book-rating">⭐⭐⭐⭐☆ 4.5 (89)</div>
-                        <div class="book-price">
-                            💲 $15.99 Digital<br>
-                            <small style="color: #666;">💲 $28.99 Impreso</small>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                            📍 Impresión: AR, CL<br>
-                            🚚 2-4 días
-                        </div>
-                        <div class="book-actions">
-                            <button class="btn-cart">🛒 Comprar</button>
-                            <button class="btn-fav">❤️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book 3 -->
-                <div class="book-card">
-                    <div class="book-cover" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                        Recetas<br>de la Abuela
-                    </div>
-                    <div class="book-info">
-                        <div class="book-category">Cocina</div>
-                        <h3 class="book-title">Recetas de la Abuela</h3>
-                        <p class="book-author">por María Santos</p>
-                        <div class="book-rating">⭐⭐⭐⭐⭐ 4.9 (156)</div>
-                        <div class="book-price">
-                            💲 $9.99 Digital<br>
-                            <small style="color: #666;">💲 $19.99 Impreso</small>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                            📍 Impresión: MX, US<br>
-                            🚚 3-5 días
-                        </div>
-                        <div class="book-actions">
-                            <button class="btn-cart">🛒 Comprar</button>
-                            <button class="btn-fav">❤️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book 4 -->
-                <div class="book-card">
-                    <div class="book-cover" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-                        El Dragón<br>Arcoíris
-                    </div>
-                    <div class="book-info">
-                        <div class="book-category">Scryptorium</div>
-                        <h3 class="book-title">El Dragón Arcoíris</h3>
-                        <p class="book-author">por Laura Ramírez</p>
-                        <div class="book-rating">⭐⭐⭐⭐⭐ 5.0 (67)</div>
-                        <div class="book-price">
-                            💲 $7.99 Digital<br>
-                            <small style="color: #666;">💲 $16.99 Impreso</small>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                            📍 Impresión: MX, ES<br>
-                            🚚 3-5 días
-                        </div>
-                        <div class="book-actions">
-                            <button class="btn-cart">🛒 Comprar</button>
-                            <button class="btn-fav">❤️</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- AI Section -->
-    <section class="ai-section">
-        <h2>🤖 IA de DrakkarPress</h2>
-        <p style="font-size: 1.2rem; margin-bottom: 2rem;">Tu copiloto creativo impulsado por inteligencia artificial</p>
-        
-        <div class="ai-features">
-            <div class="ai-feature">
-                <div class="ai-feature-icon">✨</div>
-                <h3>Genera Ideas</h3>
-                <p>Ideas de libros según tu categoría</p>
-            </div>
-            <div class="ai-feature">
-                <div class="ai-feature-icon">📝</div>
-                <h3>Extiende Textos</h3>
-                <p>Continúa tus capítulos</p>
-            </div>
-            <div class="ai-feature">
-                <div class="ai-feature-icon">🎯</div>
-                <h3>Crea Sinopsis</h3>
-                <p>Descripciones atractivas</p>
-            </div>
-            <div class="ai-feature">
-                <div class="ai-feature-icon">🎨</div>
-                <h3>Estructuras</h3>
-                <p>Para libros infantiles</p>
-            </div>
-            <div class="ai-feature">
-                <div class="ai-feature-icon">📢</div>
-                <h3>Marketing</h3>
-                <p>Posts para redes sociales</p>
-            </div>
-            <div class="ai-feature">
-                <div class="ai-feature-icon">🌍</div>
-                <h3>Multiidioma</h3>
-                <p>Disponible en varios idiomas</p>
-            </div>
-        </div>
-
-        <button style="background: white; color: #667eea; padding: 1rem 3rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 2rem;">
-            ⚡ Probar IA de DrakkarPress Gratis
-        </button>
-    </section>
-
-    <!-- Marketing Campaigns Section -->
-    <section id="marketing-campaigns" style="padding: 4rem 2rem; background: linear-gradient(135deg, #27AE60 0%, #229954 100%); color: white;">
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
-            <h2 class="section-title" style="color: white;">🎯 Campañas de Marketing Sinérgicas</h2>
-            <p style="font-size: 1.3rem; margin-bottom: 3rem; opacity: 0.95;">
-                Potenciamos el éxito de todos: escritores, revendedores e imprentas
-            </p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left;">
-                <!-- Hacia los Motores Propios -->
-                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Desde DrakkarPress hacia TU negocio</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Campañas SEO/SEM</strong> que dirigen tráfico a tu portal de escritor, afiliado o imprenta
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Email Marketing</strong> segmentado promocionando tus libros o servicios
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Social Media</strong> con enlaces directos a tu página
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Banners destacados</strong> en marketplace principal
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Desde los Motores hacia DrakkarPress -->
-                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Desde TU sitio hacia DrakkarPress</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Widget integrado</strong> en tu web que muestra catálogo completo
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Enlaces de afiliado rastreables</strong> con tu comisión garantizada
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Cross-promotion</strong>: tus visitantes descubren más libros
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Tracking completo</strong> de conversiones y comisiones
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Efecto Red -->
-                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #E8C968;">Efecto Red Sinérgico</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Más tráfico para todos</strong>: escritores, revendedores e imprentas
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>IA optimiza</strong> qué libros promocionar a cada audiencia
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Dashboards con métricas</strong> de campañas en tiempo real
-                        </li>
-                        <li style="margin: 0.8rem 0; padding-left: 1.5rem; position: relative;">
-                            <span style="position: absolute; left: 0;">✓</span>
-                            <strong>Todos ganan</strong>: más visibilidad = más ventas
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.15); border-radius: 15px; border: 2px solid rgba(232,201,104,0.4);">
-                <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">💡 Ejemplo Práctico</h3>
-                <p style="font-size: 1.1rem; line-height: 1.8;">
-                    Un <strong>escritor</strong> publica su libro → DrakkarPress lanza campaña en Google Ads → 
-                    Los <strong>revendedores</strong> comparten en sus redes sociales (30% comisión) → 
-                    Las <strong>imprentas</strong> reciben pedidos locales automáticamente → 
-                    El escritor ve tráfico desde múltiples fuentes → 
-                    Todos ganan: <span style="color: #E8C968; font-weight: bold;">90% escritor + 30% revendedor + margen imprenta + 10% plataforma</span>
-                </p>
-            </div>
-
-            <button style="background: white; color: #27AE60; padding: 1rem 3rem; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 2rem; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
-                📊 Ver Estrategias de Marketing
-            </button>
-        </div>
-    </section>
-
-    <!-- Map Section -->
-    <section class="map-section" id="red-imprentas">
-        <h2 class="section-title">🗺️ Red de Imprentas DrakkarPress</h2>
-        <p style="font-size: 1.4rem; font-weight: 600; color: #E67E22; margin-bottom: 0.5rem;">
-            ¿Quieres Imprimir?
-        </p>
-        <p style="font-size: 1.1rem; color: #666; margin-bottom: 1.5rem;">
-            Impresión local, entrega rápida en 45 países
-        </p>
-        
-        <div class="map-placeholder">
-            🌍 Mapa Interactivo de la Red<br>
-            <small style="font-size: 1rem;">(326 imprentas activas)</small>
-        </div>
-
-        <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: left;">
-            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
-                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">326</div>
-                <div style="color: #666;">Imprentas</div>
-            </div>
-            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</div>
-                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">45</div>
-                <div style="color: #666;">Países</div>
-            </div>
-            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚚</div>
-                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">3-7</div>
-                <div style="color: #666;">Días entrega</div>
-            </div>
-            <div style="padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
-                <div style="font-size: 2rem; font-weight: bold; color: #1A4D7A;">24h</div>
-                <div style="color: #666;">Inicio impresión</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Plataforma</h3>
-                <ul>
-                    <li><a href="#">Para autores</a></li>
-                    <li><a href="#">Para afiliados</a></li>
-                    <li><a href="#">Para imprentas</a></li>
-                    <li><a href="#">Catálogo</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Categorías</h3>
-                <ul>
-                    <li><a href="#">Scryptorium</a></li>
-                    <li><a href="#">Erótica</a></li>
-                    <li><a href="#">Thriller</a></li>
-                    <li><a href="#">Romance</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Soporte</h3>
-                <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Tutorial</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Términos</a></li>
-                    <li><a href="#">Privacidad</a></li>
-                    <li><a href="#">Cookies</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 DrakkarPress. Todos los derechos reservados.</p>
-            <p style="margin-top: 1rem;">
-                🔒 Pago seguro | 📦 Envío trackeable | ⚡ Impresión 24h
-            </p>
-        </div>
-    </footer>
-
-    <!-- Script de Internacionalización -->
-    <script src="js/i18n.js"></script>
-    
-    <style>
-        /* Estilos para selector de idioma */
-        .language-selector {
-            position: relative;
-            margin-right: 1rem;
-        }
-
-        .lang-btn {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
-            border: 2px solid rgba(255,255,255,0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .lang-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.4);
-        }
-
-        .lang-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 0.5rem;
-            background: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-width: 180px;
-            overflow: hidden;
-            z-index: 1000;
-        }
-
-        .lang-option {
-            display: block;
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: none;
-            background: transparent;
-            color: var(--text-dark);
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        .lang-option:hover {
-            background: rgba(26, 77, 122, 0.1);
-        }
-
-        .lang-option.active {
-            background: rgba(26, 77, 122, 0.15);
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .language-selector {
-                margin-right: 0;
-                margin-bottom: 0.5rem;
+            if (user) {
+                if (userProfile) {
+                    userProfile.textContent = user.username || user.email;
+                }
+                console.log('Usuario autenticado:', user);
+            } else {
+                if (userProfile) {
+                    userProfile.textContent = 'Iniciar sesión';
+                }
             }
         }
-    </style>
+
+        // Click en perfil para login/logout
+        document.querySelector('.user-profile').addEventListener('click', () => {
+            if (api.isAuthenticated()) {
+                showProfileMenu();
+            } else {
+                showLoginModal();
+            }
+        });
+
+        function showLoginModal() {
+            // Redirigir a página de login
+            window.location.href = '/login.html';
+        }
+
+        function showProfileMenu() {
+            const confirmed = confirm('¿Cerrar sesión?');
+            if (confirmed) {
+                api.logout();
+                updateUIBasedOnAuth();
+                alert('Sesión cerrada exitosamente');
+            }
+        }
+
+        // FAB - Botón crear
+        document.querySelector('.fab').addEventListener('click', () => {
+            if (!api.isAuthenticated()) {
+                alert('Debes iniciar sesión para publicar');
+                showLoginModal();
+                return;
+            }
+            // Aquí iría la lógica para crear nuevo contenido
+            alert('Función de publicación en desarrollo');
+        });
+
+        // Toggle like button
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            if (btn.querySelector('.fa-heart')) {
+                btn.addEventListener('click', function() {
+                    if (!api.isAuthenticated()) {
+                        alert('Debes iniciar sesión para dar like');
+                        return;
+                    }
+                    
+                    const icon = this.querySelector('i');
+                    const countSpan = this.querySelector('span');
+                    let count = parseInt(countSpan.textContent);
+                    
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.classList.add('liked');
+                        countSpan.textContent = count + 1;
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.classList.remove('liked');
+                        countSpan.textContent = count - 1;
+                    }
+                });
+            }
+        });
+
+        // Bookmark button
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            if (btn.querySelector('.fa-bookmark')) {
+                btn.addEventListener('click', function() {
+                    if (!api.isAuthenticated()) {
+                        alert('Debes iniciar sesión para guardar');
+                        return;
+                    }
+                    
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                });
+            }
+        });
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                // Aquí se cargarían los libros filtrados
+                console.log('Filtro seleccionado:', this.textContent);
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 0 2px var(--primary)';
+        });
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = 'none';
+        });
+        
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    console.log('Buscar:', query);
+                    // Aquí iría la búsqueda real
+                    alert(`Buscando: ${query}`);
+                }
+            }
+        });
+
+        // Navigation items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remover active de todos
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                
+                // Agregar active al clickeado
+                this.classList.add('active');
+                
+                const section = this.querySelector('span')?.textContent || 'Inicio';
+                console.log('Navegando a:', section);
+                
+                // Aquí se cargaría el contenido según la sección
+            });
+        });
+
+        // Notification badges
+        document.querySelectorAll('.icon-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-heart')) {
+                    console.log('Ver notificaciones de likes');
+                } else if (icon.classList.contains('fa-bell')) {
+                    console.log('Ver notificaciones generales');
+                    // Limpiar badge
+                    const badge = this.querySelector('.badge');
+                    if (badge) badge.textContent = '0';
+                } else if (icon.classList.contains('fa-shopping-cart')) {
+                    window.location.href = '/cart.html';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
