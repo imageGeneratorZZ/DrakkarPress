@@ -1,5 +1,5 @@
-# API Proxy - MUST come first
-/api/*  https://overflowing-consideration-production.up.railway.app/api/:splat  200!
+# API Proxy - proxy to Railway backend with force
+/api/*  https://overflowing-consideration-production.up.railway.app/api/:splat  200
 
-# SPA fallback - comes last
+# SPA fallback - serve index.html for all other routes
 /*  /index.html  200
