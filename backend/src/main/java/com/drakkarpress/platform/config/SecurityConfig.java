@@ -34,6 +34,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/ping").permitAll()
                 .requestMatchers("/api/runes/public/**").permitAll()
                 .requestMatchers("/api/badges/public/**").permitAll()
+                // Perfil requiere autenticación JWT
+                .requestMatchers("/api/profile/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> 

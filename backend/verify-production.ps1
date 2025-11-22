@@ -47,15 +47,21 @@ $login = Invoke-Json POST "$BaseUrl/api/auth/login" $loginBody $null
 Write-Host "[LOGIN] Status: $($login.Status) TokenPresent: $([bool]$login.Json.data.token) Msg: $($login.Json.message)"
 $loginToken = $login.Json.data.token
 
-# 5. Profile GET (requiere endpoint; adapt if different)
-# Asumimos /api/profile retorna datos del usuario autenticado
-$profile = Invoke-Json GET "$BaseUrl/api/profile" $null $loginToken
+# 5. Profile GET (usar /api/profile/me para propio perfil)
+$profile = Invoke-Json GET "$BaseUrl/api/profile/me" $null $loginToken
 Write-Host "[PROFILE GET] Status: $($profile.Status) Username: $($profile.Json.data.username)"
 
-# 6. Profile UPDATE demo (si existe endpoint PUT /api/profile)
+# 6. Profile UPDATE demo (PUT /api/profile/me)
 $updateBody = @{ bio = "E2E test run $(Get-Date -Format o)" }
-$profileUpdate = Invoke-Json PUT "$BaseUrl/api/profile" $updateBody $loginToken
+$profileUpdate = Invoke-Json PUT "$BaseUrl/api/profile/me" $updateBody $loginToken
 Write-Host "[PROFILE PUT] Status: $($profileUpdate.Status) UpdatedBio: $($profileUpdate.Json.data.bio)"
+
+# (Opcional futuro) Refresh token check placeholder
+# if ($IncludeRefresh) {
+#   $refreshBody = @{ refreshToken = $login.Json.data.refreshToken }
+#   $refresh = Invoke-Json POST "$BaseUrl/api/auth/refresh" $refreshBody $null
+#   Write-Host "[REFRESH] Status: $($refresh.Status) NewToken: $([bool]$refresh.Json.data.token)"
+# }
 
 # 7. Social login mock (opcional)
 if ($IncludeSocial) {
@@ -68,7 +74,7 @@ Write-Host "=== Resumen ===" -ForegroundColor Cyan
 Write-Host "Health: $($health.Status) | Ping: $($ping.Status) | Register: $($reg.Status) | Login: $($login.Status) | Profile GET: $($profile.Status) | Profile PUT: $($profileUpdate.Status)"
 if ($IncludeSocial) { Write-Host "Social: $($social.Status)" }
 
-if ($health.Status -eq 200 -and $ping.Status -eq 200 -and $reg.Status -eq 200 -and $login.Status -eq 200) {
+if ($health.Status -eq 200 -and $ping.Status -eq 200 -and $reg.Status -eq 200 -and $login.Status -eq 200 -and $profile.Status -eq 200) {
   Write-Host "E2E básico OK" -ForegroundColor Green
 } else {
   Write-Host "Fallas en flujo E2E" -ForegroundColor Red
