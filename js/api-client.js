@@ -145,6 +145,46 @@ class DrakkarAPI {
             return { success: false, message: 'Error de conexión' };
         }
     }
+
+    // Obtener perfil propio
+    async getMyProfile() {
+        if (!this.isAuthenticated()) return { success: false, message: 'No autenticado' };
+        try {
+            const response = await fetch(`${API_BASE_URL}/profile/me`, { headers: this.getHeaders(true) });
+            const data = await response.json();
+            return data;
+        } catch (e) {
+            console.error('Error obteniendo perfil:', e);
+            return { success: false, message: 'Error de conexión' };
+        }
+    }
+
+    // Actualizar perfil
+    async updateMyProfile(updates) {
+        if (!this.isAuthenticated()) return { success: false, message: 'No autenticado' };
+        try {
+            const response = await fetch(`${API_BASE_URL}/profile/me`, {
+                method: 'PUT',
+                headers: this.getHeaders(true),
+                body: JSON.stringify(updates)
+            });
+            const data = await response.json();
+            if (data.success) {
+                // Sincronizar username si cambió fullName (no se actualiza username todavía en backend)
+                const stored = JSON.parse(localStorage.getItem('drakkar_user') || 'null');
+                if (stored) {
+                    stored.fullName = data.data.fullName;
+                    stored.bio = data.data.bio;
+                    localStorage.setItem('drakkar_user', JSON.stringify(stored));
+                    this.user = stored;
+                }
+            }
+            return data;
+        } catch (e) {
+            console.error('Error actualizando perfil:', e);
+            return { success: false, message: 'Error de conexión' };
+        }
+    }
 }
 
 // Instancia global

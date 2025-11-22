@@ -35,7 +35,8 @@ public class AuthController {
         String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
         return ResponseEntity.ok(ApiResponse.ok("Registro exitoso", Map.of(
                 "token", token,
-                "userId", user.getId()
+                "userId", user.getId(),
+                "username", user.getUsername()
         )));
     }
 
@@ -52,7 +53,8 @@ public class AuthController {
         String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getSubscription());
         return ResponseEntity.ok(ApiResponse.ok("Login exitoso", Map.of(
                 "token", token,
-                "userId", user.getId()
+            "userId", user.getId(),
+            "username", user.getUsername()
         )));
     }
 

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mi Perfil - DrakkarPress</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+body {font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:#FAFAFA; margin:0;}
+.header {background:#fff;border-bottom:1px solid #ddd;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.header h1 {font-size:18px;margin:0;display:flex;align-items:center;gap:8px;}
+.container {max-width:780px;margin:24px auto;padding:0 20px;}
+.card {background:#fff;border:1px solid #ddd;border-radius:12px;padding:24px;margin-bottom:24px;}
+.flex {display:flex;gap:24px;flex-wrap:wrap;}
+.avatar {width:120px;height:120px;border-radius:50%;background:#1A4D7A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;position:relative;overflow:hidden;}
+.avatar img {width:100%;height:100%;object-fit:cover;}
+.field {margin-bottom:16px;}
+.field label {display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.field input, .field textarea {width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:8px;font-size:14px;background:#FAFAFA;}
+.field textarea {min-height:120px;resize:vertical;}
+.actions {display:flex;gap:12px;margin-top:8px;}
+.btn {border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.btn-primary {background:#1A4D7A;color:#fff;}
+.btn-secondary {background:#eee;color:#222;}
+.badges {display:flex;gap:8px;flex-wrap:wrap;}
+.badge {background:linear-gradient(135deg,#D4AF37,#FFD700);color:#222;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.meta {display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-top:12px;}
+.meta-item {background:#F7F7F7;border:1px solid #e1e1e1;border-radius:10px;padding:12px;}
+.meta-item span {display:block;font-size:12px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.meta-item strong {font-size:14px;}
+.notice {background:#E3F2FD;border-left:4px solid #2196F3;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;}
+.toast {position:fixed;bottom:20px;right:20px;background:#fff;border:1px solid #ddd;padding:14px 18px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.15);display:flex;align-items:center;gap:10px;font-size:14px;opacity:0;transform:translateY(10px);transition:.3s;}
+.toast.show {opacity:1;transform:translateY(0);}
+.link-back {text-decoration:none;color:#1A4D7A;font-weight:600;font-size:13px;}
+.readonly {background:#f0f0f0;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
+  <a class="link-back" href="/index.html">← Volver</a>
+</div>
+<div class="container">
+  <div id="toast" class="toast"><i class="fas fa-info-circle"></i><span id="toast-msg"></span></div>
+  <div class="card">
+    <div class="flex">
+      <div class="avatar" id="avatar"><span id="avatar-initial">U</span></div>
+      <div style="flex:1;min-width:240px;">
+        <div class="field">
+          <label>Usuario</label>
+          <input id="username" class="readonly" readonly />
+        </div>
+        <div class="field">
+          <label>Nombre completo</label>
+          <input id="fullName" placeholder="Tu nombre completo" />
+        </div>
+        <div class="field">
+          <label>Biografía</label>
+          <textarea id="bio" placeholder="Cuéntale al mundo quién eres"></textarea>
+        </div>
+        <div class="field">
+          <label>URL Foto Perfil</label>
+          <input id="profilePictureUrl" placeholder="https://..." />
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="btn-save"><i class="fas fa-save"></i> Guardar cambios</button>
+          <button class="btn btn-secondary" id="btn-logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+<script src="js/api-client.js"></script>
+<script>
+function showToast(msg,type){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.className='toast show';setTimeout(()=>t.className='toast',3000);}
+async function loadProfile(){if(!api.isAuthenticated()){location.href='/login.html';return;}const res=await api.getMyProfile();if(!res.success){showToast(res.message||'Error cargando perfil','error');return;}const d=res.data;document.getElementById('username').value=d.username||'';document.getElementById('fullName').value=d.fullName||'';document.getElementById('bio').value=d.bio||'';document.getElementById('profilePictureUrl').value=d.profilePictureUrl||'';document.getElementById('avatar-initial').textContent=(d.username||'U')[0].toUpperCase();if(d.profilePictureUrl){const img=document.createElement('img');img.src=d.profilePictureUrl;img.alt='avatar';const av=document.getElementById('avatar');av.innerHTML='';av.appendChild(img);}renderMeta(d);}function renderMeta(d){const meta=document.getElementById('meta');meta.innerHTML='';const items=[['Email',d.email],['Plan',d.plan],['Suscripción',d.subscription],['Premium',d.premium?'Sí':'No'],['Creado',d.createdAt?.toString()?.substring(0,19)],['Idioma',d.language],['País',d.country]];items.forEach(([k,v])=>{const div=document.createElement('div');div.className='meta-item';div.innerHTML='<span>'+k+'</span><strong>'+(v||'-')+'</strong>';meta.appendChild(div);});}
+
+document.getElementById('btn-save').addEventListener('click',async()=>{const updates={fullName:document.getElementById('fullName').value.trim(),bio:document.getElementById('bio').value.trim(),profilePictureUrl:document.getElementById('profilePictureUrl').value.trim()};const res=await api.updateMyProfile(updates);if(res.success){showToast('Perfil actualizado');loadProfile();}else{showToast(res.message||'Error al guardar','error');}});
+
+document.getElementById('btn-logout').addEventListener('click',()=>{api.logout();location.replace('/login.html');});
+
+document.addEventListener('DOMContentLoaded',loadProfile);
+</script>
+</body>
+</html>
