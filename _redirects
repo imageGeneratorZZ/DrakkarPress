@@ -1,5 +1,5 @@
-# API Proxy - proxy to Railway backend with force
-/api/*  https://overflowing-consideration-production.up.railway.app/api/:splat  200
+# Proxy API calls to Railway backend - NOTE: Must use proxy (200) not redirect (301/302)
+/api/*  https://overflowing-consideration-production.up.railway.app/api/:splat  200!
 
-# SPA fallback - serve index.html for all other routes
+# SPA catch-all - serve index.html for client-side routing
 /*  /index.html  200
