@@ -11,7 +11,7 @@
 # API proxy to backend
 [[redirects]]
   from = "/api/*"
-  to = "https://drakkarpress-backend.up.railway.app/api/:splat"
+  to = "https://overflowing-consideration-production.up.railway.app/api/:splat"
   status = 200
   force = true
 

@@ -124,6 +124,8 @@
             gap: 15px;
             align-items: center;
         }
+        .link-biblioteca { text-decoration: none; color:#666; }
+        .link-biblioteca:hover, .link-biblioteca:focus { color: var(--viking-blue); }
 
         .btn-cart {
             position: relative;
@@ -350,6 +352,22 @@
             cursor: pointer;
             position: relative;
         }
+        /* Safety status overlays */
+        .book-card[data-safety-status="REVIEW"]::after {
+            content: "En Revisión";
+            position: absolute; inset: 0;
+            background: rgba(255,165,0,0.55);
+            color:#fff; font-weight:600; display:flex; align-items:center; justify-content:center; font-size:14px;
+            -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+        }
+        .book-card[data-safety-status="BLOCKED"]::after {
+            content: "Bloqueado";
+            position: absolute; inset: 0;
+            background: rgba(220,20,60,0.65);
+            color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:16px;
+            -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+        }
+        .book-card[data-safety-status="SAFE"] .book-badge { background: var(--reseller-green); }
 
         .book-card:hover {
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
@@ -388,6 +406,7 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-clamp: 2;
         }
 
         .book-author {
@@ -598,7 +617,7 @@
                 </div>
                 
                 <div class="header-actions">
-                    <a href="biblioteca.html" style="text-decoration: none; color: #666;">📚 Mi Biblioteca</a>
+                    <a href="biblioteca.html" class="link-biblioteca">📚 Mi Biblioteca</a>
                     <a href="cart.html" class="btn-cart">
                         🛒 Carrito
                         <span class="cart-count">3</span>
@@ -757,7 +776,7 @@
                         <button class="view-btn" onclick="toggleView('list')" title="Vista de lista">☰</button>
                     </div>
                     
-                    <select class="sort-dropdown" id="sortDropdown" onchange="sortBooks()">
+                    <select class="sort-dropdown" id="sortDropdown" aria-label="Ordenar resultados" onchange="sortBooks()">
                         <option value="relevance">Más Relevante</option>
                         <option value="newest">Más Nuevo</option>
                         <option value="price-low">Precio: Menor a Mayor</option>
@@ -884,7 +903,9 @@
             const container = document.getElementById('booksContainer');
             container.innerHTML = '';
 
+            const safetyStatuses = ["SAFE","REVIEW","SAFE","BLOCKED","SAFE","SAFE","REVIEW","SAFE"]; // demo
             books.forEach(book => {
+                book.safetyStatus = safetyStatuses[(book.id - 1) % safetyStatuses.length];
                 const bookCard = createBookCard(book);
                 container.appendChild(bookCard);
             });
@@ -895,6 +916,7 @@
             const card = document.createElement('div');
             card.className = `book-card ${currentView === 'list' ? 'list-view' : ''}`;
             card.onclick = () => window.location.href = `libro.html?id=${book.id}`;
+            card.setAttribute('data-safety-status', book.safetyStatus || 'SAFE');
 
             const stars = '★'.repeat(Math.floor(book.rating)) + '☆'.repeat(5 - Math.floor(book.rating));
             const badge = book.badge ? `<div class="book-badge">${book.badge}</div>` : '';

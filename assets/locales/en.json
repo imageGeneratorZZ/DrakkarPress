@@ -1,0 +1,142 @@
+{
+    "page": {
+        "title": "DrakkarPress - The Digital Publishing Fleet"
+    },
+    "hero": {
+        "title": "The Digital Publishing Fleet",
+        "subtitle": "Navigate towards the future of knowledge and literature",
+        "cta": "Set Sail with Premium",
+        "members": "<strong>100,000 members</strong> in the ecosystem · <strong>4 specialized</strong> portals"
+    },
+    "roles": {
+        "writer": "Writer",
+        "reseller": "Reseller",
+        "printer": "Printer",
+        "reader": "Reader"
+    },
+    "tab": {
+        "writer": {
+            "title": "Publish your knowledge and build your author brand",
+            "description": "AI tools for content generation, catalog management, sales analytics, automated marketing and professional support. Your work deserves professionalism.",
+            "cta": "Explore Writers Portal →"
+        },
+        "reseller": {
+            "title": "Generate income by recommending books and services",
+            "description": "Affiliate program with recurring commissions, ready promotional material, real-time statistics and multiple benefit tiers.",
+            "cta": "Join as Reseller →"
+        },
+        "printer": {
+            "title": "Connect with authors who need your services",
+            "description": "Access constant print-on-demand orders, manage budgets, receive secure payments and expand your author client network.",
+            "cta": "Register Printer →"
+        },
+        "reader": {
+            "title": "Discover your next favorite read",
+            "description": "Explore curated catalogs, read authentic reviews, support authors directly and access exclusive community content.",
+            "cta": "Explore Library →"
+        }
+    },
+    "vision": {
+        "title": "Your Universe of Knowledge and Legacy",
+        "intro": "DrakkarPress is your platform to create and share knowledge.",
+        "description": "Build your author/publisher profile, publish books (with or without AI generator), generate additional income and leave messages between generations. We are the <strong>collaborative network</strong> where writers, promoters and printers navigate together.",
+        "marketing": "Marketing directed by OdrBrand:",
+        "marketing-desc": "Our allied agency handles all advertising synergy, with exclusive privileges of 40-50% discount for DrakkarPress partners.",
+        "cta": "Create My Profile →"
+    },
+    "ai": {
+        "title": "AI Generators for Authors",
+        "subtitle": "Smart tools with 25+ combinable genres to boost your creativity",
+        "gen1": {
+            "title": "Generator 1: Creation",
+            "feat1": "Book ideas with 25+ genres",
+            "feat2": "Personalized creative titles",
+            "feat3": "Complex and unique characters",
+            "feat4": "Recipes and cookbooks"
+        },
+        "gen2": {
+            "title": "Generator 2: Structure",
+            "feat1": "Automatic concept maps",
+            "feat2": "Structured chapters",
+            "feat3": "Plots and narrative arcs",
+            "feat4": "Professional synopses"
+        },
+        "gen3": {
+            "title": "Generator 3: Marketing",
+            "feat1": "Social media copy",
+            "feat2": "Optimized descriptions",
+            "feat3": "Promotional emails",
+            "feat4": "Cover suggestions"
+        },
+        "cta": "Try Generators Free →"
+    },
+    "marketing": {
+        "title": "Professional Marketing Campaigns",
+        "campaign1": {
+            "title": "Book Launch",
+            "description": "Complete strategy: social media ads, email marketing, literary influencers, press releases and Amazon/Google Books optimization.",
+            "feat1": "Custom campaign design",
+            "feat2": "Paid ads management",
+            "feat3": "Monthly analysis and reports"
+        },
+        "campaign2": {
+            "title": "Brand Building",
+            "description": "Author identity development: professional website, blog, newsletter, social media presence and long-term content strategy.",
+            "feat1": "Personal brand strategy",
+            "feat2": "6-month editorial calendar",
+            "feat3": "Community management"
+        },
+        "cta": "View Marketing Services →"
+    },
+    "premium": {
+        "title": "DrakkarPress Premium Membership",
+        "subtitle": "Lifetime locked price based on your entry phase",
+        "phase1": "Users 1-1,000 (Founders)",
+        "phase2": "Users 1,001-10,000",
+        "phase3": "Users 10,001+",
+        "cta": "⚓ Upgrade to Premium Now",
+        "guarantee": "💎 Guarantee: Your price stays forever, no future increases"
+    },
+    "testimonials": {
+        "title": "What our navigators say",
+        "test1": {
+            "quote": "The AI generators helped me structure my first novel. In 3 months I published and already sold over 200 copies.",
+            "role": "Fiction Writer"
+        },
+        "test2": {
+            "quote": "As a reseller, I generate passive income recommending services. The commission system is transparent and punctual.",
+            "role": "Premium Affiliate"
+        },
+        "test3": {
+            "quote": "I receive constant orders from authors. The platform facilitates the entire budget and payment process. Excellent for printers.",
+            "role": "Printer Partner"
+        }
+    },
+    "footer-cta": {
+        "title": "⚓ Ready to set sail?",
+        "description": "Join the most innovative publishing fleet. Build your literary legacy today.",
+        "cta": "Create Free Account →"
+    },
+    "footer": {
+        "platform": "Platform",
+        "writers": "Writers",
+        "resellers": "Resellers",
+        "printers": "Printers",
+        "library": "Library",
+        "services": "Services",
+        "marketing": "Marketing",
+        "web": "Web Development",
+        "research": "Research",
+        "ai": "Generative AI",
+        "company": "Company",
+        "about": "About Us",
+        "contact": "Contact",
+        "faq": "FAQ",
+        "premium": "Premium",
+        "legal": "Legal",
+        "terms": "Terms",
+        "privacy": "Privacy",
+        "cookies": "Cookies",
+        "copyright": "All rights reserved."
+    }
+}

@@ -44,10 +44,10 @@ public class BookPurchase {
     private User user;
 
     /**
-     * Libro comprado
+     * Libro comprado (nullable para testing)
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id", nullable = true)
     private Book book;
 
     /**

@@ -1,7 +1,7 @@
 package com.drakkarpress.platform.security;
 
 import com.drakkarpress.platform.model.User;
-import com.drakkarpress.platform.repository.UserRepository;
+import com.drakkarpress.platform.repository.PlatformUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private PlatformUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String emailOrUsername) throws UsernameNotFoundException {

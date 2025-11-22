@@ -275,7 +275,7 @@
   <script src="assets/js/error-handler.js"></script>
   <script src="assets/js/auth-v2.js"></script>
   <script>
-    const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://overflowing-consideration-production.up.railway.app';
+    const API_BASE_URL = window.DrakkarPress?.config?.getApiBaseUrl() || 'https://railway.com/project/887d34c6-8453-4745-b4c6-52000a0c80b3/service/303764e3-38d8-445f-9a13-47631adf38f8?id=7ebed9eb-de19-4c9b-83a0-c616f593b231';
 
     function showTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -567,3 +567,6 @@
   </script>
 </body>
 </html>
+
+ALTER TABLE book_purchases ADD COLUMN IF NOT EXISTS dedication_message VARCHAR(500);
+CREATE INDEX IF NOT EXISTS idx_book_purchases_dedication ON book_purchases(dedication_message) WHERE dedication_message IS NOT NULL;

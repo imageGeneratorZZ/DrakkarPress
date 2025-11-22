@@ -130,6 +130,7 @@ public class Sale {
      * - Con revendedor: 60% autor, 30% revendedor, 10% plataforma
      */
     public void calculateCommissions() {
+        if (amount == null) return; // salvaguarda
         if (isDirect) {
             this.commissionAuthor = amount.multiply(new BigDecimal("0.90"));
             this.commissionReseller = BigDecimal.ZERO;

@@ -1,56 +1,35 @@
 ## Multi-stage Dockerfile for DrakkarPress Backend (Spring Boot 3.5, Java 21)
 
 # -------- Build stage --------
-FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
-WORKDIR /workspace
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+WORKDIR /app
 
-# Copy pom first for better layer caching
+# Copy only pom.xml first for better layer caching
 COPY pom.xml .
+ARG MAVEN_OPTS="-Xms128m -Xmx512m"
+# Compilación más rápida (silenciosa y paralela)
+RUN mvn -q dependency:go-offline -B
 
-# Download dependencies (cached if pom.xml hasn't changed)
-RUN mvn dependency:go-offline -B
-
-# Copy source code
+# Copy source and build
 COPY src ./src
-
-# Build and clean Maven cache to save space
-RUN mvn -B -DskipTests clean package && \
-    rm -rf ~/.m2/repository
+RUN mvn -q -T 1C clean package -DskipTests \
+	&& cp target/*.jar target/app.jar
 
 # -------- Runtime stage --------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Add non-root user (Alpine uses adduser instead of useradd)
-RUN adduser -D -u 1001 appuser
+# Create non-root user
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
 
-# Copy fat jar from build
-COPY --from=build /workspace/target/*.jar /app/app.jar
+# Copy only the JAR from build stage
+COPY --from=build /app/target/app.jar app.jar
 
-# Expose application port
+# Expose port
 EXPOSE 8080
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Duser.timezone=UTC"
 
-# Healthcheck for Railway
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-USER appuser
-
-# Run with memory-optimized JVM flags for Railway free tier (512MB)
-ENTRYPOINT ["java",\
-  "-XX:+UseContainerSupport",\
-  "-XX:MaxRAMPercentage=75.0",\
-  "-XX:InitialRAMPercentage=50.0",\
-  "-XX:MinRAMPercentage=50.0",\
-  "-XX:+UseSerialGC",\
-  "-XX:MaxMetaspaceSize=128m",\
-  "-XX:CompressedClassSpaceSize=32m",\
-  "-Xss256k",\
-  "-XX:+TieredCompilation",\
-  "-XX:TieredStopAtLevel=1",\
-  "-Djava.security.egd=file:/dev/./urandom",\
-  "-Dspring.backgroundpreinitializer.ignore=true",\
-  "-jar","/app/app.jar"]
+# Use exec form for better signal handling
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar app.jar"]

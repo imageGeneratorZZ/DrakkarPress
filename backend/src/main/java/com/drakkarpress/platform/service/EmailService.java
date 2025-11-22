@@ -1,6 +1,6 @@
 package com.drakkarpress.platform.service;
 
-import com.drakkarpress.platform.model.Book;
+import com.drakkarpress.model.Book;
 import com.drakkarpress.platform.model.BookPurchase;
 import com.drakkarpress.platform.model.User;
 import com.drakkarpress.platform.model.PaymentTransaction;
@@ -237,7 +237,7 @@ public class EmailService {
     public void sendEbookPurchaseConfirmation(com.drakkarpress.platform.model.BookPurchase purchase) {
         try {
             User user = purchase.getUser();
-            com.drakkarpress.platform.model.Book book = purchase.getBook();
+            Book book = purchase.getBook();
 
             String downloadExpires = purchase.getDownloadExpiresAt() != null ? 
                 purchase.getDownloadExpiresAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "Sin expiración";
@@ -299,5 +299,13 @@ public class EmailService {
             System.err.println("❌ Error enviando email de ebook: " + e.getMessage());
             throw new RuntimeException("Error enviando email", e);
         }
+    }
+
+    /**
+     * Enviar email de activación de membresía (stub simplificado)
+     */
+    public void sendMembershipActivatedEmail(String email, String planType) {
+        // Implementación futura con plantilla; por ahora sólo log.
+        System.out.println("[EMAIL] Membresía activada para " + email + " plan=" + planType);
     }
 }

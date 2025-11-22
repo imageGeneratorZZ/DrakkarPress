@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - DrakkarPress</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1A4D7A;
+            --secondary: #D4AF37;
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #262626;
+            --text-secondary: #8E8E8E;
+            --border: #DBDBDB;
+            --error: #ED4956;
+            --success: #00BA7C;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 10px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .logo-subtitle {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 16px;
+        }
+
+        .btn-primary:hover {
+            background: #15416b;
+        }
+
+        .btn-primary:disabled {
+            background: var(--primary);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            padding: 0 18px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-social {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-social:hover {
+            background: var(--bg-primary);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .signup-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .signup-box a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .app-download {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-section">
+                <div class="logo-icon">⚔️</div>
+                <div class="logo-text">DrakkarPress</div>
+                <div class="logo-subtitle">Inicia sesión para continuar</div>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" class="form-input" id="email" placeholder="Email" required autocomplete="username">
+                    <div class="error-message" id="emailError">Email inválido</div>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-input" id="password" placeholder="Contraseña" required autocomplete="current-password">
+                    <div class="error-message" id="passwordError">Contraseña incorrecta</div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span id="btnText">Iniciar Sesión</span>
+                    <div class="loading-spinner" id="spinner"></div>
+                </button>
+
+                <div class="forgot-password">
+                    <a href="/forgot-password.html">¿Olvidaste tu contraseña?</a>
+                </div>
+            </form>
+
+            <div class="divider">
+                <span>O</span>
+            </div>
+
+            <div class="social-login">
+                <button class="btn-social" onclick="alert('Login con Google en desarrollo')">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+                <button class="btn-social" onclick="alert('Login con Facebook en desarrollo')">
+                    <i class="fab fa-facebook"></i>
+                    Facebook
+                </button>
+            </div>
+        </div>
+
+        <div class="signup-box">
+            ¿No tienes cuenta? <a href="/register.html">Regístrate</a>
+        </div>
+
+        <div class="app-download">
+            <p>Descarga la aplicación</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Mensaje</span>
+    </div>
+
+    <script src="js/api-client.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.disabled = true;
+                btnText.style.display = 'none';
+                spinner.style.display = 'block';
+            } else {
+                loginBtn.disabled = false;
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validación básica
+            if (!email || !password) {
+                showToast('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const result = await api.login(email, password);
+
+                if (result.success) {
+                    showToast('¡Bienvenido de vuelta!', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 1000);
+                } else {
+                    showToast(result.message || 'Error al iniciar sesión', 'error');
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error de conexión con el servidor', 'error');
+                setLoading(false);
+            }
+        });
+
+        // Limpiar errores al escribir
+        emailInput.addEventListener('input', () => {
+            emailInput.classList.remove('error');
+            document.getElementById('emailError').classList.remove('show');
+        });
+
+        passwordInput.addEventListener('input', () => {
+            passwordInput.classList.remove('error');
+            document.getElementById('passwordError').classList.remove('show');
+        });
+
+        // Si ya está autenticado, redirigir
+        if (api.isAuthenticated()) {
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html>

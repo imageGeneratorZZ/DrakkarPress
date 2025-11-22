@@ -308,6 +308,19 @@ TOTAL:             ████████████████░░░░ 
 
 ---
 
+## Shopify Webhook & Membresía
+
+Flujo actualizado de pago usando Shopify:
+1. `POST /api/payments/create-checkout` crea `PaymentTransaction` (estado PENDING) y devuelve `checkoutUrl` con `?note=<UUID>`.
+2. El usuario paga en Shopify.
+3. Shopify envía webhook con `financial_status` y `note`.
+4. `POST /api/payments/webhook` verifica HMAC (`X-Shopify-Hmac-Sha256`) usando `shopify.webhook.secret`.
+5. Si `financial_status=paid` y `note` es UUID válido → transacción COMPLETED + activación membresía + email.
+
+Verificaciones:
+- HMAC: Base64(HmacSHA256(payload, secret)).
+- Próximos: estados `refunded`, `cancelled`, extracción desde `note_attributes`.
+
 ## 🚀 Próximos Pasos
 
 ### Deploy Inmediato:

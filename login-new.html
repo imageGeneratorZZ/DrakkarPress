@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - DrakkarPress</title>
+    <meta name="description" content="Accede a tu cuenta de DrakkarPress y gestiona tu perfil de autor, libros y ventas.">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/assets/css/design-tokens.css" as="style">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/design-tokens.css">
+    
+    <style>
+        body {
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .alert {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            display: none;
+        }
+
+        .alert.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: var(--font-semibold);
+            color: var(--text-dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+            transition: border-color var(--transition-base);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: var(--text-sm);
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--neutral-200);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-icon">⚓</div>
+            <h1 class="text-2xl font-bold mb-sm">Bienvenido de vuelta</h1>
+            <p class="text-sm" style="opacity: 0.9;">Navega hacia tu Dashboard</p>
+        </div>
+
+        <div class="p-2xl">
+            <div id="alertBox" class="alert error"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="tu@email.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span class="text-sm">Recordarme</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full btn-lg">
+                    Iniciar Sesión
+                </button>
+
+                <div class="register-link">
+                    <p class="text-sm text-medium">
+                        ¿No tienes cuenta? 
+                        <a href="register.html" class="text-primary font-semibold">Regístrate aquí</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/assets/js/ui/i18n-enhanced.js" defer></script>
+    <script>
+        const API_BASE_URL = 'https://drakkarpress-backend-production.up.railway.app/api';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const alertBox = document.getElementById('alertBox');
+            alertBox.style.display = 'none';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Store token and user data
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.data.user));
+
+                    // Redirect based on role
+                    const role = data.data.user.role;
+                    const redirects = {
+                        'WRITER': 'escritores.html',
+                        'RESELLER': 'revendedores.html',
+                        'PRINTER': 'imprentas.html',
+                        'READER': 'biblioteca.html'
+                    };
+
+                    window.location.href = redirects[role] || 'index.html';
+                } else {
+                    alertBox.textContent = data.message || 'Error al iniciar sesión';
+                    alertBox.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alertBox.textContent = 'Error de conexión. Intenta nuevamente.';
+                alertBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

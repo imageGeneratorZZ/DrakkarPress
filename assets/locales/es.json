@@ -1,0 +1,142 @@
+{
+    "page": {
+        "title": "DrakkarPress - La Flota Editorial Digital"
+    },
+    "hero": {
+        "title": "La Flota Editorial Digital",
+        "subtitle": "Navega hacia el futuro del conocimiento y la literatura",
+        "cta": "Zarpa con Premium",
+        "members": "<strong>100,000 miembros</strong> en el ecosistema · <strong>4 portales</strong> especializados"
+    },
+    "roles": {
+        "writer": "Escritor",
+        "reseller": "Revendedor",
+        "printer": "Imprenta",
+        "reader": "Lector"
+    },
+    "tab": {
+        "writer": {
+            "title": "Publica tu conocimiento y construye tu marca de autor",
+            "description": "Herramientas de IA para generar contenido, gestión de catálogo, análisis de ventas, marketing automatizado y soporte profesional. Tu obra merece profesionalismo.",
+            "cta": "Explorar Portal de Escritores →"
+        },
+        "reseller": {
+            "title": "Genera ingresos recomendando libros y servicios",
+            "description": "Programa de afiliados con comisiones recurrentes, material promocional listo, estadísticas en tiempo real y múltiples niveles de beneficios.",
+            "cta": "Unirse como Revendedor →"
+        },
+        "printer": {
+            "title": "Conecta con autores que necesitan tus servicios",
+            "description": "Accede a pedidos constantes de impresión bajo demanda, gestiona presupuestos, recibe pagos seguros y amplía tu red de clientes autores.",
+            "cta": "Registrar Imprenta →"
+        },
+        "reader": {
+            "title": "Descubre tu próxima lectura favorita",
+            "description": "Explora catálogos curados, lee reseñas auténticas, apoya directamente a autores y accede a contenido exclusivo de la comunidad.",
+            "cta": "Explorar Biblioteca →"
+        }
+    },
+    "vision": {
+        "title": "Tu Universo de Conocimiento y Legado",
+        "intro": "DrakkarPress es tu plataforma para crear y compartir conocimiento.",
+        "description": "Construye tu perfil de autor/editor, publica libros (con o sin IA generadora), genera ingresos adicionales y deja mensajes entre generaciones. Somos la <strong>red colaborativa</strong> donde escritores, promotores e imprentas navegan juntos.",
+        "marketing": "Marketing dirigido por OdrBrand:",
+        "marketing-desc": "Nuestra agencia aliada maneja toda la sinergia publicitaria, con privilegios exclusivos del 40-50% de descuento para socios de DrakkarPress.",
+        "cta": "Crear Mi Perfil →"
+    },
+    "ai": {
+        "title": "Generadores de IA para Autores",
+        "subtitle": "Herramientas inteligentes con 25+ géneros combinables para impulsar tu creatividad",
+        "gen1": {
+            "title": "Generadora 1: Creación",
+            "feat1": "Ideas de libros con 25+ géneros",
+            "feat2": "Títulos creativos personalizados",
+            "feat3": "Personajes complejos y únicos",
+            "feat4": "Recetas y libros de cocina"
+        },
+        "gen2": {
+            "title": "Generadora 2: Estructura",
+            "feat1": "Mapas conceptuales automáticos",
+            "feat2": "Capítulos estructurados",
+            "feat3": "Tramas y arcos narrativos",
+            "feat4": "Sinopsis profesionales"
+        },
+        "gen3": {
+            "title": "Generadora 3: Marketing",
+            "feat1": "Copys para redes sociales",
+            "feat2": "Descripciones optimizadas",
+            "feat3": "Emails promocionales",
+            "feat4": "Sugerencias de portadas"
+        },
+        "cta": "Probar Generadores Gratis →"
+    },
+    "marketing": {
+        "title": "Campañas de Marketing Profesional",
+        "campaign1": {
+            "title": "Lanzamiento de Libro",
+            "description": "Estrategia completa: ads en redes, email marketing, influencers literarios, notas de prensa y optimización de Amazon/Google Books.",
+            "feat1": "Diseño de campaña personalizada",
+            "feat2": "Gestión de anuncios pagos",
+            "feat3": "Análisis y reportes mensuales"
+        },
+        "campaign2": {
+            "title": "Construcción de Marca",
+            "description": "Desarrollo de identidad de autor: web profesional, blog, newsletter, presencia en redes y estrategia de contenido a largo plazo.",
+            "feat1": "Estrategia de marca personal",
+            "feat2": "Calendario editorial 6 meses",
+            "feat3": "Gestión de comunidad"
+        },
+        "cta": "Ver Servicios de Marketing →"
+    },
+    "premium": {
+        "title": "Membresía Premium DrakkarPress",
+        "subtitle": "Precio bloqueado de por vida según tu fase de entrada",
+        "phase1": "Usuarios 1-1,000 (Fundadores)",
+        "phase2": "Usuarios 1,001-10,000",
+        "phase3": "Usuarios 10,001+",
+        "cta": "⚓ Mejorar a Premium Ahora",
+        "guarantee": "💎 Garantía: Tu precio se mantiene para siempre, sin aumentos futuros"
+    },
+    "testimonials": {
+        "title": "Lo que dicen nuestros navegantes",
+        "test1": {
+            "quote": "Los generadores de IA me ayudaron a estructurar mi primera novela. En 3 meses publiqué y ya vendí más de 200 copias.",
+            "role": "Escritora de Ficción"
+        },
+        "test2": {
+            "quote": "Como revendedor, genero ingresos pasivos recomendando servicios. El sistema de comisiones es transparente y puntual.",
+            "role": "Afiliado Premium"
+        },
+        "test3": {
+            "quote": "Recibo pedidos constantes de autores. La plataforma facilita todo el proceso de presupuestos y pagos. Excelente para imprentas.",
+            "role": "Socio Impresor"
+        }
+    },
+    "footer-cta": {
+        "title": "⚓ ¿Listo para zarpar?",
+        "description": "Únete a la flota editorial más innovadora. Construye tu legado literario hoy.",
+        "cta": "Crear Cuenta Gratuita →"
+    },
+    "footer": {
+        "platform": "Plataforma",
+        "writers": "Escritores",
+        "resellers": "Revendedores",
+        "printers": "Imprentas",
+        "library": "Biblioteca",
+        "services": "Servicios",
+        "marketing": "Marketing",
+        "web": "Desarrollo Web",
+        "research": "Research",
+        "ai": "IA Generativa",
+        "company": "Empresa",
+        "about": "Nosotros",
+        "contact": "Contacto",
+        "faq": "FAQ",
+        "premium": "Premium",
+        "legal": "Legal",
+        "terms": "Términos",
+        "privacy": "Privacidad",
+        "cookies": "Cookies",
+        "copyright": "Todos los derechos reservados."
+    }
+}

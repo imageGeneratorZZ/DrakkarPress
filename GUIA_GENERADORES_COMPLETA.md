@@ -1,6 +1,22 @@
 # 🎨 GENERADORES DRAKKARPRESS - GUÍA COMPLETA
 
-## 📊 25+ GÉNEROS COMBINABLES
+## 📚 Plataformas de Generación
+
+### **DrakkarPress** (generators.html)
+- Generador de Libros para **Adultos**
+- 25+ géneros combinables con ecualizador
+- Nivel de erotismo configurable (0-5)
+- Ideal para: Romance, Thriller, Fantasía, Ciencia Ficción, No Ficción
+
+### **Scryptorium** (versión específica)
+- Generador de Libros para **Niños**
+- Contenido infantil seguro y educativo
+- Cuentos, libros para colorear, material didáctico
+- Sin niveles de erotismo (siempre limpio)
+
+---
+
+## 📊 25+ GÉNEROS COMBINABLES (DrakkarPress)
 
 ### 📚 Ficción Literaria (11 géneros)
 1. ❤️ **Romance** - Historias de amor y relaciones

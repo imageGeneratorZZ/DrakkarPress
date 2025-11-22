@@ -1,5 +1,6 @@
 package com.drakkarpress.platform.service;
 
+import com.drakkarpress.platform.repository.PlatformUserRepository;
 import com.drakkarpress.platform.dto.request.LoginRequest;
 import com.drakkarpress.platform.dto.request.RefreshTokenRequest;
 import com.drakkarpress.platform.dto.request.RegisterRequest;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class AuthService {
 
     @Autowired
-    private UserRepository userRepository;
+    private PlatformUserRepository userRepository;
 
     @Autowired
     private MembershipRepository membershipRepository;

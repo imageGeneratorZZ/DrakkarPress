@@ -7,15 +7,11 @@ import com.drakkarpress.platform.model.User;
 import com.drakkarpress.platform.repository.BookPurchaseRepository;
 import com.drakkarpress.repository.BookRepository;
 import com.drakkarpress.platform.repository.PaymentTransactionRepository;
-import com.drakkarpress.platform.repository.UserRepository;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
+import com.drakkarpress.platform.repository.PlatformUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import com.drakkarpress.platform.repository.RoyaltySplitRepository;
+import com.drakkarpress.platform.model.RoyaltySplit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,184 +23,125 @@ import java.util.*;
  * Servicio de Compra de Ebooks
  * 
  * Maneja la venta de libros digitales (PDF/EPUB)
- * Integración con Stripe para pagos
+ * Integración con Shopify para pagos (Stripe removido)
  * Envío automático por email
  */
 @Service
 @Slf4j
+@SuppressWarnings("null")
 public class BookPurchaseService {
 
     private final BookPurchaseRepository purchaseRepository;
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
+    private final PlatformUserRepository userRepository;
     private final PaymentTransactionRepository paymentRepository;
     private final EmailService emailService;
-
-    @Value("${stripe.api.key}")
-    private String stripeApiKey;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
+    @Value("${shopify.store.url:https://drakkarpress.myshopify.com}")
+    private String shopifyStoreUrl;
+
+    private final RoyaltySplitRepository royaltySplitRepository;
+
     public BookPurchaseService(
             BookPurchaseRepository purchaseRepository,
             BookRepository bookRepository,
-            UserRepository userRepository,
+            PlatformUserRepository userRepository,
             PaymentTransactionRepository paymentRepository,
-            EmailService emailService) {
+            EmailService emailService,
+            RoyaltySplitRepository royaltySplitRepository) {
         this.purchaseRepository = purchaseRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         this.paymentRepository = paymentRepository;
         this.emailService = emailService;
+        this.royaltySplitRepository = royaltySplitRepository;
     }
 
-    /**
-     * Crea sesión de checkout para comprar ebook
-     */
-    @Transactional
-    public Map<String, Object> createEbookCheckout(UUID userId, UUID bookId, String format, String dedicationMessage) {
-        try {
-            Stripe.apiKey = stripeApiKey;
+        /**
+         * Crea checkout (Shopify) para comprar ebook.
+         * Stripe removido: ahora solo se registra la compra y se devuelve una URL genérica.
+         */
+        @Transactional
+        public Map<String, Object> createEbookCheckout(UUID userId, UUID bookId, String format, String dedicationMessage) {
+        // Validar usuario
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            // Validar usuario
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        // Validar libro
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
 
-            // Validar libro
-            Book book = bookRepository.findById(bookId)
-                    .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
-
-            // Verificar si ya lo compró
-            boolean alreadyPurchased = purchaseRepository.existsByUserIdAndBookIdAndStatus(
-                    userId, bookId, "COMPLETED");
-            
-            if (alreadyPurchased) {
-                throw new RuntimeException("Ya compraste este libro. Descárgalo desde tu biblioteca.");
-            }
-
-            // Determinar precio según formato
-            BigDecimal price = getPriceByFormat(format);
-            long priceInCents = price.multiply(new BigDecimal(100)).longValue();
-
-            // Crear transacción de pago
-            PaymentTransaction transaction = PaymentTransaction.builder()
-                    .user(user)
-                    .paymentProvider("STRIPE")
-                    .amount(price)
-                    .currency("USD")
-                    .paymentStatus("PENDING")
-                    .transactionType("EBOOK_PURCHASE")
-                    .description("Ebook: " + book.getTitle() + " (" + format.toUpperCase() + ")")
-                    .build();
-            transaction = paymentRepository.save(transaction);
-
-            // Crear registro de compra
-                BookPurchase purchase = BookPurchase.createEbookPurchase(
-                    user, book, price, format, transaction.getId(), dedicationMessage);
-            purchase = purchaseRepository.save(purchase);
-
-            // URLs de retorno
-            String successUrl = frontendUrl + "/purchase-success.html?session_id={CHECKOUT_SESSION_ID}";
-            String cancelUrl = frontendUrl + "/shop.html?cancelled=true";
-
-            // Crear sesión de Stripe
-            SessionCreateParams params = SessionCreateParams.builder()
-                    .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(successUrl)
-                    .setCancelUrl(cancelUrl)
-                    .setCustomerEmail(user.getEmail())
-                    .setClientReferenceId(purchase.getId().toString())
-                    .addLineItem(
-                            SessionCreateParams.LineItem.builder()
-                                    .setPriceData(
-                                            SessionCreateParams.LineItem.PriceData.builder()
-                                                    .setCurrency("usd")
-                                                    .setUnitAmount(priceInCents)
-                                                    .setProductData(
-                                                            SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                    .setName(book.getTitle())
-                                                                    .setDescription("Ebook " + format.toUpperCase() + " - Descarga inmediata")
-                                                                    .addImage(book.getCoverImageUrl() != null ? book.getCoverImageUrl() : "")
-                                                                    .build()
-                                                    )
-                                                    .build()
-                                    )
-                                    .setQuantity(1L)
-                                    .build()
-                    )
-                    .putMetadata("user_id", userId.toString())
-                    .putMetadata("book_id", bookId.toString())
-                    .putMetadata("purchase_id", purchase.getId().toString())
-                    .putMetadata("format", format)
-                    .build();
-
-            Session session = Session.create(params);
-
-            // Actualizar transacción
-            transaction.setExternalTransactionId(session.getId());
-            paymentRepository.save(transaction);
-
-            log.info("Checkout creado para ebook: {} - Usuario: {}", book.getTitle(), user.getEmail());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("sessionId", session.getId());
-            response.put("url", session.getUrl());
-            response.put("purchaseId", purchase.getId());
-
-            return response;
-
-        } catch (StripeException e) {
-            log.error("Error creando checkout: {}", e.getMessage(), e);
-            throw new RuntimeException("Error al procesar el pago: " + e.getMessage());
+        // Verificar si ya lo compró
+        if (purchaseRepository.existsByUserIdAndBookIdAndStatus(userId, bookId, "COMPLETED")) {
+            throw new RuntimeException("Ya compraste este libro. Descárgalo desde tu biblioteca.");
         }
-    }
+
+        BigDecimal price = getPriceByFormat(format);
+
+        // Crear transacción de pago (sin procesar aún, se marcará luego vía webhook manual/admin)
+        PaymentTransaction transaction = PaymentTransaction.builder()
+            .user(user)
+            .paymentProvider("SHOPIFY")
+            .amount(price)
+            .currency("USD")
+            .paymentStatus("PENDING")
+            .transactionType("EBOOK_PURCHASE")
+            .description("Ebook: " + book.getTitle() + " (" + format.toUpperCase() + ")")
+            .build();
+        transaction = paymentRepository.save(transaction);
+
+        // Registro de compra inicial (pendiente)
+        BookPurchase purchase = BookPurchase.createEbookPurchase(
+            user, book, price, format, transaction.getId(), dedicationMessage);
+        purchaseRepository.save(purchase);
+
+        // Construir checkout URL (placeholder). En Shopify usar product/variant real y cart.
+        String checkoutUrl = shopifyStoreUrl + "/cart/add?id=SHOPIFY_EBOOK_VARIANT_ID&quantity=1";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("checkoutUrl", checkoutUrl);
+        response.put("purchaseId", purchase.getId());
+        response.put("transactionId", transaction.getId());
+        response.put("provider", "SHOPIFY");
+        return response;
+        }
 
     /**
-     * Maneja webhook de pago completado para ebook
+     * Webhook (Shopify) o confirmación manual: marcar compra completada.
+     * Este método debería llamarse cuando se confirma el pago en Shopify.
      */
     @Transactional
-    public void handleEbookPurchaseCompleted(Event event) {
-        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
-        
-        if (!deserializer.getObject().isPresent()) {
-            log.error("No se pudo deserializar evento");
-            return;
-        }
-
-        Session session = (Session) deserializer.getObject().get();
-        String purchaseIdStr = session.getClientReferenceId();
-        
-        if (purchaseIdStr == null) {
-            log.error("No purchase_id en session");
-            return;
-        }
-
-        UUID purchaseId = UUID.fromString(purchaseIdStr);
+    public void markEbookPurchaseCompleted(UUID purchaseId) {
         BookPurchase purchase = purchaseRepository.findById(purchaseId)
                 .orElseThrow(() -> new RuntimeException("Compra no encontrada: " + purchaseId));
 
-        // Marcar como completada
+        if (purchase.isCompleted()) {
+            return; // Ya procesada
+        }
+
         purchase.markCompleted();
-        
-        // Generar link de descarga
         purchase.generateDownloadLink(frontendUrl, 72); // 72 horas de validez
-        
         purchaseRepository.save(purchase);
 
-        // Actualizar transacción de pago
         PaymentTransaction transaction = paymentRepository.findById(purchase.getTransactionId())
                 .orElse(null);
-        if (transaction != null) {
-            transaction.markCompleted(session.getId());
+        if (transaction != null && !"COMPLETED".equals(transaction.getPaymentStatus())) {
+            transaction.markCompleted("SHOPIFY_ORDER_ID_PLACEHOLDER");
             paymentRepository.save(transaction);
         }
 
-        log.info("Compra de ebook completada: {} - Usuario: {}", 
-                 purchase.getBook().getTitle(), purchase.getUser().getEmail());
-
-        // Enviar email con link de descarga
         emailService.sendEbookPurchaseConfirmation(purchase);
+        log.info("Compra completada (Shopify) ebook: {} usuario: {}", purchase.getBook().getTitle(), purchase.getUser().getEmail());
+
+        // Calcular y registrar comisión / royalty split interno
+        try {
+            calculateAndPersistInternalRoyalty(purchase);
+        } catch (Exception ex) {
+            log.error("Error calculando royalty split para compra {}: {}", purchaseId, ex.getMessage());
+        }
     }
 
     /**
@@ -319,5 +256,37 @@ public class BookPurchaseService {
         stats.put("averagePrice", totalSales > 0 ? totalRevenue / totalSales : 0);
         
         return stats;
+    }
+
+    // ========================================================================
+    // COMISIONES / ROYALTIES INTERNOS
+    // ========================================================================
+
+    @Transactional
+    protected void calculateAndPersistInternalRoyalty(BookPurchase purchase) {
+        if (!purchase.isCompleted()) return;
+
+        var user = purchase.getUser();
+        var book = purchase.getBook();
+        var gross = purchase.getPricePaid();
+        if (gross == null) return;
+
+        // Comisión plataforma (25% si usuario FREE, 5% si PREMIUM)
+        boolean isFree = user.getSubscription() != null && user.getSubscription().equalsIgnoreCase("FREE");
+        var platformFee = isFree 
+            ? gross.multiply(new java.math.BigDecimal("0.25"))  // 25% FREE
+            : gross.multiply(new java.math.BigDecimal("0.05")); // 5% PREMIUM
+        var net = gross.subtract(platformFee);
+
+        RoyaltySplit split = RoyaltySplit.builder()
+                .bookId(book.getId())
+                .userId(user.getId())
+                .percentage(new java.math.BigDecimal("100.00"))
+                .grossAmount(gross)
+                .platformFee(platformFee)
+                .netAmount(net)
+                .source(RoyaltySplit.Source.INTERNAL_SALE)
+                .build();
+        royaltySplitRepository.save(split);
     }
 }

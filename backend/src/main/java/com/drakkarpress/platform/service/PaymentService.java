@@ -5,13 +5,7 @@ import com.drakkarpress.platform.model.PaymentTransaction;
 import com.drakkarpress.platform.model.User;
 import com.drakkarpress.platform.repository.MembershipRepository;
 import com.drakkarpress.platform.repository.PaymentTransactionRepository;
-import com.drakkarpress.platform.repository.UserRepository;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
+import com.drakkarpress.platform.repository.PlatformUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,38 +14,40 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servicio de Pagos con Stripe
- * 
- * Características:
- * - Integración con Stripe Checkout
- * - Manejo de webhooks
- * - Gestión de transacciones
- * - Activación automática de membresías
+ * Servicio de Pagos con Shopify
+ * Todos los pagos se procesan a través de Shopify
  */
 @Service
 @Slf4j
 public class PaymentService {
 
     private final PaymentTransactionRepository paymentRepository;
-    private final UserRepository userRepository;
+    private final PlatformUserRepository userRepository;
     private final MembershipRepository membershipRepository;
     private final EmailService emailService;
     private final PricingService pricingService;
 
-    @Value("${stripe.api.key}")
-    private String stripeApiKey;
-
-    @Value("${stripe.webhook.secret}")
-    private String webhookSecret;
+    @Value("${shopify.store.url:https://drakkarpress.myshopify.com}")
+    private String shopifyStoreUrl;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
+    @Value("${shopify.webhook.secret:dummy-webhook-secret}")
+    private String shopifyWebhookSecret;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public PaymentService(
             PaymentTransactionRepository paymentRepository,
-            UserRepository userRepository,
+            PlatformUserRepository userRepository,
             MembershipRepository membershipRepository,
             EmailService emailService,
             PricingService pricingService) {
@@ -63,116 +59,79 @@ public class PaymentService {
     }
 
     /**
-     * Crea sesión de Stripe Checkout
+     * Redirige a Shopify para el checkout
      */
     @Transactional
     public Map<String, Object> createCheckoutSession(UUID userId, String planType, String frequency) {
         try {
-            // Inicializar Stripe
-            Stripe.apiKey = stripeApiKey;
-
-            // Obtener usuario
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            // Obtener precio
             PricingService.PricingInfo pricing = pricingService.getCurrentPricing(planType, frequency);
             long amountInCents = pricing.getPriceInCents();
 
-            // Crear transacción pendiente
             PaymentTransaction transaction = PaymentTransaction.createSignup(
                     user,
-                    "STRIPE",
+                    "SHOPIFY",
                     new BigDecimal(amountInCents).divide(new BigDecimal(100)),
                     planType,
                     frequency
             );
             transaction = paymentRepository.save(transaction);
 
-            // URLs de retorno
-            String successUrl = frontendUrl + "/checkout-success.html?session_id={CHECKOUT_SESSION_ID}";
-            String cancelUrl = frontendUrl + "/premium.html?cancelled=true";
-
-            // Crear sesión de Stripe
-            SessionCreateParams params = SessionCreateParams.builder()
-                    .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(successUrl)
-                    .setCancelUrl(cancelUrl)
-                    .setCustomerEmail(user.getEmail())
-                    .setClientReferenceId(transaction.getId().toString())
-                    .addLineItem(
-                            SessionCreateParams.LineItem.builder()
-                                    .setPriceData(
-                                            SessionCreateParams.LineItem.PriceData.builder()
-                                                    .setCurrency("usd")
-                                                    .setUnitAmount(amountInCents)
-                                                    .setProductData(
-                                                            SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                    .setName("DrakkarPress " + getPlanDisplayName(planType))
-                                                                    .setDescription(getFrequencyDisplayName(frequency) + " - Acceso completo")
-                                                                    .build()
-                                                    )
-                                                    .build()
-                                    )
-                                    .setQuantity(1L)
-                                    .build()
-                    )
-                    .putMetadata("user_id", userId.toString())
-                    .putMetadata("transaction_id", transaction.getId().toString())
-                    .putMetadata("plan_type", planType)
-                    .putMetadata("frequency", frequency)
-                    .build();
-
-            Session session = Session.create(params);
-
-            // Actualizar transacción con session ID
-            transaction.setExternalTransactionId(session.getId());
-            paymentRepository.save(transaction);
-
-            log.info("Sesión de checkout creada: {} para usuario: {}", session.getId(), user.getEmail());
+            String checkoutUrl = shopifyStoreUrl + "/cart?note=" + transaction.getId();
 
             Map<String, Object> response = new HashMap<>();
-            response.put("sessionId", session.getId());
-            response.put("url", session.getUrl());
+            response.put("checkoutUrl", checkoutUrl);
             response.put("transactionId", transaction.getId());
+            response.put("shopifyStoreUrl", shopifyStoreUrl);
 
+            log.info("Checkout creado - Transacción: {}", transaction.getId());
             return response;
 
-        } catch (StripeException e) {
-            log.error("Error al crear sesión de Stripe: {}", e.getMessage(), e);
-            throw new RuntimeException("Error al procesar el pago: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Error creando checkout: {}", e.getMessage(), e);
+            throw new RuntimeException("Error creando sesión de pago");
         }
     }
 
     /**
-     * Maneja webhooks de Stripe
+     * Webhook de Shopify
      */
     @Transactional
-    public void handleWebhook(String payload, String sigHeader) {
+    public void handleWebhook(String payload, String hmacHeader) {
         try {
-            Event event = Event.constructFrom(payload);
-
-            // Verificar firma (en producción)
-            if (webhookSecret != null && !webhookSecret.isEmpty()) {
-                event = com.stripe.net.Webhook.constructEvent(payload, sigHeader, webhookSecret);
+            if (hmacHeader == null || hmacHeader.isBlank()) {
+                log.warn("Webhook Shopify sin HMAC header");
+                throw new RuntimeException("HMAC faltante");
             }
 
-            log.info("Webhook recibido: {}", event.getType());
-
-            switch (event.getType()) {
-                case "checkout.session.completed":
-                    handleCheckoutCompleted(event);
-                    break;
-                case "checkout.session.async_payment_succeeded":
-                    handleCheckoutCompleted(event);
-                    break;
-                case "checkout.session.async_payment_failed":
-                    handleCheckoutFailed(event);
-                    break;
-                default:
-                    log.info("Evento no manejado: {}", event.getType());
+            if (!verifyHmac(payload, hmacHeader)) {
+                log.warn("HMAC inválido para webhook Shopify");
+                throw new RuntimeException("Firma inválida");
             }
 
+            log.info("Webhook de Shopify verificado correctamente");
+
+            // Parsear JSON para detectar evento
+            JsonNode root = objectMapper.readTree(payload);
+            // Ejemplo: order paid -> root.get("financial_status") == "paid"
+            String financialStatus = getText(root, "financial_status");
+            String orderId = getText(root, "id");
+
+            // Extraer transaction UUID desde note (lo guardamos como ?note=<uuid>)
+            String note = getText(root, "note");
+            UUID transactionId = null;
+            if (note != null) {
+                try { transactionId = UUID.fromString(note.trim()); } catch (IllegalArgumentException ignored) { }
+            }
+
+            if ("paid".equalsIgnoreCase(financialStatus) && transactionId != null) {
+                log.info("Procesando pago completado Shopify. orderId={} transactionId={}", orderId, transactionId);
+                completeTransaction(transactionId, orderId);
+            } else {
+                log.info("Evento Shopify ignorado. financial_status={} note={} orderId={}", financialStatus, note, orderId);
+            }
         } catch (Exception e) {
             log.error("Error procesando webhook: {}", e.getMessage(), e);
             throw new RuntimeException("Error procesando webhook");
@@ -180,99 +139,23 @@ public class PaymentService {
     }
 
     /**
-     * Maneja pago completado
-     */
-    private void handleCheckoutCompleted(Event event) {
-        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
-        Session session = null;
-
-        if (dataObjectDeserializer.getObject().isPresent()) {
-            session = (Session) dataObjectDeserializer.getObject().get();
-        } else {
-            log.error("No se pudo deserializar el objeto del evento");
-            return;
-        }
-
-        String transactionIdStr = session.getClientReferenceId();
-        if (transactionIdStr == null) {
-            log.error("No se encontró transaction_id en session");
-            return;
-        }
-
-        UUID transactionId = UUID.fromString(transactionIdStr);
-        PaymentTransaction transaction = paymentRepository.findById(transactionId)
-                .orElseThrow(() -> new RuntimeException("Transacción no encontrada: " + transactionId));
-
-        // Marcar como completada
-        transaction.markCompleted(session.getId());
-        transaction.setPaymentMethod(session.getPaymentMethodTypes().get(0));
-        paymentRepository.save(transaction);
-
-        // Activar membresía
-        User user = transaction.getUser();
-        activateMembership(user, transaction);
-
-        log.info("Pago completado para usuario: {} - Transaction: {}", user.getEmail(), transactionId);
-
-        // Enviar email de confirmación
-        PricingService.PricingInfo pricing = pricingService.getCurrentPricing(
-                transaction.getPlanType(),
-                transaction.getPaymentFrequency()
-        );
-        emailService.sendPurchaseConfirmation(user, transaction, pricing);
-    }
-
-    /**
-     * Maneja pago fallido
-     */
-    private void handleCheckoutFailed(Event event) {
-        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
-        Session session = null;
-
-        if (dataObjectDeserializer.getObject().isPresent()) {
-            session = (Session) dataObjectDeserializer.getObject().get();
-        } else {
-            return;
-        }
-
-        String transactionIdStr = session.getClientReferenceId();
-        if (transactionIdStr == null) return;
-
-        UUID transactionId = UUID.fromString(transactionIdStr);
-        PaymentTransaction transaction = paymentRepository.findById(transactionId)
-                .orElse(null);
-
-        if (transaction != null) {
-            transaction.markFailed("Pago asíncrono falló");
-            paymentRepository.save(transaction);
-            log.warn("Pago fallido para transacción: {}", transactionId);
-        }
-    }
-
-    /**
-     * Activa membresía después de pago exitoso
+     * Activar membresía después de pago
      */
     private void activateMembership(User user, PaymentTransaction transaction) {
-        String planType = transaction.getPlanType();
         String frequency = transaction.getPaymentFrequency();
-
-        // Calcular fecha de expiración
         LocalDateTime expiresAt = calculateExpirationDate(frequency);
 
-        // Buscar membresía existente o crear nueva
-        List<Membership> memberships = membershipRepository.findByUserId(user.getId());
+        Optional<Membership> existingMembership = membershipRepository.findByUserId(user.getId());
         Membership membership;
 
-        if (!memberships.isEmpty()) {
-            membership = memberships.get(0);
-            membership.setPlanType(planType);
+        if (existingMembership.isPresent()) {
+            membership = existingMembership.get();
             membership.setStatus("ACTIVE");
             membership.setExpiresAt(expiresAt);
             membership.setPaymentFrequency(frequency);
         } else {
             membership = Membership.builder()
                     .user(user)
-                    .planType(planType)
                     .status("ACTIVE")
                     .expiresAt(expiresAt)
                     .paymentFrequency(frequency)
@@ -280,57 +163,31 @@ public class PaymentService {
         }
 
         membershipRepository.save(membership);
-
-        // Actualizar transaction con membership_id
         transaction.setMembershipId(membership.getId());
         paymentRepository.save(transaction);
 
-        log.info("Membresía activada: {} para usuario: {}", planType, user.getEmail());
+        log.info("Membresía activada para usuario: {}", user.getEmail());
     }
 
     /**
-     * Calcula fecha de expiración
+     * Calcular fecha de expiración
      */
     private LocalDateTime calculateExpirationDate(String frequency) {
         LocalDateTime now = LocalDateTime.now();
         return switch (frequency) {
             case "MONTHLY" -> now.plusMonths(1);
             case "ANNUAL" -> now.plusYears(1);
-            case "LIFETIME" -> now.plusYears(100); // Lifetime
+            case "LIFETIME" -> now.plusYears(100);
             default -> now.plusMonths(1);
         };
     }
 
     /**
-     * Obtiene historial de pagos
+     * Historial de pagos
      */
     public List<PaymentTransaction> getPaymentHistory(UUID userId) {
         return paymentRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
-
-    /**
-     * Verifica estado de sesión
-     */
-    public Map<String, Object> getSessionStatus(String sessionId) {
-        try {
-            Stripe.apiKey = stripeApiKey;
-            Session session = Session.retrieve(sessionId);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", session.getPaymentStatus());
-            response.put("customerEmail", session.getCustomerEmail());
-
-            return response;
-
-        } catch (StripeException e) {
-            log.error("Error al obtener sesión: {}", e.getMessage(), e);
-            throw new RuntimeException("Error al verificar estado de pago");
-        }
-    }
-
-    // ========================================================================
-    // UTILIDADES
-    // ========================================================================
 
     private String getPlanDisplayName(String planType) {
         return switch (planType) {
@@ -348,5 +205,45 @@ public class PaymentService {
             case "LIFETIME" -> "Lifetime";
             default -> frequency;
         };
+    }
+
+    // ===================== NUEVAS UTILIDADES SHOPIFY =====================
+
+    private boolean verifyHmac(String payload, String hmacHeader) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec keySpec = new SecretKeySpec(shopifyWebhookSecret.getBytes(), "HmacSHA256");
+            mac.init(keySpec);
+            byte[] digest = mac.doFinal(payload.getBytes());
+            String computed = Base64.getEncoder().encodeToString(digest);
+            return computed.equals(hmacHeader.trim());
+        } catch (Exception e) {
+            log.error("Error verificando HMAC Shopify: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    private String getText(JsonNode node, String field) {
+        if (node == null) return null;
+        JsonNode child = node.get(field);
+        return (child != null && !child.isNull()) ? child.asText() : null;
+    }
+
+    @Transactional
+    protected void completeTransaction(UUID transactionId, String externalOrderId) {
+        paymentRepository.findById(transactionId).ifPresent(tx -> {
+            if (!tx.isCompleted()) {
+                tx.markCompleted(externalOrderId);
+                paymentRepository.save(tx);
+                // Activar membresía si corresponde
+                activateMembership(tx.getUser(), tx);
+                try {
+                    emailService.sendMembershipActivatedEmail(tx.getUser().getEmail(), tx.getPlanType());
+                } catch (Exception ex) {
+                    log.warn("No se pudo enviar email de activación: {}", ex.getMessage());
+                }
+                log.info("Transacción {} marcada como COMPLETED via Shopify order {}", transactionId, externalOrderId);
+            }
+        });
     }
 }

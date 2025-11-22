@@ -1,7 +1,7 @@
 package com.drakkarpress.platform.controller;
 
 import com.drakkarpress.platform.dto.response.ApiResponse;
-import com.drakkarpress.platform.repository.UserRepository;
+import com.drakkarpress.platform.repository.PlatformUserRepository;
 import com.drakkarpress.platform.service.PricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class PricingController {
     private PricingService pricingService;
 
     @Autowired
-    private UserRepository userRepository;
+    private PlatformUserRepository userRepository;
 
     /**
      * Obtener información de todos los planes

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{TITLE}}</title>
+  <style>{{STYLES}}</style>
+</head>
+<body>
+  <section class="cover-page">
+    <div class="cover">
+      <h1 class="title">{{TITLE}}</h1>
+      <h2 class="author">{{AUTHOR}}</h2>
+      <div class="cover-image">
+        <!-- cover as data uri to avoid file path issues -->
+        <img src="{{COVER_IMAGE}}" alt="Portada"/>
+      </div>
+      <div class="date">{{DATE}}</div>
+    </div>
+  </section>
+
+  <div class="page-break"></div>
+
+  <main class="book">
+    {{CONTENT}}
+  </main>
+</body>
+</html>

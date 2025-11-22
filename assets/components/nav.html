@@ -1,0 +1,329 @@
+<header class="site-header" role="banner">
+    <nav class="nav-container" role="navigation" aria-label="Navegación principal">
+        <a href="/" class="logo" aria-label="DrakkarPress - Inicio">
+            <div class="logo-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 60 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <title>Logo DrakkarPress - La Flota Editorial Digital</title>
+                    <!-- Olas del conocimiento (base) -->
+                    <path d="M2 40 Q8 38 14 40 T26 40 T38 40 T50 40 T58 40" stroke="#3498db" stroke-width="1" opacity="0.3" fill="none"/>
+                    <path d="M2 43 Q8 41 14 43 T26 43 T38 43 T50 43 T58 43" stroke="#3498db" stroke-width="1" opacity="0.2" fill="none"/>
+                    
+                    <!-- Drakkar Principal (Centro) -->
+                    <g transform="translate(30, 24)">
+                        <path d="M-8,4 L-6,0 L6,0 L8,4 Q8,6 6,6 L-6,6 Q-8,6 -8,4 Z" fill="#1A4D7A" stroke="#D4AF37" stroke-width="0.8"/>
+                        <line x1="0" y1="0" x2="0" y2="-12" stroke="#D4AF37" stroke-width="1.5"/>
+                        <path d="M0,-12 L-5,-4 L0,-2 Z" fill="#E8C968" opacity="0.7"/>
+                        <path d="M0,-12 L5,-4 L0,-2 Z" fill="#E8C968" opacity="0.5"/>
+                        <text x="0" y="-6" font-size="5" fill="#1A4D7A" text-anchor="middle" font-weight="bold">ᚲ</text>
+                        <path d="M-8,4 L-10,2 L-9,1" stroke="#D4AF37" stroke-width="1" fill="none"/>
+                    </g>
+                    
+                    <!-- Drakkars secundarios (representan roles) -->
+                    <g transform="translate(12, 28)">
+                        <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="0.6"/>
+                        <line x1="0" y1="0" x2="0" y2="-8" stroke="#2980b9" stroke-width="1"/>
+                        <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
+                    </g>
+                    
+                    <g transform="translate(48, 28)">
+                        <path d="M-6,3 L-4,0 L4,0 L6,3 Q6,4 4,4 L-4,4 Q-6,4 -6,3 Z" fill="#e67e22" opacity="0.7" stroke="#d35400" stroke-width="0.6"/>
+                        <line x1="0" y1="0" x2="0" y2="-8" stroke="#d35400" stroke-width="1"/>
+                        <path d="M0,-8 L-3,-2 L0,-1 Z" fill="#ecf0f1" opacity="0.6"/>
+                    </g>
+                    
+                    <circle cx="30" cy="5" r="1.5" fill="#D4AF37" opacity="0.8"/>
+                    <circle cx="30" cy="24" r="23" stroke="#D4AF37" stroke-width="0.8" opacity="0.2" fill="none"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <span class="brand-name">DrakkarPress</span>
+                <span class="brand-tagline">La Flota Editorial Digital</span>
+            </div>
+        </a>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="catalogo.html" class="nav-link">
+                <span aria-hidden="true">📚</span> Catálogo
+            </a>
+            
+            <div class="dropdown">
+                <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                    Portales <span aria-hidden="true">▾</span>
+                </button>
+                <div class="dropdown-content" role="menu">
+                    <a href="escritores.html" role="menuitem">
+                        <span aria-hidden="true">✍️</span> Escritores
+                    </a>
+                    <a href="revendedores.html" role="menuitem">
+                        <span aria-hidden="true">💼</span> Afiliados
+                    </a>
+                    <a href="imprentas.html" role="menuitem">
+                        <span aria-hidden="true">🖨️</span> Imprentas
+                    </a>
+                    <a href="biblioteca.html" role="menuitem">
+                        <span aria-hidden="true">📖</span> Mi Biblioteca
+                    </a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                    Servicios <span aria-hidden="true">▾</span>
+                </button>
+                <div class="dropdown-content" role="menu">
+                    <a href="servicios-marketing.html" role="menuitem">
+                        <span aria-hidden="true">📢</span> Marketing Digital
+                    </a>
+                    <a href="servicios-web.html" role="menuitem">
+                        <span aria-hidden="true">💻</span> Desarrollo Web
+                    </a>
+                    <a href="servicios-research.html" role="menuitem">
+                        <span aria-hidden="true">🔬</span> Investigación
+                    </a>
+                </div>
+            </div>
+            
+            <a href="generators.html" class="nav-link nav-link-special">
+                <span aria-hidden="true">🤖</span> Generadores IA
+            </a>
+            
+            <a href="about.html" class="nav-link">Nosotros</a>
+            <a href="contact.html" class="nav-link">Contacto</a>
+            
+            <!-- Language Switcher -->
+            <div id="language-switcher" class="language-switcher" role="group" aria-label="Language selector"></div>
+            
+            <!-- Auth state: injected by auth-state.js -->
+            <div id="authButtons" class="auth-buttons">
+                <a href="login.html" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
+            </div>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+</header>
+
+<style>
+/* Estilos críticos de navegación (incluidos inline para above-the-fold) */
+.site-header {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-container {
+    max-width: var(--max-width-xl);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--space-lg);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: var(--white);
+    transition: transform var(--transition-base);
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--gradient-gold);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.brand-tagline {
+    font-size: 0.7rem;
+    opacity: 0.9;
+    font-weight: var(--font-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: var(--text-base);
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--secondary-light);
+}
+
+.nav-link-special {
+    background: var(--gradient-ai);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-bold);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: var(--white);
+    min-width: 220px;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-md);
+    z-index: var(--z-dropdown);
+    top: 100%;
+    margin-top: 10px;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-dark);
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    transition: background var(--transition-base);
+}
+
+.dropdown-content a:hover {
+    background: var(--background);
+}
+
+.auth-buttons {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.mobile-menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all var(--transition-base);
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--primary-dark);
+        flex-direction: column;
+        padding: var(--space-lg);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .nav-links.mobile-open {
+        display: flex;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        margin-top: var(--space-sm);
+        border-left: 3px solid var(--secondary);
+    }
+    
+    .language-switcher {
+        margin-top: var(--space-md);
+    }
+}
+
+/* Language Switcher Styles */
+.language-switcher {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.lang-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: var(--white);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lang-btn.active {
+    background: var(--secondary);
+    color: var(--primary-dark);
+}
+</style>

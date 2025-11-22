@@ -32,20 +32,28 @@ cd "%EXEC_DIR%"
 
 IF NOT EXIST "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar" goto downloadWrapper
 
-@REM Find Java
-set JAVA_HOME=
-for %%i in (java.exe) do set JAVA_HOME=%%~$PATH:i
-if "%JAVA_HOME%" == "" (
-    echo Error: JAVA_HOME is not set and no 'java' command could be found in your PATH.
-    echo Please set the JAVA_HOME variable to match the location of your Java installation.
-    goto error
+@REM === Locate Java (simplified, robust) ===
+set JAVA_EXE=
+if not "%JAVA_HOME%"=="" set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+if not exist "%JAVA_EXE%" (
+  for %%i in (java.exe) do set JAVA_EXE=%%~$PATH:i
 )
+if "%JAVA_EXE%"=="" goto noJava
+if not exist "%JAVA_EXE%" goto noJava
+echo Usando Java en "%JAVA_EXE%"
 
 @REM Execute Maven
-"%JAVA_HOME%\bin\java.exe" ^
+"%JAVA_EXE%" ^
   -classpath "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar" ^
   "-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%" ^
   org.apache.maven.wrapper.MavenWrapperMain %*
+if ERRORLEVEL 1 goto error
+goto end
+
+:noJava
+echo Error: JAVA_HOME no configurado y 'java.exe' no encontrado en PATH.
+echo Instala JDK 21 y reintenta.
+goto error
 if ERRORLEVEL 1 goto error
 goto end
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface PlatformUserRepository extends JpaRepository<User, UUID> {
 
     /**
      * Buscar usuario por email

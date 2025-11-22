@@ -85,6 +85,14 @@ public class Book {
     @Builder.Default
     private Integer sales = 0;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer likes = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer commentsCount = 0;
+
     @Column(precision = 3, scale = 2)
     private BigDecimal averageRating;
 
@@ -104,6 +112,21 @@ public class Book {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    // Integraciones externas / distribución
+    @Column(length = 100)
+    private String kdpExternalId;
+
+    @Column(length = 100)
+    private String googlePlayExternalId;
+
+    @Column(length = 100)
+    private String luluExternalId;
+
+    // Estado de seguridad / moderación (SAFE, REVIEW, BLOCKED)
+    @Column(length = 20)
+    @Builder.Default
+    private String safetyStatus = "UNKNOWN";
 
     // Relationships
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
@@ -130,6 +153,11 @@ public class Book {
     public void incrementSales() {
         this.sales++;
     }
+
+    public void incrementLikes() { this.likes++; }
+    public void decrementLikes() { if (this.likes > 0) this.likes--; }
+    public void incrementCommentsCount() { this.commentsCount++; }
+    public void decrementCommentsCount() { if (this.commentsCount > 0) this.commentsCount--; }
 
     public boolean isPublished() {
         return status == BookStatus.PUBLISHED;

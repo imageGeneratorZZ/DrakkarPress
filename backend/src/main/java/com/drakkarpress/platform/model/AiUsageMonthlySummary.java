@@ -23,11 +23,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "ai_usage_monthly_summary", indexes = {
     @Index(name = "idx_ai_usage_summary_user_id", columnList = "user_id"),
-    @Index(name = "idx_ai_usage_summary_year_month", columnList = "year, month"),
+    @Index(name = "idx_ai_usage_summary_year_month", columnList = "usage_year, usage_month"),
     @Index(name = "idx_ai_usage_summary_usage_type", columnList = "usage_type")
 }, uniqueConstraints = {
     @UniqueConstraint(name = "uk_user_year_month_type", 
-                     columnNames = {"user_id", "year", "month", "usage_type"})
+                     columnNames = {"user_id", "usage_year", "usage_month", "usage_type"})
 })
 @Data
 @Builder
@@ -43,20 +43,20 @@ public class AiUsageMonthlySummary {
     /**
      * Usuario
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     /**
      * Año
      */
-    @Column(name = "year", nullable = false)
+    @Column(name = "usage_year", nullable = false)
     private Integer year;
 
     /**
      * Mes (1-12)
      */
-    @Column(name = "month", nullable = false)
+    @Column(name = "usage_month", nullable = false)
     private Integer month;
 
     /**

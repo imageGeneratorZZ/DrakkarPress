@@ -25,6 +25,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     List<Book> findByStatusOrderByPriceDigitalAsc(BookStatus status);
 
     List<Book> findByStatusOrderByPriceDigitalDesc(BookStatus status);
+
+    List<Book> findByStatusOrderByPublishedAtDesc(BookStatus status);
     
     @Query("SELECT b FROM Book b WHERE b.title LIKE %:keyword% OR b.description LIKE %:keyword%")
     List<Book> searchByKeyword(@Param("keyword") String keyword);

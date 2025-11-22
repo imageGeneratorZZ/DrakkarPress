@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Plataforma Editorial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1A4D7A;
+            --secondary: #D4AF37;
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #262626;
+            --text-secondary: #8E8E8E;
+            --border: #DBDBDB;
+            --hover: #F7F7F7;
+            --sidebar-width: 245px;
+            --header-height: 60px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Sidebar - Estilo Instagram */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 8px 12px 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 25px 12px 16px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-logo a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .nav-item:hover {
+            background: var(--hover);
+        }
+
+        .nav-item.active {
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            width: 24px;
+            margin-right: 16px;
+            font-size: 24px;
+        }
+
+        .nav-item.create {
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-profile:hover {
+            background: var(--hover);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            font-size: 14px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--hover);
+        }
+
+        .icon-btn i {
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FF3040;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Feed Container */
+        .feed-container {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            gap: 24px;
+        }
+
+        /* Stories Section */
+        .stories-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .stories-scroll {
+            display: flex;
+            gap: 16px;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .story-avatar {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 3px;
+            margin-bottom: 6px;
+        }
+
+        .story-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 3px solid var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .story-name {
+            font-size: 12px;
+            color: var(--text-primary);
+            max-width: 74px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Post Card */
+        .post-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            justify-content: space-between;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .post-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-info span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .post-options {
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-placeholder {
+            color: var(--text-secondary);
+            font-size: 48px;
+        }
+
+        .post-actions {
+            display: flex;
+            padding: 12px 16px;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.liked {
+            color: #ED4956;
+        }
+
+        .action-btn span {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-actions .spacer {
+            flex: 1;
+        }
+
+        .post-content {
+            padding: 0 16px 16px;
+        }
+
+        .post-likes {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .post-caption strong {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .post-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 77, 122, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 99;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(26, 77, 122, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+                padding: 8px;
+            }
+
+            .sidebar-logo a span,
+            .nav-item span {
+                display: none;
+            }
+
+            .sidebar-logo {
+                padding: 20px 0;
+                justify-content: center;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 12px 0;
+            }
+
+            .nav-item i {
+                margin: 0;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 72px;
+            }
+
+            .search-bar {
+                max-width: 200px;
+            }
+
+            .top-actions {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                border-right: none;
+                border-top: 1px solid var(--border);
+                padding: 8px;
+            }
+
+            .sidebar-logo,
+            .sidebar-footer {
+                display: none;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                padding: 8px;
+                margin: 0;
+            }
+
+            .nav-item i {
+                margin: 0;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-bottom: 72px;
+            }
+
+            .feed-container {
+                padding: 16px 8px;
+            }
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            background: linear-gradient(135deg, var(--secondary), #FFD700);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background: var(--hover);
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="/">
+                <div class="logo-icon">⚔️</div>
+                <span>DrakkarPress</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>Explorar</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>Descubrir</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bookmark"></i>
+                <span>Guardados</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Mi Biblioteca</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Comunidad</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="#" class="nav-item create">
+                <i class="fas fa-plus-square"></i>
+                <span>Crear</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span>Mi Perfil</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar libros, autores...">
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">5</span>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Feed Container -->
+        <div class="feed-container">
+            <!-- Stories Section -->
+            <div class="stories-section">
+                <div class="stories-scroll">
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">📚</div>
+                        </div>
+                        <div class="story-name">Tu Historia</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">✍️</div>
+                        </div>
+                        <div class="story-name">Escritores</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🏆</div>
+                        </div>
+                        <div class="story-name">Top Ventas</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🎨</div>
+                        </div>
+                        <div class="story-name">Arte</div>
+                    </div>
+                    <div class="story-item">
+                        <div class="story-avatar">
+                            <div class="story-avatar-inner">🔮</div>
+                        </div>
+                        <div class="story-name">Fantasía</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <div class="filter-chips">
+                    <div class="filter-chip active">Todo</div>
+                    <div class="filter-chip">Novedades</div>
+                    <div class="filter-chip">Fantasía</div>
+                    <div class="filter-chip">Romance</div>
+                    <div class="filter-chip">Thriller</div>
+                    <div class="filter-chip">Ciencia Ficción</div>
+                    <div class="filter-chip">Horror</div>
+                </div>
+            </div>
+
+            <!-- Post Cards -->
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>Juan Pérez <span class="premium-badge">Premium</span></h4>
+                            <span>Hace 2 horas • Fantasía</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="far fa-heart"></i>
+                        <span>234</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>45</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A 234 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>Juan Pérez</strong>
+                        ¡Acabo de publicar mi nueva novela épica! 🔥 Una historia de dragones, magia y aventuras que te mantendrá pegado hasta la última página.
+                    </div>
+                    <div class="post-time">Hace 2 horas</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>María González</h4>
+                            <span>Hace 5 horas • Romance</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn liked">
+                        <i class="fas fa-heart"></i>
+                        <span>567</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>89</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A ti y otras 566 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>María González</strong>
+                        Nueva historia romántica ambientada en París. Déjate llevar por esta historia de amor inolvidable ❤️✨
+                    </div>
+                    <div class="post-time">Hace 5 horas</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="post-avatar">
+                            <i class="fas fa-skull"></i>
+                        </div>
+                        <div class="post-info">
+                            <h4>Carlos Díaz <span class="premium-badge">Premium</span></h4>
+                            <span>Hace 1 día • Horror</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        <i class="fas fa-ghost"></i>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="far fa-heart"></i>
+                        <span>892</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-comment"></i>
+                        <span>124</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="far fa-share-square"></i>
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="action-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <div class="post-likes">A 892 personas les gusta esto</div>
+                    <div class="post-caption">
+                        <strong>Carlos Díaz</strong>
+                        Mi nueva novela de terror psicológico ya está disponible. ¿Te atreves a leerla? 👻🌙
+                    </div>
+                    <div class="post-time">Hace 1 día</div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" title="Publicar nuevo libro">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script>
+        // Toggle like button
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            if (btn.querySelector('.fa-heart')) {
+                btn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.classList.add('liked');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.classList.remove('liked');
+                    }
+                });
+            }
+        });
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 0 2px var(--primary)';
+        });
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>

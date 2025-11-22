@@ -1,10 +1,26 @@
 # 🎨 GENERADORES DE IA - DRAKKARPRESS
 
+## 📚 Ecosistema de Generadores
+
+### **DrakkarPress**: Generador de Libros para Adultos
+- Ubicación: `generators.html`
+- Público objetivo: Adultos 18+
+- Géneros: Romance, Erótica, Thriller, Fantasía, Ciencia Ficción, etc.
+- Nivel de erotismo: 0-5 configurable
+
+### **Scryptorium**: Generador de Libros para Niños
+- Versión específica para contenido infantil
+- Público objetivo: Niños y familias
+- Géneros: Cuentos infantiles, libros para colorear, educativos
+- Contenido: Siempre limpio y apropiado para todas las edades
+
+---
+
 ## 🚀 Características Implementadas
 
 ### ✅ División en 2 Generadoras
 
-#### 🎨 GENERADORA 1: Creación de Contenido
+#### 🎨 GENERADORA 1: Creación de Contenido (DrakkarPress)
 **Propósito**: Herramientas creativas para generar contenido original desde cero
 
 **Funciones**:

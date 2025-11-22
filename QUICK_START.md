@@ -23,8 +23,6 @@
 
 ### 2️⃣ Resolver Backend (30 minutos)
 
-**Problema actual**: Lombok no compila en terminal
-
 **Solución**:
 1. Descargar [IntelliJ IDEA Community](https://www.jetbrains.com/idea/download/) (FREE)
 2. Open → `C:\Users\SuperUsuario\DrakkarPress.com\backend`
@@ -33,7 +31,6 @@
 5. ✅ **Backend compila en 30 minutos**
 
 **Alternativa** (si no quieres IntelliJ):
-- VS Code + generar getters/setters manualmente (tedioso, 2 horas)
 
 ---
 
@@ -47,9 +44,7 @@
 3. Products → Create 3 productos ($5, $10, $19.99)
 4. ✅ **Pagos funcionando**
 
-#### B. SendGrid (10 min) - Para emails
 1. https://sendgrid.com/ → Sign Up
-2. API Keys → Create → Copiar `SG.`
 3. Sender Authentication → Verify email
 4. ✅ **Emails funcionando**
 
@@ -79,7 +74,6 @@
 
 ### Backend Configuration
 
-| Archivo | Qué configura | Cuándo usar |
 |---------|---------------|-------------|
 | `backend/DATABASE_PRODUCTION.md` | PostgreSQL setup completo | Al crear base de datos |
 | `backend/STRIPE_PAYMENTS_CONFIG.md` | Sistema de pagos | Al configurar Stripe |
@@ -97,7 +91,6 @@
 
 ---
 
-## 🔴 Bloqueadores Actuales
 
 ### 1. Backend No Compila
 - **Causa**: Lombok + Java 21 + Maven = incompatible en terminal
@@ -112,7 +105,6 @@
 ---
 
 ## 💡 Tips Rápidos
-
 ### Si tienes 1 hora
 1. Deploy frontend (5 min)
 2. Resolver Lombok en IntelliJ (30 min)
@@ -125,7 +117,6 @@
 3. Provisionar PostgreSQL (20 min)
 4. Deploy backend a DigitalOcean (45 min)
 5. Testing end-to-end (30 min)
-6. ✅ **Aplicación completa en producción**
 
 ### Si tienes 1 día
 1. Todo lo de arriba
@@ -133,7 +124,6 @@
 3. CloudFront CDN (20 min)
 4. Monitoring (Sentry, New Relic) (1 hora)
 5. Security hardening (1 hora)
-6. ✅ **Producción enterprise-grade**
 
 ---
 

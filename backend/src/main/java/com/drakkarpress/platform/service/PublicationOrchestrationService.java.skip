@@ -1,0 +1,369 @@
+package com.drakkarpress.platform.service;
+
+import com.drakkarpress.model.Book;
+import com.drakkarpress.platform.model.PublicationJob;
+import com.drakkarpress.platform.model.User;
+import com.drakkarpress.platform.repository.PublicationJobRepository;
+import com.drakkarpress.repository.BookRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.*;
+
+/**
+ * Servicio de orquestación para publicación automática en plataformas externas.
+ * 
+ * Proceso:
+ * 1. Convierte EPUB a formatos requeridos (MOBI para KDP, etc.)
+ * 2. Publica en KDP (Amazon)
+ * 3. Publica en Google Play Books
+ * 4. Publica en Lulu (print-on-demand)
+ * 5. Actualiza estado del job
+ */
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class PublicationOrchestrationService {
+
+    private final PublicationJobRepository jobRepository;
+    private final BookRepository bookRepository;
+    private final EbookConversionService conversionService;
+    private final KdpConnectorService kdpService;
+    private final GooglePlayConnectorService googlePlayService;
+    private final LuluConnectorService luluService;
+    private final ObjectMapper objectMapper;
+
+    /**
+     * Inicia un trabajo de publicación automática.
+     */
+    @Transactional
+    public PublicationJob startPublication(Book book, User user, List<String> platforms) {
+        var job = PublicationJob.builder()
+                .book(book)
+                .user(user)
+                .targetPlatforms(String.join(",", platforms))
+                .status(PublicationJob.PublicationStatus.PENDING)
+                .build();
+
+        job = jobRepository.save(job);
+        
+        // Iniciar publicación asíncrona
+        publishAsync(job.getId());
+        
+        return job;
+    }
+
+    /**
+     * Publica el libro en todas las plataformas de forma asíncrona.
+     */
+    @Async
+    @Transactional
+    public void publishAsync(UUID jobId) {
+        var job = jobRepository.findById(jobId).orElseThrow();
+        
+        try {
+            job.setStatus(PublicationJob.PublicationStatus.CONVERTING);
+            job.setStartedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            log.info("🚀 Iniciando publicación automática - Job ID: {} - Book ID: {}", jobId, job.getBook().getId());
+
+            Book book = job.getBook();
+            String epubPath = book.getDigitalFileUrl();
+            
+            if (epubPath == null || epubPath.isEmpty()) {
+                throw new IllegalStateException("El libro no tiene un archivo EPUB asociado");
+            }
+
+            // 1. Conversión de formatos
+            log.info("📦 Convirtiendo formatos...");
+            Map<String, String> conversionResults = convertToAllFormats(epubPath);
+            job.setConversionResults(objectMapper.writeValueAsString(conversionResults));
+            jobRepository.save(job);
+
+            // 2. Publicar en plataformas
+            job.setStatus(PublicationJob.PublicationStatus.UPLOADING);
+            jobRepository.save(job);
+
+            List<String> platforms = Arrays.asList(job.getTargetPlatforms().split(","));
+            Map<String, String> platformStatuses = new HashMap<>();
+
+            for (String platform : platforms) {
+                try {
+                    switch (platform.trim().toUpperCase()) {
+                        case "KDP":
+                            publishToKdp(job, book, conversionResults);
+                            platformStatuses.put("KDP", "PUBLISHED");
+                            break;
+                        case "GOOGLE_PLAY":
+                        case "GOOGLE":
+                            publishToGooglePlay(job, book, epubPath);
+                            platformStatuses.put("GOOGLE_PLAY", "PUBLISHED");
+                            break;
+                        case "LULU":
+                            publishToLulu(job, book, conversionResults);
+                            platformStatuses.put("LULU", "PUBLISHED");
+                            break;
+                        default:
+                            log.warn("⚠️ Plataforma desconocida: {}", platform);
+                            platformStatuses.put(platform, "UNKNOWN_PLATFORM");
+                    }
+                } catch (Exception e) {
+                    log.error("❌ Error publicando en {}", platform, e);
+                    platformStatuses.put(platform, "FAILED: " + e.getMessage());
+                }
+            }
+
+            job.setPlatformStatuses(objectMapper.writeValueAsString(platformStatuses));
+
+            // 3. Determinar estado final
+            boolean allSuccessful = platformStatuses.values().stream()
+                    .allMatch(status -> "PUBLISHED".equals(status));
+            boolean anySuccessful = platformStatuses.values().stream()
+                    .anyMatch(status -> "PUBLISHED".equals(status));
+
+            if (allSuccessful) {
+                job.setStatus(PublicationJob.PublicationStatus.COMPLETED);
+            } else if (anySuccessful) {
+                job.setStatus(PublicationJob.PublicationStatus.PARTIALLY_PUBLISHED);
+            } else {
+                job.setStatus(PublicationJob.PublicationStatus.FAILED);
+                job.setErrorMessage("No se pudo publicar en ninguna plataforma");
+            }
+
+            job.setCompletedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            log.info("✅ Publicación completada - Job ID: {} - Estado: {}", jobId, job.getStatus());
+
+        } catch (Exception e) {
+            log.error("❌ Error en publicación automática - Job ID: {}", jobId, e);
+            job.setStatus(PublicationJob.PublicationStatus.FAILED);
+            job.setErrorMessage(e.getMessage());
+            jobRepository.save(job);
+        }
+    }
+
+    /**
+     * Convierte EPUB a todos los formatos necesarios.
+     */
+    private Map<String, String> convertToAllFormats(String epubPath) {
+        Map<String, String> results = new HashMap<>();
+        
+        try {
+            // MOBI para Kindle
+            String mobiPath = conversionService.convertEpubToMobi(new File(epubPath));
+            results.put("MOBI", mobiPath);
+            log.info("✅ MOBI generado: {}", mobiPath);
+        } catch (Exception e) {
+            log.error("❌ Error convirtiendo a MOBI", e);
+            results.put("MOBI", "ERROR: " + e.getMessage());
+        }
+
+        try {
+            // AZW3 para Kindle (formato mejorado)
+            String azw3Path = conversionService.convertEpubToAzw3(new File(epubPath));
+            results.put("AZW3", azw3Path);
+            log.info("✅ AZW3 generado: {}", azw3Path);
+        } catch (Exception e) {
+            log.error("❌ Error convirtiendo a AZW3", e);
+            results.put("AZW3", "ERROR: " + e.getMessage());
+        }
+
+        try {
+            // PDF para vista previa y Lulu
+            String pdfPath = conversionService.convertEpubToPdf(new File(epubPath), false);
+            results.put("PDF", pdfPath);
+            log.info("✅ PDF generado: {}", pdfPath);
+        } catch (Exception e) {
+            log.error("❌ Error convirtiendo a PDF", e);
+            results.put("PDF", "ERROR: " + e.getMessage());
+        }
+
+        return results;
+    }
+
+    /**
+     * Publica en Amazon KDP.
+     */
+    private void publishToKdp(PublicationJob job, Book book, Map<String, String> conversionResults) {
+        log.info("📚 Publicando en Amazon KDP...");
+        
+        String mobiPath = conversionResults.get("MOBI");
+        if (mobiPath == null || mobiPath.startsWith("ERROR")) {
+            throw new RuntimeException("No hay archivo MOBI válido para KDP");
+        }
+
+        try {
+            var kdpResult = kdpService.publishToKdp(
+                book.getTitle(),
+                book.getAuthor(),
+                book.getDescription(),
+                book.getGenre().toString(),
+                mobiPath,
+                book.getCoverImageUrl(),
+                book.getPriceDigital()
+            );
+
+            // Extraer ASIN si está disponible
+            if (kdpResult.containsKey("asin")) {
+                job.setKdpAsin(kdpResult.get("asin").toString());
+            }
+
+            log.info("✅ Publicado en KDP: {}", kdpResult);
+
+        } catch (Exception e) {
+            log.error("❌ Error publicando en KDP", e);
+            throw new RuntimeException("Error en KDP: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Publica en Google Play Books.
+     */
+    private void publishToGooglePlay(PublicationJob job, Book book, String epubPath) {
+        log.info("📚 Publicando en Google Play Books...");
+        
+        try {
+            var googleResult = googlePlayService.publishToGooglePlay(
+                book.getTitle(),
+                book.getAuthor(),
+                book.getDescription(),
+                book.getGenre().toString(),
+                epubPath,
+                book.getCoverImageUrl(),
+                book.getPriceDigital()
+            );
+
+            // Extraer ID si está disponible
+            if (googleResult.containsKey("bookId")) {
+                job.setGooglePlayId(googleResult.get("bookId").toString());
+            }
+
+            log.info("✅ Publicado en Google Play: {}", googleResult);
+
+        } catch (Exception e) {
+            log.error("❌ Error publicando en Google Play", e);
+            throw new RuntimeException("Error en Google Play: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Publica en Lulu (print-on-demand).
+     */
+    private void publishToLulu(PublicationJob job, Book book, Map<String, String> conversionResults) {
+        log.info("🖨️ Publicando en Lulu (print-on-demand)...");
+        
+        String pdfPath = conversionResults.get("PDF");
+        if (pdfPath == null || pdfPath.startsWith("ERROR")) {
+            log.warn("⚠️ No hay PDF disponible, Lulu requiere PDF para impresión");
+            throw new RuntimeException("No hay archivo PDF válido para Lulu");
+        }
+
+        try {
+            var luluResult = luluService.createPrintProject(
+                book.getTitle(),
+                book.getAuthor().getUsername(),
+                book.getDescription(),
+                pdfPath,
+                book.getCoverImageUrl(),
+                book.getPages()
+            );
+
+            // Extraer project ID
+            if (luluResult.containsKey("projectId")) {
+                job.setLuluProjectId(luluResult.get("projectId").toString());
+            }
+
+            log.info("✅ Proyecto creado en Lulu: {}", luluResult);
+
+        } catch (Exception e) {
+            log.error("❌ Error publicando en Lulu", e);
+            throw new RuntimeException("Error en Lulu: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Obtiene el estado de un job de publicación.
+     */
+    public PublicationJob getJobStatus(UUID jobId) {
+        return jobRepository.findById(jobId)
+            .orElseThrow(() -> new IllegalArgumentException("Job no encontrado: " + jobId));
+    }
+
+    /**
+     * Reintenta publicación en plataformas que fallaron.
+     */
+    @Transactional
+    public PublicationJob retryPublication(UUID jobId) {
+        var job = jobRepository.findById(jobId).orElseThrow();
+        
+        if (job.getStatus() == PublicationJob.PublicationStatus.FAILED ||
+            job.getStatus() == PublicationJob.PublicationStatus.PARTIALLY_PUBLISHED) {
+            
+            job.setStatus(PublicationJob.PublicationStatus.PENDING);
+            job.setErrorMessage(null);
+            job = jobRepository.save(job);
+            
+            publishAsync(job.getId());
+        }
+        
+        return job;
+    }
+
+    /**
+     * Sincroniza estado de publicaciones existentes.
+     */
+    @Async
+    public void syncPublicationStatus(UUID jobId) {
+        var job = jobRepository.findById(jobId).orElseThrow();
+        
+        try {
+            Map<String, String> updatedStatuses = new HashMap<>();
+
+            // Verificar estado en KDP
+            if (job.getKdpAsin() != null) {
+                try {
+                    var kdpStatus = kdpService.getPublicationStatus(job.getKdpAsin());
+                    updatedStatuses.put("KDP", kdpStatus.get("status").toString());
+                } catch (Exception e) {
+                    log.error("Error verificando estado en KDP", e);
+                }
+            }
+
+            // Verificar estado en Google Play
+            if (job.getGooglePlayId() != null) {
+                try {
+                    var googleStatus = googlePlayService.getPublicationStatus(job.getGooglePlayId());
+                    updatedStatuses.put("GOOGLE_PLAY", googleStatus.get("status").toString());
+                } catch (Exception e) {
+                    log.error("Error verificando estado en Google Play", e);
+                }
+            }
+
+            // Verificar estado en Lulu
+            if (job.getLuluProjectId() != null) {
+                try {
+                    var luluStatus = luluService.getProjectStatus(job.getLuluProjectId());
+                    updatedStatuses.put("LULU", luluStatus.get("status").toString());
+                } catch (Exception e) {
+                    log.error("Error verificando estado en Lulu", e);
+                }
+            }
+
+            if (!updatedStatuses.isEmpty()) {
+                job.setPlatformStatuses(objectMapper.writeValueAsString(updatedStatuses));
+                jobRepository.save(job);
+            }
+
+        } catch (Exception e) {
+            log.error("Error sincronizando estados de publicación", e);
+        }
+    }
+}

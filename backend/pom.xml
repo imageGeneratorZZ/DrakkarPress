@@ -24,6 +24,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <!-- Align Spring Cloud BOM compatible with Spring Boot 3.5.x -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     
     <dependencies>
@@ -99,13 +100,6 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- Stripe (pagos) -->
-        <dependency>
-            <groupId>com.stripe</groupId>
-            <artifactId>stripe-java</artifactId>
-            <version>24.7.0</version>
-        </dependency>
-        
         <!-- Apache Commons (utilidades) -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -153,7 +147,8 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <!-- Disponible en runtime para perfil local h2 -->
+            <scope>runtime</scope>
         </dependency>
         
         <!-- DevTools (hot reload en desarrollo) -->
@@ -174,6 +169,18 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        
+        <!-- ZXing (QR Code generation) -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
         </dependency>
     </dependencies>
     

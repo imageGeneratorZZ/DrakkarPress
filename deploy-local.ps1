@@ -33,6 +33,11 @@ DOMAIN=localhost
 
 Write-Host "Arrancando servicios con docker-compose (puede tardar varios minutos la primera vez)..."
 docker-compose -f (Join-Path $scriptDir 'docker-compose.yml') up -d --build
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "docker-compose fallo con codigo $LASTEXITCODE. Revisa Docker Desktop y vuelve a intentar."
+    Pop-Location
+    exit $LASTEXITCODE
+}
 
 # Esperar health endpoint del backend
 $healthUrl = 'http://localhost:8080/actuator/health'
@@ -60,6 +65,16 @@ if ($elapsed -ge $maxWaitSeconds) {
     Write-Error "El backend no respondió a tiempo. Revisa los logs: docker logs drakkar_backend"
     Pop-Location
     exit 1
+}
+
+# Verificar Nginx sirviendo frontend
+try {
+    $home = Invoke-WebRequest -Uri 'http://localhost' -UseBasicParsing -TimeoutSec 5
+    if ($home.StatusCode -ge 200 -and $home.StatusCode -lt 400) {
+        Write-Host "Frontend (Nginx) operativo en http://localhost" -ForegroundColor Green
+    }
+} catch {
+    Write-Warning "Nginx no respondió en http://localhost. Verifica logs: docker logs drakkar_nginx"
 }
 
 Write-Host "Despliegue local completado. Revisa http://localhost (nginx) o http://localhost:8080 (backend)."

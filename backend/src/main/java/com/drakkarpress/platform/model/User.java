@@ -75,10 +75,12 @@ public class User {
     private String languagePreference;
 
     @Column(name = "is_email_verified", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isEmailVerified;
+    @Builder.Default
+    private Boolean isEmailVerified = false;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
+    @Builder.Default
+    private Boolean isActive = true;
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
@@ -93,6 +95,22 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Builder.Default
+    private Boolean enabled = true;
+
+    @Column(name = "verified", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Builder.Default
+    private Boolean verified = false;
+
+    @Column(name = "role", nullable = false, length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'READER'")
+    @Builder.Default
+    private String role = "READER";
+
+    @Column(name = "subscription", nullable = false, length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'FREE'")
+    @Builder.Default
+    private String subscription = "FREE";
 
     // ========================================================================
     // RELACIONES

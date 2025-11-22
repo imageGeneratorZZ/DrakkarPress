@@ -22,8 +22,8 @@ import java.util.UUID;
 @Table(name = "ai_usage_tracking", indexes = {
     @Index(name = "idx_ai_usage_tracking_user_id", columnList = "user_id"),
     @Index(name = "idx_ai_usage_tracking_usage_type", columnList = "usage_type"),
-    @Index(name = "idx_ai_usage_tracking_used_at", columnList = "used_at"),
-    @Index(name = "idx_ai_usage_tracking_year_month", columnList = "year, month")
+    @Index(name = "idx_ai_usage_tracking_used_at", columnList = "used_at")
+    // Removed composite index (year, month) due to H2 reserved words conflict; optional for Postgres
 })
 @Data
 @Builder
@@ -85,13 +85,13 @@ public class AiUsageTracking {
     /**
      * Año del uso (para particionamiento)
      */
-    @Column(name = "year", nullable = false)
+    @Column(name = "year_val", nullable = false)
     private Integer year;
 
     /**
      * Mes del uso (1-12) (para particionamiento)
      */
-    @Column(name = "month", nullable = false)
+    @Column(name = "month_val", nullable = false)
     private Integer month;
 
     /**

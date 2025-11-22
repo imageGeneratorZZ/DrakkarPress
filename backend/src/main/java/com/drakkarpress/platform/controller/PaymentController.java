@@ -20,13 +20,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Controlador de Pagos
- * 
+ * Controlador de Pagos (Integración Shopify)
+ *
  * Endpoints:
- * - POST /api/payments/create-checkout - Crear sesión de pago
- * - POST /api/payments/webhook - Webhook de Stripe
- * - GET /api/payments/history - Historial de pagos
- * - GET /api/payments/session/{sessionId} - Estado de sesión
+ * - POST /api/payments/create-checkout : genera transacción y URL de Shopify
+ * - POST /api/payments/webhook : recepción de eventos Shopify (HMAC)
+ * - GET /api/payments/history : historial del usuario
+ * - GET /api/payments/health : verificación servicio
  */
 @RestController
 @RequestMapping("/api/payments")
@@ -38,22 +38,7 @@ public class PaymentController {
     private final JwtTokenProvider tokenProvider;
 
     /**
-     * Crear sesión de checkout
-     * 
-     * POST /api/payments/create-checkout
-     * Authorization: Bearer token
-     * Body: { "planType": "PREMIUM_PHASE_1", "frequency": "ANNUAL" }
-     * 
-     * Response: {
-     *   "success": true,
-     *   "message": "Sesión creada",
-     *   "data": {
-     *     "sessionId": "cs_test_...",
-     *     "checkoutUrl": "https://checkout.stripe.com/...",
-     *     "transactionId": "uuid",
-     *     "status": "PENDING"
-     *   }
-     * }
+     * Crear checkout de membresía (redirección a Shopify)
      */
     @PostMapping("/create-checkout")
     public ResponseEntity<ApiResponse<CheckoutResponse>> createCheckout(
@@ -68,7 +53,7 @@ public class PaymentController {
             log.info("Creando checkout para usuario: {} - Plan: {} - Frecuencia: {}", 
                      userId, request.getPlanType(), request.getFrequency());
 
-            // Crear sesión
+                // Crear checkout (transacción + URL Shopify)
             Map<String, Object> sessionData = paymentService.createCheckoutSession(
                     userId,
                     request.getPlanType(),
@@ -76,13 +61,13 @@ public class PaymentController {
             );
 
             CheckoutResponse response = CheckoutResponse.builder()
-                    .sessionId((String) sessionData.get("sessionId"))
-                    .checkoutUrl((String) sessionData.get("url"))
+                    .sessionId(null) // Ya no se usa sesión Stripe
+                    .checkoutUrl((String) sessionData.get("checkoutUrl"))
                     .transactionId((UUID) sessionData.get("transactionId"))
-                    .status("PENDING")
+                    .status("REDIRECT_TO_SHOPIFY")
                     .build();
 
-            return ResponseEntity.ok(ApiResponse.success("Sesión de pago creada", response));
+                return ResponseEntity.ok(ApiResponse.success("Checkout Shopify creado", response));
 
         } catch (Exception e) {
             log.error("Error creando checkout: {}", e.getMessage(), e);
@@ -92,33 +77,29 @@ public class PaymentController {
         }
     }
 
-    /**
-     * Webhook de Stripe
-     * 
-     * POST /api/payments/webhook
-     * Stripe-Signature: signature header
-     * Body: raw event payload
-     * 
-     * Este endpoint es llamado automáticamente por Stripe
-     * cuando ocurren eventos (pago completado, fallido, etc.)
-     */
+        /**
+         * Webhook de Shopify (HMAC verificación pendiente)
+         */
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(
             @RequestBody String payload,
-            @RequestHeader(value = "Stripe-Signature", required = false) String sigHeader) {
+            @RequestHeader(value = "X-Shopify-Hmac-Sha256", required = false) String hmacHeader) {
         
         try {
-            log.info("Webhook recibido de Stripe");
-            
-            paymentService.handleWebhook(payload, sigHeader);
+            log.info("Webhook recibido de Shopify");
+
+            paymentService.handleWebhook(payload, hmacHeader);
             
             return ResponseEntity.ok("Webhook procesado");
 
         } catch (Exception e) {
-            log.error("Error procesando webhook: {}", e.getMessage(), e);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Error procesando webhook: " + e.getMessage());
+            String msg = e.getMessage() != null ? e.getMessage() : "Error";
+            if (msg.contains("Firma inválida") || msg.contains("HMAC")) {
+                log.warn("Webhook rechazado por firma inválida");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Firma inválida");
+            }
+            log.error("Error procesando webhook: {}", msg, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error procesando webhook");
         }
     }
 
@@ -169,29 +150,7 @@ public class PaymentController {
         }
     }
 
-    /**
-     * Verificar estado de sesión
-     * 
-     * GET /api/payments/session/{sessionId}
-     * 
-     * Usado después de que el usuario regresa de Stripe Checkout
-     * para verificar si el pago fue exitoso
-     */
-    @GetMapping("/session/{sessionId}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getSessionStatus(
-            @PathVariable String sessionId) {
-        
-        try {
-            Map<String, Object> status = paymentService.getSessionStatus(sessionId);
-            return ResponseEntity.ok(ApiResponse.success("Estado de sesión obtenido", status));
-
-        } catch (Exception e) {
-            log.error("Error obteniendo sesión: {}", e.getMessage(), e);
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Error al verificar estado de pago"));
-        }
-    }
+    // Endpoint de estado de sesión eliminado (Stripe ya no se usa)
 
     /**
      * Health check

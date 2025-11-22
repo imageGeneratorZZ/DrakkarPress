@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>DrakkarPress - La Flota Editorial Digital | Publica, Vende y Construye tu Legado Literario</title>
+    <meta name="description" content="Plataforma editorial completa para escritores, revendedores e imprentas. Publica libros con IA, gestiona tu catálogo, vende en múltiples canales y construye tu marca de autor. Herramientas de marketing, impresión bajo demanda y membresías escalonadas.">
+    <meta name="keywords" content="publicar libros, editorial digital, impresión bajo demanda, marketing para autores, autopublicación, generadores IA para escritores, vender libros online, plataforma editorial">
+    <meta name="author" content="DrakkarPress">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drakkarpress.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drakkarpress.com/">
+    <meta property="og:title" content="DrakkarPress - La Flota Editorial Digital">
+    <meta property="og:description" content="Plataforma completa para autores: publica, vende y construye tu legado literario con herramientas de IA, marketing profesional y red colaborativa.">
+    <meta property="og:image" content="https://drakkarpress.com/assets/images/og-image.jpg">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="DrakkarPress">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://drakkarpress.com/">
+    <meta name="twitter:title" content="DrakkarPress - La Flota Editorial Digital">
+    <meta name="twitter:description" content="Plataforma completa para autores: publica, vende y construye tu legado literario con herramientas de IA, marketing profesional y red colaborativa.">
+    <meta name="twitter:image" content="https://drakkarpress.com/assets/images/twitter-image.jpg">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/assets/css/critical.css" as="style">
+    <link rel="preload" href="/assets/css/design-tokens.css" as="style">
+    <link rel="preload" href="/assets/components/nav.html" as="fetch" crossorigin>
+    
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="/assets/css/critical.css">
+    <link rel="stylesheet" href="/assets/css/design-tokens.css">
+    
+    <!-- Deferred CSS -->
+    <link rel="stylesheet" href="/assets/css/components.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/assets/css/components.css"></noscript>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "DrakkarPress",
+        "description": "Plataforma editorial digital para escritores, revendedores e imprentas",
+        "url": "https://drakkarpress.com",
+        "logo": "https://drakkarpress.com/assets/images/logo.svg",
+        "sameAs": [
+            "https://twitter.com/drakkarpress",
+            "https://facebook.com/drakkarpress",
+            "https://linkedin.com/company/drakkarpress"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Support",
+            "email": "soporte@drakkarpress.com",
+            "availableLanguage": ["Spanish", "English"]
+        }
+    }
+    </script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DrakkarPress",
+        "url": "https://drakkarpress.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://drakkarpress.com/catalogo.html?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Skip to Main Content (Accessibility) -->
+    <a href="#main-content" class="skip-to-main">Saltar al contenido principal</a>
+    
+    <!-- Navigation Component (loaded async) -->
+    <div id="nav-placeholder" role="banner"></div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero bg-gradient-primary text-white" role="region" aria-label="Presentación principal">
+            <div class="container text-center">
+                <h1 class="text-5xl font-extrabold mb-lg">
+                    ⚓ <span data-i18n="hero.title">La Flota Editorial Digital</span>
+                </h1>
+                
+                <p class="text-2xl mb-xl" style="opacity: 0.95;" data-i18n="hero.subtitle">
+                    Navega hacia el futuro del conocimiento y la literatura
+                </p>
+                
+                <div class="hero-cta-wrapper">
+                    <button 
+                        class="btn btn-lg btn-primary" 
+                        data-premium-cta
+                        aria-label="Únete a la membresía Premium"
+                    >
+                        ⚓ <span data-i18n="hero.cta">Zarpa con Premium</span>
+                    </button>
+                    <span class="hero-cta-subtitle text-sm">
+                        Precio bloqueado de por vida según tu fase de entrada
+                    </span>
+                </div>
+                
+                <div class="stats mt-2xl text-lg" style="opacity: 0.9;">
+                    <p data-i18n="hero.members">
+                        <strong>100,000 miembros</strong> en el ecosistema · <strong>4 portales</strong> especializados
+                    </p>
+                </div>
+
+                <!-- Interactive Role Tabs -->
+                <div class="hero-tabs" role="tablist" aria-label="Roles de usuario">
+                    <button 
+                        class="tab-btn active" 
+                        data-tab="escritor" 
+                        role="tab" 
+                        aria-selected="true" 
+                        aria-controls="tab-escritor"
+                        id="tab-button-escritor"
+                    >
+                        <span class="tab-icon" aria-hidden="true">✍️</span>
+                        <span class="tab-text" data-i18n="roles.writer">Escritor</span>
+                    </button>
+                    
+                    <button 
+                        class="tab-btn" 
+                        data-tab="revendedor" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="tab-revendedor"
+                        id="tab-button-revendedor"
+                    >
+                        <span class="tab-icon" aria-hidden="true">📈</span>
+                        <span class="tab-text" data-i18n="roles.reseller">Revendedor</span>
+                    </button>
+                    
+                    <button 
+                        class="tab-btn" 
+                        data-tab="imprenta" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="tab-imprenta"
+                        id="tab-button-imprenta"
+                    >
+                        <span class="tab-icon" aria-hidden="true">🖨️</span>
+                        <span class="tab-text" data-i18n="roles.printer">Imprenta</span>
+                    </button>
+                    
+                    <button 
+                        class="tab-btn" 
+                        data-tab="lector" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="tab-lector"
+                        id="tab-button-lector"
+                    >
+                        <span class="tab-icon" aria-hidden="true">📚</span>
+                        <span class="tab-text" data-i18n="roles.reader">Lector</span>
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="tab-escritor" role="tabpanel" aria-labelledby="tab-button-escritor">
+                    <h3 data-i18n="tab.writer.title">Publica tu conocimiento y construye tu marca de autor</h3>
+                    <p data-i18n="tab.writer.description">
+                        Herramientas de IA para generar contenido, gestión de catálogo, análisis de ventas, 
+                        marketing automatizado y soporte profesional. Tu obra merece profesionalismo.
+                    </p>
+                    <a href="escritores.html" class="tab-cta" data-i18n="tab.writer.cta">
+                        Explorar Portal de Escritores →
+                    </a>
+                </div>
+
+                <div class="tab-content" id="tab-revendedor" role="tabpanel" aria-labelledby="tab-button-revendedor">
+                    <h3 data-i18n="tab.reseller.title">Genera ingresos recomendando libros y servicios</h3>
+                    <p data-i18n="tab.reseller.description">
+                        Programa de afiliados con comisiones recurrentes, material promocional listo, 
+                        estadísticas en tiempo real y múltiples niveles de beneficios. 
+                    </p>
+                    <a href="revendedores.html" class="tab-cta" data-i18n="tab.reseller.cta">
+                        Unirse como Revendedor →
+                    </a>
+                </div>
+
+                <div class="tab-content" id="tab-imprenta" role="tabpanel" aria-labelledby="tab-button-imprenta">
+                    <h3 data-i18n="tab.printer.title">Conecta con autores que necesitan tus servicios</h3>
+                    <p data-i18n="tab.printer.description">
+                        Accede a pedidos constantes de impresión bajo demanda, gestiona presupuestos, 
+                        recibe pagos seguros y amplía tu red de clientes autores.
+                    </p>
+                    <a href="imprentas.html" class="tab-cta" data-i18n="tab.printer.cta">
+                        Registrar Imprenta →
+                    </a>
+                </div>
+
+                <div class="tab-content" id="tab-lector" role="tabpanel" aria-labelledby="tab-button-lector">
+                    <h3 data-i18n="tab.reader.title">Descubre tu próxima lectura favorita</h3>
+                    <p data-i18n="tab.reader.description">
+                        Explora catálogos curados, lee reseñas auténticas, apoya directamente a autores 
+                        y accede a contenido exclusivo de la comunidad.
+                    </p>
+                    <a href="biblioteca.html" class="tab-cta" data-i18n="tab.reader.cta">
+                        Explorar Biblioteca →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Universe Vision Section -->
+        <section class="py-3xl px-lg bg-primary-light-5" style="border-top: 3px solid var(--primary);" role="region" aria-label="Visión del ecosistema">
+            <div class="container text-center">
+                <h2 class="text-4xl text-primary mb-lg">
+                    📚 <span data-i18n="vision.title">Tu Universo de Conocimiento y Legado</span>
+                </h2>
+                
+                <p class="text-xl text-medium max-w-4xl mx-auto mb-xl" style="line-height: 1.8;">
+                    <strong data-i18n="vision.intro">DrakkarPress es tu plataforma para crear y compartir conocimiento.</strong> 
+                    <span data-i18n="vision.description">
+                        Construye tu perfil de autor/editor, publica libros (con o sin IA generadora), 
+                        genera ingresos adicionales y deja mensajes entre generaciones. Somos la 
+                        <strong>red colaborativa</strong> donde escritores, promotores e imprentas navegan juntos.
+                    </span>
+                </p>
+                
+                <div class="card max-w-3xl mx-auto p-xl shadow-lg">
+                    <p class="text-base text-medium mb-0">
+                        🚀 <strong data-i18n="vision.marketing">Marketing dirigido por OdrBrand:</strong> 
+                        <span data-i18n="vision.marketing-desc">
+                            Nuestra agencia aliada maneja toda la sinergia publicitaria, 
+                            con privilegios exclusivos del 40-50% de descuento para socios de DrakkarPress.
+                        </span>
+                    </p>
+                </div>
+                
+                <a 
+                    href="login.html" 
+                    class="btn btn-secondary btn-lg mt-xl"
+                    data-i18n="vision.cta"
+                    aria-label="Crear perfil de usuario"
+                >
+                    Crear Mi Perfil →
+                </a>
+            </div>
+        </section>
+
+        <!-- AI Generators Section -->
+        <section class="py-4xl px-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;" role="region" aria-label="Generadores de IA">
+            <div class="container text-center">
+                <h2 class="text-5xl mb-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+                    🤖 <span data-i18n="ai.title">Generadores de IA para Autores</span>
+                </h2>
+                
+                <p class="text-2xl mb-2xl" style="opacity: 0.95;" data-i18n="ai.subtitle">
+                    Herramientas inteligentes con 25+ géneros combinables para impulsar tu creatividad
+                </p>
+                
+                <div class="grid-auto gap-2xl">
+                    <!-- Generator 1 -->
+                    <article class="card p-2xl shadow-xl" style="background: rgba(255,255,255,0.95); color: var(--text-dark);">
+                        <div class="text-5xl mb-lg" aria-hidden="true">🎨</div>
+                        <h3 class="text-2xl mb-lg" style="color: #667eea;" data-i18n="ai.gen1.title">
+                            Generadora 1: Creación
+                        </h3>
+                        <ul class="text-left" style="list-style: none; padding: 0; line-height: 2;">
+                            <li>💡 <span data-i18n="ai.gen1.feat1">Ideas de libros con 25+ géneros</span></li>
+                            <li>📚 <span data-i18n="ai.gen1.feat2">Títulos creativos personalizados</span></li>
+                            <li>👤 <span data-i18n="ai.gen1.feat3">Personajes complejos y únicos</span></li>
+                            <li>🍳 <span data-i18n="ai.gen1.feat4">Recetas y libros de cocina</span></li>
+                        </ul>
+                    </article>
+
+                    <!-- Generator 2 -->
+                    <article class="card p-2xl shadow-xl" style="background: rgba(255,255,255,0.95); color: var(--text-dark);">
+                        <div class="text-5xl mb-lg" aria-hidden="true">🧠</div>
+                        <h3 class="text-2xl mb-lg" style="color: #764ba2;" data-i18n="ai.gen2.title">
+                            Generadora 2: Estructura
+                        </h3>
+                        <ul class="text-left" style="list-style: none; padding: 0; line-height: 2;">
+                            <li>🗺️ <span data-i18n="ai.gen2.feat1">Mapas conceptuales automáticos</span></li>
+                            <li>📖 <span data-i18n="ai.gen2.feat2">Capítulos estructurados</span></li>
+                            <li>🎭 <span data-i18n="ai.gen2.feat3">Tramas y arcos narrativos</span></li>
+                            <li>📝 <span data-i18n="ai.gen2.feat4">Sinopsis profesionales</span></li>
+                        </ul>
+                    </article>
+
+                    <!-- Generator 3 -->
+                    <article class="card p-2xl shadow-xl" style="background: rgba(255,255,255,0.95); color: var(--text-dark);">
+                        <div class="text-5xl mb-lg" aria-hidden="true">🚀</div>
+                        <h3 class="text-2xl mb-lg" style="color: #667eea;" data-i18n="ai.gen3.title">
+                            Generadora 3: Marketing
+                        </h3>
+                        <ul class="text-left" style="list-style: none; padding: 0; line-height: 2;">
+                            <li>📱 <span data-i18n="ai.gen3.feat1">Copys para redes sociales</span></li>
+                            <li>🎯 <span data-i18n="ai.gen3.feat2">Descripciones optimizadas</span></li>
+                            <li>📧 <span data-i18n="ai.gen3.feat3">Emails promocionales</span></li>
+                            <li>🎨 <span data-i18n="ai.gen3.feat4">Sugerencias de portadas</span></li>
+                        </ul>
+                    </article>
+                </div>
+                
+                <a 
+                    href="generators.html" 
+                    class="btn btn-lg mt-2xl" 
+                    style="background: white; color: #667eea; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+                    data-i18n="ai.cta"
+                    aria-label="Probar generadores de IA"
+                >
+                    Probar Generadores Gratis →
+                </a>
+            </div>
+        </section>
+
+        <!-- Marketing Campaigns Section -->
+        <section class="py-4xl px-lg bg-background" role="region" aria-label="Campañas de marketing">
+            <div class="container">
+                <h2 class="text-4xl text-center text-primary mb-2xl">
+                    📢 <span data-i18n="marketing.title">Campañas de Marketing Profesional</span>
+                </h2>
+                
+                <div class="grid-2 gap-2xl">
+                    <article class="card p-2xl shadow-lg">
+                        <h3 class="text-2xl mb-lg text-secondary">
+                            🎯 <span data-i18n="marketing.campaign1.title">Lanzamiento de Libro</span>
+                        </h3>
+                        <p class="text-medium mb-lg" data-i18n="marketing.campaign1.description">
+                            Estrategia completa: ads en redes, email marketing, influencers literarios, 
+                            notas de prensa y optimización de Amazon/Google Books.
+                        </p>
+                        <ul class="text-left text-medium" style="line-height: 2;">
+                            <li>✓ <span data-i18n="marketing.campaign1.feat1">Diseño de campaña personalizada</span></li>
+                            <li>✓ <span data-i18n="marketing.campaign1.feat2">Gestión de anuncios pagos</span></li>
+                            <li>✓ <span data-i18n="marketing.campaign1.feat3">Análisis y reportes mensuales</span></li>
+                        </ul>
+                    </article>
+
+                    <article class="card p-2xl shadow-lg">
+                        <h3 class="text-2xl mb-lg text-secondary">
+                            🌐 <span data-i18n="marketing.campaign2.title">Construcción de Marca</span>
+                        </h3>
+                        <p class="text-medium mb-lg" data-i18n="marketing.campaign2.description">
+                            Desarrollo de identidad de autor: web profesional, blog, newsletter, 
+                            presencia en redes y estrategia de contenido a largo plazo.
+                        </p>
+                        <ul class="text-left text-medium" style="line-height: 2;">
+                            <li>✓ <span data-i18n="marketing.campaign2.feat1">Estrategia de marca personal</span></li>
+                            <li>✓ <span data-i18n="marketing.campaign2.feat2">Calendario editorial 6 meses</span></li>
+                            <li>✓ <span data-i18n="marketing.campaign2.feat3">Gestión de comunidad</span></li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="text-center mt-2xl">
+                    <a 
+                        href="servicios-marketing.html" 
+                        class="btn btn-primary btn-lg"
+                        data-i18n="marketing.cta"
+                        aria-label="Ver servicios de marketing"
+                    >
+                        Ver Servicios de Marketing →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Premium Membership CTA -->
+        <section class="py-4xl px-lg bg-gradient-primary text-white text-center" role="region" aria-label="Membresía Premium">
+            <div class="container">
+                <h2 class="text-5xl mb-lg">
+                    ⭐ <span data-i18n="premium.title">Membresía Premium DrakkarPress</span>
+                </h2>
+                
+                <p class="text-2xl mb-2xl max-w-3xl mx-auto" data-i18n="premium.subtitle">
+                    Precio bloqueado de por vida según tu fase de entrada
+                </p>
+
+                <div class="grid-3 gap-xl mb-2xl">
+                    <div class="card p-xl">
+                        <div class="badge badge-founder mb-md">Fase 1</div>
+                        <div class="text-4xl font-bold text-primary mb-sm">$5<span class="text-lg">/mes</span></div>
+                        <p class="text-medium text-sm" data-i18n="premium.phase1">Usuarios 1-1,000 (Fundadores)</p>
+                    </div>
+
+                    <div class="card p-xl">
+                        <div class="badge badge-early-adopter mb-md">Fase 2</div>
+                        <div class="text-4xl font-bold text-primary mb-sm">$10<span class="text-lg">/mes</span></div>
+                        <p class="text-medium text-sm" data-i18n="premium.phase2">Usuarios 1,001-10,000</p>
+                    </div>
+
+                    <div class="card p-xl">
+                        <div class="badge badge-premium mb-md">Fase 3</div>
+                        <div class="text-4xl font-bold text-primary mb-sm">$19.99<span class="text-lg">/mes</span></div>
+                        <p class="text-medium text-sm" data-i18n="premium.phase3">Usuarios 10,001+</p>
+                    </div>
+                </div>
+
+                <button 
+                    class="btn btn-secondary btn-lg"
+                    data-premium-cta
+                    data-i18n="premium.cta"
+                    aria-label="Mejorar a Premium ahora"
+                >
+                    ⚓ Mejorar a Premium Ahora
+                </button>
+
+                <p class="mt-lg text-sm" style="opacity: 0.9;" data-i18n="premium.guarantee">
+                    💎 Garantía: Tu precio se mantiene para siempre, sin aumentos futuros
+                </p>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-4xl px-lg bg-background" role="region" aria-label="Testimonios">
+            <div class="container">
+                <h2 class="text-4xl text-center text-primary mb-2xl">
+                    💬 <span data-i18n="testimonials.title">Lo que dicen nuestros navegantes</span>
+                </h2>
+
+                <div class="grid-3 gap-xl">
+                    <article class="card p-xl shadow-lg">
+                        <div class="mb-md">
+                            <span class="text-2xl" aria-hidden="true">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="text-medium mb-lg" data-i18n="testimonials.test1.quote">
+                            "Los generadores de IA me ayudaron a estructurar mi primera novela. 
+                            En 3 meses publiqué y ya vendí más de 200 copias."
+                        </p>
+                        <p class="text-sm text-light">
+                            <strong>María González</strong> · <span data-i18n="testimonials.test1.role">Escritora de Ficción</span>
+                        </p>
+                    </article>
+
+                    <article class="card p-xl shadow-lg">
+                        <div class="mb-md">
+                            <span class="text-2xl" aria-hidden="true">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="text-medium mb-lg" data-i18n="testimonials.test2.quote">
+                            "Como revendedor, genero ingresos pasivos recomendando servicios. 
+                            El sistema de comisiones es transparente y puntual."
+                        </p>
+                        <p class="text-sm text-light">
+                            <strong>Carlos Ruiz</strong> · <span data-i18n="testimonials.test2.role">Afiliado Premium</span>
+                        </p>
+                    </article>
+
+                    <article class="card p-xl shadow-lg">
+                        <div class="mb-md">
+                            <span class="text-2xl" aria-hidden="true">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="text-medium mb-lg" data-i18n="testimonials.test3.quote">
+                            "Recibo pedidos constantes de autores. La plataforma facilita todo 
+                            el proceso de presupuestos y pagos. Excelente para imprentas."
+                        </p>
+                        <p class="text-sm text-light">
+                            <strong>Imprenta del Valle</strong> · <span data-i18n="testimonials.test3.role">Socio Impresor</span>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <section class="py-3xl px-lg text-center" style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: white;" role="region" aria-label="Llamada a la acción final">
+            <div class="container">
+                <h2 class="text-4xl mb-lg" data-i18n="footer-cta.title">
+                    ⚓ ¿Listo para zarpar?
+                </h2>
+                <p class="text-xl mb-xl max-w-2xl mx-auto" data-i18n="footer-cta.description">
+                    Únete a la flota editorial más innovadora. Construye tu legado literario hoy.
+                </p>
+                <a 
+                    href="register.html" 
+                    class="btn btn-secondary btn-lg"
+                    data-i18n="footer-cta.cta"
+                    aria-label="Crear cuenta gratuita"
+                >
+                    Crear Cuenta Gratuita →
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-2xl px-lg bg-primary-dark text-white" role="contentinfo">
+        <div class="container">
+            <div class="grid-4 gap-xl mb-xl">
+                <div>
+                    <h3 class="text-lg font-bold mb-md" data-i18n="footer.platform">Plataforma</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a href="escritores.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.writers">Escritores</a></li>
+                        <li><a href="revendedores.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.resellers">Revendedores</a></li>
+                        <li><a href="imprentas.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.printers">Imprentas</a></li>
+                        <li><a href="biblioteca.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.library">Biblioteca</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-md" data-i18n="footer.services">Servicios</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a href="servicios-marketing.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.marketing">Marketing</a></li>
+                        <li><a href="servicios-web.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.web">Desarrollo Web</a></li>
+                        <li><a href="servicios-research.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.research">Research</a></li>
+                        <li><a href="generators.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.ai">IA Generativa</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-md" data-i18n="footer.company">Empresa</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a href="about.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.about">Nosotros</a></li>
+                        <li><a href="contact.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.contact">Contacto</a></li>
+                        <li><a href="faq.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="premium.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.premium">Premium</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-md" data-i18n="footer.legal">Legal</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a href="/legal/terms.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.terms">Términos</a></li>
+                        <li><a href="/legal/privacy.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.privacy">Privacidad</a></li>
+                        <li><a href="/legal/cookies.html" class="text-white" style="text-decoration: none; opacity: 0.9;" data-i18n="footer.cookies">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center pt-xl" style="border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="opacity: 0.8;">&copy; 2024 DrakkarPress. <span data-i18n="footer.copyright">Todos los derechos reservados.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript - Load in order -->
+    <script src="/assets/js/ui/i18n-enhanced.js" defer></script>
+    <script src="/assets/js/ui/nav-loader.js" defer></script>
+    <script src="/assets/js/ui/auth-state.js" defer></script>
+    <script src="/assets/js/ui/cta-premium.js" defer></script>
+    <script src="/assets/js/ui/tabs.js" defer></script>
+    
+    <!-- Initialize Tabs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize hero tabs
+            if (window.Tabs) {
+                window.Tabs.init('hero');
+            }
+        });
+    </script>
+</body>
+</html>

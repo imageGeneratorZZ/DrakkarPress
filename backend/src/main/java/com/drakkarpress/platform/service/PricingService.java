@@ -15,10 +15,14 @@ public class PricingService {
      * Calcular precio de membresía según user_number
      * 
      * PROMOCIÓN DE LANZAMIENTO:
-     * - Fase 1 (1-1,000): $5/mes ($50/año) GRANDFATHERED
-     * - Fase 2 (1,001-10,000): $10/mes ($100/año) GRANDFATHERED
-     * - Fase 3 (10,001-15,000): $15/mes ($150/año) GRANDFATHERED
-     * - Regular (15,001+): $19.90/mes ($170/año)
+     * - Fase 1 (1-1,000): $5/mes ($50/año → $30/año con 40% descuento) GRANDFATHERED
+     * - Fase 2 (1,001-10,000): $10/mes ($100/año → $60/año con 40% descuento) GRANDFATHERED
+     * - Fase 3 (10,001-15,000): $15/mes ($150/año → $90/año con 40% descuento) GRANDFATHERED
+     * - Regular (15,001+): $19.90/mes ($170/año → $102/año con 40% descuento)
+     * 
+     * COMISIONES DE VENTAS:
+     * - Usuarios FREE: 25% comisión plataforma
+     * - Usuarios PREMIUM: 5% comisión plataforma
      */
     public PricingInfo calculatePricing(Long userNumber) {
         if (userNumber == null) {
@@ -126,6 +130,17 @@ public class PricingService {
     }
 
     /**
+     * Obtener pricing actual según plan y frecuencia
+     */
+    public PricingInfo getCurrentPricing(String planType, String frequency) {
+        // Por ahora retornamos precios regulares, pero esto debería integrarse con calculatePricing
+        BigDecimal monthlyPrice = new BigDecimal("19.90");
+        BigDecimal annualPrice = new BigDecimal("170.00");
+        
+        return new PricingInfo("PREMIUM_REGULAR", monthlyPrice, annualPrice, false, "PREMIUM_MEMBER");
+    }
+
+    /**
      * DTO de información de precio
      */
     public static class PricingInfo {
@@ -142,6 +157,10 @@ public class PricingService {
             this.annualPrice = annualPrice;
             this.isGrandfathered = isGrandfathered;
             this.badge = badge;
+        }
+
+        public long getPriceInCents() {
+            return annualPrice.multiply(new BigDecimal("100")).longValue();
         }
     }
 

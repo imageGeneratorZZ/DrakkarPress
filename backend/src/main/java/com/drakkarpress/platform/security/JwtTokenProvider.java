@@ -47,6 +47,24 @@ public class JwtTokenProvider {
     }
 
     /**
+     * Generar token simple con role y subscription (backward compatibility)
+     */
+    public String generateToken(UUID userId, String username, String role, String subscription) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
+
+        return Jwts.builder()
+                .subject(userId.toString())
+                .claim("username", username)
+                .claim("role", role)
+                .claim("subscription", subscription)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    /**
      * Generar refresh token
      */
     public String generateRefreshToken(UUID userId) {
@@ -101,6 +119,24 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    /**
+     * Backward compatibility alias for validateToken
+     */
+    public boolean validate(String token) {
+        return validateToken(token);
+    }
+
+    /**
+     * Parse claims from token (backward compatibility)
+     */
+    public Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     /**
