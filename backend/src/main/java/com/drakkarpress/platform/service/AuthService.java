@@ -104,17 +104,25 @@ public class AuthService {
         
         membershipRepository.save(membership);
 
-        // Asignar runa por defecto (Fehu - primera runa)
-        Rune defaultRune = runeRepository.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))
-                .orElseThrow(() -> new RuntimeException("Default rune not found"));
-        
-        UserRune userRune = new UserRune();
-        userRune.setUser(user);
-        userRune.setRune(defaultRune);
-        userRune.setIsActive(true);
-        userRune.setSelectedAt(LocalDateTime.now());
-        
-        userRuneRepository.save(userRune);
+        // Asignar runa por defecto (Fehu - primera runa) - opcional, no bloquear registro
+        try {
+            Rune defaultRune = runeRepository.findById(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+                    .orElse(null);
+            
+            if (defaultRune != null) {
+                UserRune userRune = new UserRune();
+                userRune.setUser(user);
+                userRune.setRune(defaultRune);
+                userRune.setIsActive(true);
+                userRune.setSelectedAt(LocalDateTime.now());
+                
+                userRuneRepository.save(userRune);
+            } else {
+                System.out.println("[AUTH] ⚠️  Default rune not found, skipping rune assignment");
+            }
+        } catch (Exception e) {
+            System.err.println("[AUTH] ⚠️  Error assigning default rune (non-blocking): " + e.getMessage());
+        }
 
         // Generar tokens
         String accessToken = tokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getUsername());
