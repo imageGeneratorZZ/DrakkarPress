@@ -51,7 +51,7 @@ public class AuthService {
     private PricingService pricingService;
 
     @Autowired
-    private EmailService emailService;
+    private EmailServiceBase emailService;
 
     /**
      * Registro de nuevo usuario
@@ -123,12 +123,15 @@ public class AuthService {
         // Guardar sesión
         createSession(user.getId(), accessToken, refreshToken);
 
-        // Enviar email de bienvenida (async) - TEMPORALMENTE DESHABILITADO
+        // Enviar email de bienvenida (async)
         try {
+            System.out.println("[AUTH] 📨 Intentando enviar welcome email para: " + user.getEmail());
             emailService.sendWelcomeEmail(user, pricing);
+            System.out.println("[AUTH] ✅ Welcome email dispatch completado");
         } catch (Exception e) {
             // Ignorar errores de email para permitir registro sin SMTP configurado
-            System.out.println("⚠️  Email no enviado (SMTP no configurado): " + e.getMessage());
+            System.err.println("[AUTH] ⚠️  Email no enviado (SMTP no configurado o error): " + e.getMessage());
+            e.printStackTrace();
         }
 
         return new AuthResponse(
@@ -193,8 +196,8 @@ public class AuthService {
         String refreshToken = request.getRefreshToken();
 
         // Validar refresh token
-        if (!tokenProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("Invalid refresh token");
+        if (!tokenProvider.validateToken(refreshToken) || !tokenProvider.isRefreshToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token type");
         }
 
         // Buscar sesión
@@ -212,25 +215,30 @@ public class AuthService {
         Membership membership = membershipRepository.findByUserId(user.getId())
                 .orElse(null);
 
-        // Generar nuevo access token
-        String newAccessToken = tokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getUsername());
+        // Generar nuevos tokens (rotación de refresh)
+        String newAccessToken = tokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getUsername(), user.getRole(), user.getSubscription());
+        String newRefreshToken = tokenProvider.generateRefreshToken(user.getId());
         String jti = tokenProvider.getJtiFromToken(newAccessToken);
 
-        // Actualizar sesión
+        // Actualizar sesión con nuevo refresh hash y expiraciones
         session.setAccessTokenJti(jti);
+        session.setRefreshTokenHash(hashToken(newRefreshToken));
+        LocalDateTime refreshExpiry = tokenProvider.getExpirationDateFromToken(newRefreshToken).toInstant()
+            .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+        session.setExpiresAt(refreshExpiry);
         session.setLastUsedAt(LocalDateTime.now());
         sessionTokenRepository.save(session);
 
         return new AuthResponse(
-                newAccessToken,
-                refreshToken,
-                900L,
-                user.getId(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getFullName(),
-                user.getUserNumber().intValue(),
-                membership != null ? membership.getPlan() : "FREE"
+            newAccessToken,
+            newRefreshToken,
+            900L,
+            user.getId(),
+            user.getEmail(),
+            user.getUsername(),
+            user.getFullName(),
+            user.getUserNumber().intValue(),
+            membership != null ? membership.getPlan() : "FREE"
         );
     }
 
@@ -272,6 +280,14 @@ public class AuthService {
         session.setLastUsedAt(LocalDateTime.now());
 
         sessionTokenRepository.save(session);
+    }
+
+    /**
+     * Inicializar sesión para un flujo de autenticación (registro/login/social).
+     * Expone la lógica interna sin duplicar implementación.
+     */
+    public void initializeSession(UUID userId, String accessToken, String refreshToken) {
+        createSession(userId, accessToken, refreshToken);
     }
 
     /**
@@ -336,5 +352,15 @@ public class AuthService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to get user info: " + e.getMessage());
         }
+    }
+
+    /**
+     * Health check
+     */
+    public Object health() {
+        return new java.util.HashMap<String, Object>() {{
+            put("status", "UP");
+            put("timestamp", java.time.LocalDateTime.now());
+        }};
     }
 }

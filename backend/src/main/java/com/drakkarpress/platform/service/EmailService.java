@@ -8,6 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,11 @@ import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Servicio de envío de emails
+ * Servicio de envío de emails (deshabilitado en perfil 'local')
  */
 @Service
-public class EmailService {
+@Profile("!local")
+public class EmailService extends EmailServiceBase {
 
     @Autowired
     private JavaMailSender mailSender;
@@ -42,6 +44,10 @@ public class EmailService {
      * Enviar email de bienvenida con información de fase
      */
     public void sendWelcomeEmail(User user, PricingService.PricingInfo pricing) {
+        System.out.println("[EMAIL] 📧 Iniciando envío de welcome email...");
+        System.out.println("[EMAIL]   → Usuario: " + user.getEmail() + " (" + user.getUsername() + ")");
+        System.out.println("[EMAIL]   → User#: " + user.getUserNumber() + " | Plan: " + pricing.plan);
+        System.out.println("[EMAIL]   → From: " + fromEmail);
         try {
             Context context = new Context();
             context.setVariable("userName", user.getFullName() != null ? user.getFullName() : user.getUsername());
@@ -65,10 +71,13 @@ public class EmailService {
             helper.setSubject("¡Bienvenido a " + appName + "! - Usuario #" + user.getUserNumber());
             helper.setText(htmlContent, true);
 
+            System.out.println("[EMAIL] 📤 Enviando mensaje via mailSender...");
             mailSender.send(message);
+            System.out.println("[EMAIL] ✅ Welcome email enviado exitosamente a: " + user.getEmail());
         } catch (MessagingException e) {
             // Log error pero no fallar el registro
-            System.err.println("Error sending welcome email: " + e.getMessage());
+            System.err.println("[EMAIL] ❌ Error sending welcome email: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
