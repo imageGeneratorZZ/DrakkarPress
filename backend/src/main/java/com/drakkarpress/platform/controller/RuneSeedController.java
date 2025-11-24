@@ -26,20 +26,23 @@ public class RuneSeedController {
             }
 
             // Insertar runa por defecto con UUID fijo
-            Rune fehu = new Rune();
-            fehu.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-            fehu.setSymbol("ᚠ");
-            fehu.setName("Fehu");
-            fehu.setMeaningEs("Abundancia, riqueza, prosperidad");
-            fehu.setMeaningEn("Abundance, wealth, prosperity");
-            fehu.setCategory("LEGACY_ABUNDANCE");
-            fehu.setDescriptionEs("El ganado, símbolo de riqueza. La abundancia que llega al escritor, tanto material como espiritual.");
-            fehu.setDescriptionEn("The cattle, symbol of wealth. The abundance that comes to the writer, both material and spiritual.");
-            fehu.setDisplayOrder(1);
-            fehu.setIsActive(true);
-            fehu.setCreatedAt(LocalDateTime.now());
-            fehu.setUpdatedAt(LocalDateTime.now());
-            runeRepository.save(fehu);
+            UUID fehuId = UUID.fromString("00000000-0000-0000-0000-000000000001");
+            if (!runeRepository.existsById(fehuId)) {
+                Rune fehu = new Rune();
+                fehu.setId(fehuId);
+                fehu.setSymbol("ᚠ");
+                fehu.setName("Fehu");
+                fehu.setMeaningEs("Abundancia, riqueza, prosperidad");
+                fehu.setMeaningEn("Abundance, wealth, prosperity");
+                fehu.setCategory("LEGACY_ABUNDANCE");
+                fehu.setDescriptionEs("El ganado, símbolo de riqueza. La abundancia que llega al escritor, tanto material como espiritual.");
+                fehu.setDescriptionEn("The cattle, symbol of wealth. The abundance that comes to the writer, both material and spiritual.");
+                fehu.setDisplayOrder(1);
+                fehu.setIsActive(true);
+                fehu.setCreatedAt(LocalDateTime.now());
+                fehu.setUpdatedAt(LocalDateTime.now());
+                runeRepository.save(fehu);
+            }
 
             // Insertar las 23 runas restantes
             String[][] runesData = {
@@ -137,19 +140,21 @@ public class RuneSeedController {
             };
 
             for (String[] data : runesData) {
-                Rune rune = new Rune();
-                rune.setSymbol(data[0]);
-                rune.setName(data[1]);
-                rune.setMeaningEs(data[2]);
-                rune.setMeaningEn(data[3]);
-                rune.setCategory(data[4]);
-                rune.setDescriptionEs(data[5]);
-                rune.setDescriptionEn(data[6]);
-                rune.setDisplayOrder(Integer.parseInt(data[7]));
-                rune.setIsActive(true);
-                rune.setCreatedAt(LocalDateTime.now());
-                rune.setUpdatedAt(LocalDateTime.now());
-                runeRepository.save(rune);
+                if (runeRepository.findByName(data[1]).isEmpty()) {
+                    Rune rune = new Rune();
+                    rune.setSymbol(data[0]);
+                    rune.setName(data[1]);
+                    rune.setMeaningEs(data[2]);
+                    rune.setMeaningEn(data[3]);
+                    rune.setCategory(data[4]);
+                    rune.setDescriptionEs(data[5]);
+                    rune.setDescriptionEn(data[6]);
+                    rune.setDisplayOrder(Integer.parseInt(data[7]));
+                    rune.setIsActive(true);
+                    rune.setCreatedAt(LocalDateTime.now());
+                    rune.setUpdatedAt(LocalDateTime.now());
+                    runeRepository.save(rune);
+                }
             }
 
             return ResponseEntity.ok("✅ Seed completado: 24 runas insertadas exitosamente");
