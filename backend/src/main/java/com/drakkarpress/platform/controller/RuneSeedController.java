@@ -22,7 +22,7 @@ public class RuneSeedController {
             // Verificar si ya existen runas
             long count = runeRepository.count();
             if (count > 0) {
-                return ResponseEntity.ok("Runas ya existen en la base de datos. Total: " + count);
+                return ResponseEntity.ok("✅ Runas ya existen. Total: " + count);
             }
 
             // Insertar runa por defecto con UUID fijo
