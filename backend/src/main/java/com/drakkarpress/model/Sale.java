@@ -59,10 +59,10 @@ public class Sale {
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @Column(length = 255)
-    private String paymentId; // ID de Stripe/PayPal
+    private String paymentId; // ID de Shopify/PayPal
 
     @Column(length = 50)
-    private String paymentMethod; // STRIPE, PAYPAL, OXXO
+    private String paymentMethod; // SHOPIFY, PAYPAL, OXXO
 
     @Column(length = 100)
     private String transactionId;

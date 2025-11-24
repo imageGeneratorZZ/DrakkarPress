@@ -33,9 +33,11 @@ public class BookGenerationJob {
     private String prompt;  // Prompt del usuario: "Escribe una novela de fantasía sobre..."
 
     @Column(name = "target_chapters")
+    @Builder.Default
     private Integer targetChapters = 10;  // Número de capítulos a generar
 
     @Column(name = "target_words_per_chapter")
+    @Builder.Default
     private Integer targetWordsPerChapter = 2000;
 
     @Enumerated(EnumType.STRING)
@@ -48,6 +50,7 @@ public class BookGenerationJob {
     private Integer progressPercentage = 0;  // 0-100
 
     @Column(name = "current_chapter")
+    @Builder.Default
     private Integer currentChapter = 0;
 
     @Column(columnDefinition = "TEXT")
@@ -70,9 +73,11 @@ public class BookGenerationJob {
     private String aiModel = "gpt-4";  // "gpt-4", "claude-3-opus", "gemini-pro"
 
     @Column(name = "total_tokens_used")
+    @Builder.Default
     private Long totalTokensUsed = 0L;
 
     @Column(name = "estimated_cost")
+    @Builder.Default
     private Double estimatedCost = 0.0;  // USD
 
     @CreationTimestamp

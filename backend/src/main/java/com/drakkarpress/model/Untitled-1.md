@@ -1,1 +1,2 @@
-Invoke-WebRequest https://overflowing-consideration-production.up.railway.app/api/ping
+curl http://localhost:12000/api/health
+curl http://localhost:12000/api/payments/health

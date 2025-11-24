@@ -1,6 +1,6 @@
 package com.drakkarpress.platform.controller;
 
-import com.drakkarpress.platform.dto.response.ApiResponse;
+import com.drakkarpress.platform.dto.ApiResponse;
 import com.drakkarpress.platform.repository.PlatformUserRepository;
 import com.drakkarpress.platform.service.PricingService;
 import org.springframework.beans.factory.annotation.Autowired;

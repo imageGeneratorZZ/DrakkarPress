@@ -130,15 +130,19 @@ public class Book {
 
     // Relationships
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Sale> salesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<UserLibrary> inLibraries = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<MarketingCampaign> campaigns = new ArrayList<>();
 
     // Business Methods

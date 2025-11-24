@@ -15,7 +15,7 @@ import java.util.UUID;
  * Entidad RoleVerification - Verificación de documentos para roles
  * 
  * Características principales:
- * - AUTHOR_PUBLISHER requiere: datos de pago (Stripe/PayPal)
+ * - AUTHOR_PUBLISHER requiere: datos de pago (Shopify/PayPal)
  * - PRINT_SHOP requiere: certificación de calidad
  * - RESELLER requiere: datos de pago
  * - Estados: PENDING, APPROVED, REJECTED, EXPIRED
@@ -77,7 +77,7 @@ public class RoleVerification {
 
     /**
      * Datos de verificación en formato JSON
-     * Ej para AUTHOR_PUBLISHER: {"stripe_account_id": "acct_xxx", "payment_method": "stripe"}
+     * Ej para AUTHOR_PUBLISHER: {"shopify_account_id": "shop_xxx", "payment_method": "shopify"}
      * Ej para PRINT_SHOP: {"certification_number": "CERT-12345", "expiry_date": "2026-12-31"}
      */
     @Column(name = "verification_data", columnDefinition = "JSONB")

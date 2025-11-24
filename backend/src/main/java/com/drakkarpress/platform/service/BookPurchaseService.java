@@ -35,7 +35,7 @@ public class BookPurchaseService {
     private final BookRepository bookRepository;
     private final PlatformUserRepository userRepository;
     private final PaymentTransactionRepository paymentRepository;
-    private final EmailService emailService;
+    private final EmailServiceBase emailService;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
@@ -50,7 +50,7 @@ public class BookPurchaseService {
             BookRepository bookRepository,
             PlatformUserRepository userRepository,
             PaymentTransactionRepository paymentRepository,
-            EmailService emailService,
+            EmailServiceBase emailService,
             RoyaltySplitRepository royaltySplitRepository) {
         this.purchaseRepository = purchaseRepository;
         this.bookRepository = bookRepository;

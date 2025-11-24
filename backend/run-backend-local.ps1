@@ -17,6 +17,14 @@ function Err($m){ Write-Host "[ERROR] $m" -ForegroundColor Red }
 
 $ErrorActionPreference = 'Stop'
 
+# Auto-kill posibles procesos Java que estén reteniendo el JAR previo
+try {
+  Get-Process | Where-Object { $_.ProcessName -match 'java' } | ForEach-Object {
+    Write-Host "[INFO] Finalizando proceso Java previo PID=$($_.Id)" -ForegroundColor Yellow
+    try { Stop-Process -Id $_.Id -Force } catch {}
+  }
+} catch {}
+
 # Detect JDK folder inside .java/jdk21
 $jdkFolder = Get-ChildItem -Directory .\.java\jdk21 | Where-Object { $_.Name -match '^jdk' } | Select-Object -First 1
 if(-not $jdkFolder){ Err "No se encontró JDK en .java\jdk21 (ejecuta jdk-setup.ps1 primero)"; exit 1 }
@@ -74,6 +82,7 @@ if(-not $jar){
 }
 
 if($Mode -in @('build-run','run-jar') -and $jar){
-  Info "Arrancando backend (Ctrl+C para detener)..."
-  & "$env:JAVA_HOME\bin\java.exe" -jar $jar.FullName --server.port=12000
+  Info "Arrancando backend con perfil 'local' (Ctrl+C para detener)..."
+  # Importante: el parámetro de sistema (-Dspring.profiles.active=local) debe ir ANTES de -jar
+  & "$env:JAVA_HOME\bin\java.exe" "-Dspring.profiles.active=local" -jar $jar.FullName --server.port=12000
 }

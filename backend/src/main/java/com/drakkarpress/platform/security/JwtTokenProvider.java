@@ -46,23 +46,29 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // Overload para incluir role y subscription en el access token (unificación generación)
+    public String generateAccessToken(UUID userId, String email, String username, String role, String subscription) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
+        String jti = UUID.randomUUID().toString();
+
+        JwtBuilder builder = Jwts.builder()
+                .subject(userId.toString())
+                .claim("email", email)
+                .claim("username", username)
+                .claim("type", "access")
+                .id(jti)
+                .issuedAt(now)
+                .expiration(expiryDate);
+        if (role != null) builder.claim("role", role);
+        if (subscription != null) builder.claim("subscription", subscription);
+        return builder.signWith(getSigningKey()).compact();
+    }
+
     /**
      * Generar token simple con role y subscription (backward compatibility)
      */
-    public String generateToken(UUID userId, String username, String role, String subscription) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
-
-        return Jwts.builder()
-                .subject(userId.toString())
-                .claim("username", username)
-                .claim("role", role)
-                .claim("subscription", subscription)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(getSigningKey())
-                .compact();
-    }
+    // generateToken eliminado: usar generateAccessToken(...)
 
     /**
      * Generar refresh token
@@ -163,5 +169,14 @@ public class JwtTokenProvider {
                 .getPayload();
         
         return "access".equals(claims.get("type"));
+    }
+
+    public boolean isRefreshToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return "refresh".equals(claims.get("type"));
     }
 }

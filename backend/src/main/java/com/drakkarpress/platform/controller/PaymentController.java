@@ -61,7 +61,7 @@ public class PaymentController {
             );
 
             CheckoutResponse response = CheckoutResponse.builder()
-                    .sessionId(null) // Ya no se usa sesión Stripe
+                    .sessionId(null) // No se usa sesión, solo URL de Shopify
                     .checkoutUrl((String) sessionData.get("checkoutUrl"))
                     .transactionId((UUID) sessionData.get("transactionId"))
                     .status("REDIRECT_TO_SHOPIFY")
@@ -149,8 +149,6 @@ public class PaymentController {
                     .body(ApiResponse.error("Error al obtener historial de pagos"));
         }
     }
-
-    // Endpoint de estado de sesión eliminado (Stripe ya no se usa)
 
     /**
      * Health check

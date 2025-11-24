@@ -1,1 +1,2 @@
-Railway → Tab "Logs"
+$env:JAVA_HOME="C:\Users\SuperUsuario\DrakkarPress.com\backend\.java\jdk21\jdk-21.0.9+10"
+& $env:JAVA_HOME\bin\java.exe "-Dspring.profiles.active=local" -jar target\drakkarpress-platform-1.0.0.jar --server.port=12000

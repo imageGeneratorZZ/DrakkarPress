@@ -16,7 +16,7 @@ import java.util.UUID;
  * Entidad PaymentTransaction - Transacciones de pago
  * 
  * Características principales:
- * - Registro de todos los pagos (Stripe, PayPal, etc.)
+ * - Registro de todos los pagos (Shopify, PayPal, etc.)
  * - Estados: pending, completed, failed, refunded
  * - Tracking de membresías y renovaciones
  */
@@ -46,14 +46,14 @@ public class PaymentTransaction {
     private User user;
 
     /**
-     * ID de transacción externa (Stripe, PayPal, etc.)
+     * ID de transacción externa (Shopify, PayPal, etc.)
      */
     @Column(name = "external_transaction_id", length = 255)
     private String externalTransactionId;
 
     /**
      * Proveedor de pago
-     * STRIPE, PAYPAL, OXXO, etc.
+     * SHOPIFY, PAYPAL, OXXO, etc.
      */
     @Column(name = "payment_provider", nullable = false, length = 50)
     private String paymentProvider;

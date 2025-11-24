@@ -31,7 +31,7 @@ public class PaymentService {
     private final PaymentTransactionRepository paymentRepository;
     private final PlatformUserRepository userRepository;
     private final MembershipRepository membershipRepository;
-    private final EmailService emailService;
+    private final EmailServiceBase emailService;
     private final PricingService pricingService;
 
     @Value("${shopify.store.url:https://drakkarpress.myshopify.com}")
@@ -49,7 +49,7 @@ public class PaymentService {
             PaymentTransactionRepository paymentRepository,
             PlatformUserRepository userRepository,
             MembershipRepository membershipRepository,
-            EmailService emailService,
+            EmailServiceBase emailService,
             PricingService pricingService) {
         this.paymentRepository = paymentRepository;
         this.userRepository = userRepository;

@@ -1,0 +1,2 @@
+cd backend
+cmd /c mvnw.cmd -DskipTests package
