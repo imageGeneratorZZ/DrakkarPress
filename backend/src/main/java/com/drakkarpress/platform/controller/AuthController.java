@@ -28,33 +28,25 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Map<String, Object>>> register(@RequestBody RegisterRequest request) {
         try {
-            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-                return ResponseEntity.badRequest().body(ApiResponse.error("Email ya registrado"));
-            }
-            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-                return ResponseEntity.badRequest().body(ApiResponse.error("Username ya registrado"));
-            }
-            User user = User.builder()
-                    .email(request.getEmail())
-                    .username(request.getUsername())
-                    .fullName(request.getDisplayName() != null ? request.getDisplayName() : request.getUsername())
-                    .passwordHash(passwordEncoder.encode(request.getPassword()))
-                    .userNumber(System.currentTimeMillis())
-                    .build();
-            user = userRepository.save(user);
-            String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getUsername(), user.getRole(), user.getSubscription());
-            String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
-            authService.initializeSession(user.getId(), accessToken, refreshToken);
+            AuthResponse auth = authService.register(request);
             return ResponseEntity.ok(ApiResponse.ok("Registro exitoso", Map.of(
-                    "token", accessToken,
-                    "refreshToken", refreshToken,
-                    "userId", user.getId(),
-                    "username", user.getUsername()
+                    "token", auth.getAccessToken(),
+                    "refreshToken", auth.getRefreshToken(),
+                    "userId", auth.getUserId(),
+                    "username", auth.getUsername()
             )));
+        } catch (RuntimeException re) {
+            // Errores de validación (email/username existentes) retornan 400
+            String msg = re.getMessage();
+            if (msg != null && (msg.contains("already") || msg.toLowerCase().contains("taken") || msg.toLowerCase().contains("registered"))) {
+                return ResponseEntity.badRequest().body(ApiResponse.error(msg));
+            }
+            System.err.println("[REGISTER] ⚠️  Error: " + re.getMessage());
+            return ResponseEntity.internalServerError().body(ApiResponse.error("Error registro: " + re.getMessage()));
         } catch (Exception e) {
-            System.err.println("[REGISTER] Error: " + e.getClass().getName() + " - " + e.getMessage());
+            System.err.println("[REGISTER] ❌ Error inesperado: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(ApiResponse.error("Error interno registro: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(ApiResponse.error("Error interno"));
         }
     }
 
