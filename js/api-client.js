@@ -22,7 +22,8 @@ if (queryOverride) {
 } else if (host === 'localhost' || host === '127.0.0.1') {
     API_BASE_URL = 'http://localhost:12000/api';
 } else if (host === 'drakkarpress.com' || host === 'www.drakkarpress.com') {
-    API_BASE_URL = 'https://api.drakkarpress.com';
+    // Usar Railway backend directamente hasta que api subdomain esté configurado
+    API_BASE_URL = 'https://overflowing-consideration-production.up.railway.app/api';
 } else if (host === 'api.drakkarpress.com') {
     API_BASE_URL = 'https://api.drakkarpress.com';
 } else {
