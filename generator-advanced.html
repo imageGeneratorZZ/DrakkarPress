@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Generador Avanzado de Libros</title>
+    <script src="js/api-client.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            height: calc(100vh - 180px);
+        }
+
+        /* Panel de configuración */
+        .config-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* Panel de capítulos */
+        .chapters-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapters-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .chapters-toolbar h3 {
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-toggle button {
+            padding: 8px 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .view-toggle button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .chapters-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chapter-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .chapter-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .chapter-card.needs-review {
+            border-left: 4px solid #ff9800;
+            background: #fff3e0;
+        }
+
+        .chapter-card.generated {
+            border-left: 4px solid #4caf50;
+        }
+
+        .chapter-card.edited {
+            border-left: 4px solid #2196f3;
+        }
+
+        .chapter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .chapter-info {
+            flex: 1;
+        }
+
+        .chapter-number {
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .chapter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .chapter-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .chapter-status.pending {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .chapter-status.generating {
+            background: #bbdefb;
+            color: #1976d2;
+            animation: pulse 1.5s infinite;
+        }
+
+        .chapter-status.generated {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .chapter-status.edited {
+            background: #b3e5fc;
+            color: #0277bd;
+        }
+
+        .chapter-status.needs-review {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chapter-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-actions button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-mini-generate {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-mini-edit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-mini-regenerate {
+            background: #ff5722;
+            color: white;
+        }
+
+        .btn-mini-cascade {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-mini-continue {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-mini-view {
+            background: #2196f3;
+            color: white;
+        }
+
+        .chapter-content-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 100px;
+            overflow: hidden;
+            color: #666;
+        }
+
+        .chapter-editor {
+            margin-top: 10px;
+        }
+
+        .chapter-editor textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .editor-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Modal para vista completa */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modal-close {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 30px 50px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .word-count {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪶 Generador Avanzado de Libros con IA</h1>
+            <p>Crea libros completos con coherencia narrativa y edición en cascada</p>
+        </div>
+
+        <div class="main-layout">
+            <!-- Panel de configuración -->
+            <div class="config-panel">
+                <h3 style="margin-bottom: 20px; color: #667eea;">⚙️ Configuración del Proyecto</h3>
+                
+                <div class="form-group">
+                    <label>Título del Libro *</label>
+                    <input type="text" id="book-title" placeholder="El Secreto de las Sombras">
+                </div>
+
+                <div class="form-group">
+                    <label>Género *</label>
+                    <select id="book-genre">
+                        <option>Ficción</option>
+                        <option>No Ficción</option>
+                        <option>Fantasía</option>
+                        <option>Ciencia Ficción</option>
+                        <option>Misterio</option>
+                        <option>Romance</option>
+                        <option>Terror</option>
+                        <option>Thriller</option>
+                        <option>Histórico</option>
+                        <option>Aventura</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Estilo de Escritura *</label>
+                    <select id="book-style">
+                        <option>Narrativo descriptivo</option>
+                        <option>Diálogos intensos</option>
+                        <option>Acción rápida</option>
+                        <option>Poético/Literario</option>
+                        <option>Minimalista</option>
+                        <option>Realismo mágico</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de Capítulos *</label>
+                    <input type="number" id="book-chapters" value="12" min="1" max="50">
+                </div>
+
+                <div class="form-group">
+                    <label>Idea / Sinopsis *</label>
+                    <textarea id="book-synopsis" placeholder="Describe tu idea de libro: personajes principales, conflicto central, ambientación, temas a explorar..."></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="initializeProject()">
+                    🎯 Crear Proyecto
+                </button>
+
+                <button class="btn btn-success" onclick="generateOutline()" id="btn-outline" disabled>
+                    📋 Generar Estructura
+                </button>
+
+                <button class="btn btn-warning" onclick="generateCompleteBook()" id="btn-complete" disabled>
+                    ✍️ Escribir Libro Completo
+                </button>
+
+                <div class="progress-container" id="progress-container" style="display: none;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                        Progreso de generación
+                    </div>
+                    <div class="progress-bar">
+                        <div id="book-progress" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-chapters">0</div>
+                        <div class="stat-label">Capítulos generados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-words">0</div>
+                        <div class="stat-label">Palabras totales</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-info" onclick="exportBook()" id="btn-export" disabled>
+                    💾 Exportar Libro
+                </button>
+
+                <div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px; font-size: 12px; color: #666;">
+                    <strong>💡 Características:</strong><br>
+                    • Generación automática completa<br>
+                    • Edición individual de capítulos<br>
+                    • Regeneración en cascada<br>
+                    • Mantiene coherencia narrativa
+                </div>
+            </div>
+
+            <!-- Panel de capítulos -->
+            <div class="chapters-panel">
+                <div class="chapters-toolbar">
+                    <h3>
+                        📚 Capítulos
+                        <span id="project-title" style="font-weight: normal; font-size: 14px; color: #999;"></span>
+                    </h3>
+                    <div class="view-toggle">
+                        <button class="active" onclick="switchView('list')">📋 Lista</button>
+                        <button onclick="switchView('cascade')">🔄 Cascada</button>
+                    </div>
+                </div>
+
+                <div class="chapters-list" id="chapters-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3>No hay capítulos aún</h3>
+                        <p>Crea un proyecto y genera la estructura para comenzar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para vista completa de capítulo -->
+    <div class="modal" id="chapter-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Capítulo</h2>
+                <button class="modal-close" onclick="closeModal()">✕ Cerrar</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div id="loading-text">Procesando...</div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global
+        const state = {
+            projectId: null,
+            title: '',
+            genre: '',
+            style: '',
+            synopsis: '',
+            plannedChapters: 0,
+            chapters: [],
+            viewMode: 'list'
+        };
+
+        // Inicializar API
+        const api = new DrakkarAPI();
+
+        // Verificar autenticación
+        if (!api.isAuthenticated()) {
+            alert('⚠️ Debes iniciar sesión para usar el generador.\n\nSerás redirigido al login.');
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+        }
+
+        // Inicializar proyecto
+        async function initializeProject() {
+            const title = document.getElementById('book-title').value.trim();
+            const genre = document.getElementById('book-genre').value;
+            const style = document.getElementById('book-style').value;
+            const synopsis = document.getElementById('book-synopsis').value.trim();
+            const chapters = parseInt(document.getElementById('book-chapters').value);
+
+            if (!title || !synopsis) {
+                alert('Por favor completa título y sinopsis');
+                return;
+            }
+
+            showLoading('Creando proyecto...');
+
+            try {
+                const response = await api.createBookProject({
+                    title,
+                    genre,
+                    style,
+                    synopsis,
+                    chapters
+                });
+
+                if (response.success && response.data.projectId) {
+                    state.projectId = response.data.projectId;
+                    state.title = title;
+                    state.genre = genre;
+                    state.style = style;
+                    state.synopsis = synopsis;
+                    state.plannedChapters = chapters;
+
+                    document.getElementById('project-title').textContent = `- ${title}`;
+                    document.getElementById('btn-outline').disabled = false;
+                    
+                    hideLoading();
+                    alert('✅ Proyecto creado exitosamente');
+                } else {
+                    throw new Error(response.message || 'Error creando proyecto');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Generar outline
+        async function generateOutline() {
+            if (!state.projectId) {
+                alert('Primero crea un proyecto');
+                return;
+            }
+
+            showLoading('Generando estructura del libro...');
+
+            try {
+                const response = await api.generateOutline(state.projectId);
+
+                if (response.success && response.data.chapters) {
+                    state.chapters = response.data.chapters.map(ch => ({
+                        order: ch.order,
+                        title: ch.title,
+                        content: '',
+                        status: 'pending',
+                        wordCount: 0
+                    }));
+
+                    renderChapters();
+                    updateStats();
+                    
+                    document.getElementById('btn-complete').disabled = false;
+                    
+                    hideLoading();
+                    alert('✅ Estructura generada. Ahora puedes escribir el libro completo o capítulos individuales.');
+                } else {
+                    throw new Error(response.message || 'Error generando outline');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Generar libro completo
+        async function generateCompleteBook() {
+            if (!state.projectId || state.chapters.length === 0) {
+                alert('Primero genera la estructura del libro');
+                return;
+            }
+
+            if (!confirm('¿Generar automáticamente todos los capítulos?\n\nEsto puede tomar varios minutos.')) {
+                return;
+            }
+
+            showLoading('Generando libro completo...');
+            document.getElementById('progress-container').style.display = 'block';
+
+            try {
+                const response = await api.generateCompleteBook(state.projectId);
+
+                if (response.success) {
+                    // Recargar capítulos
+                    await loadChapters();
+                    
+                    hideLoading();
+                    document.getElementById('btn-export').disabled = false;
+                    alert('✅ Libro generado completamente');
+                } else {
+                    throw new Error(response.message || 'Error generando libro');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Generar capítulo individual
+        async function generateChapter(order) {
+            showLoading(`Generando capítulo ${order}...`);
+
+            try {
+                const response = await api.generateChapter(state.projectId, order);
+
+                if (response.success && response.data.content) {
+                    const chapter = state.chapters.find(ch => ch.order === order);
+                    if (chapter) {
+                        chapter.content = response.data.content;
+                        chapter.status = 'generated';
+                        chapter.wordCount = countWords(response.data.content);
+                    }
+
+                    renderChapters();
+                    updateStats();
+                    hideLoading();
+                } else {
+                    throw new Error(response.message || 'Error generando capítulo');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Regenerar capítulo
+        async function regenerateChapter(order) {
+            if (!confirm(`¿Regenerar capítulo ${order}?\n\nEsto marcará los capítulos posteriores para revisión.`)) {
+                return;
+            }
+
+            showLoading(`Regenerando capítulo ${order}...`);
+
+            try {
+                const response = await api.regenerateChapter(state.projectId, order);
+
+                if (response.success && response.data.content) {
+                    const chapter = state.chapters.find(ch => ch.order === order);
+                    if (chapter) {
+                        chapter.content = response.data.content;
+                        chapter.status = 'generated';
+                        chapter.wordCount = countWords(response.data.content);
+                    }
+
+                    // Marcar capítulos posteriores
+                    state.chapters.forEach(ch => {
+                        if (ch.order > order && ch.content) {
+                            ch.status = 'needs-review';
+                        }
+                    });
+
+                    renderChapters();
+                    updateStats();
+                    hideLoading();
+                    alert('✅ Capítulo regenerado. Los capítulos posteriores necesitan revisión.');
+                } else {
+                    throw new Error(response.message || 'Error regenerando capítulo');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Regenerar en cascada
+        async function regenerateCascade(fromOrder) {
+            if (!confirm(`¿Regenerar capítulos desde ${fromOrder + 1} en adelante?\n\nEsto reescribirá todos los capítulos posteriores.`)) {
+                return;
+            }
+
+            showLoading('Regenerando capítulos en cascada...');
+
+            try {
+                const response = await api.regenerateCascade(state.projectId, fromOrder);
+
+                if (response.success) {
+                    await loadChapters();
+                    hideLoading();
+                    alert(`✅ ${response.data.regeneratedCount} capítulos regenerados en cascada`);
+                } else {
+                    throw new Error(response.message || 'Error en regeneración cascada');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Continuar capítulo
+        async function continueChapter(order) {
+            const chapter = state.chapters.find(ch => ch.order === order);
+            if (!chapter || !chapter.content) {
+                alert('El capítulo debe estar generado primero');
+                return;
+            }
+
+            showLoading('Continuando capítulo...');
+
+            try {
+                const response = await api.continueChapter(state.projectId, order, chapter.content);
+
+                if (response.success && response.data.continuation) {
+                    chapter.content = response.data.continuation;
+                    chapter.status = 'edited';
+                    chapter.wordCount = countWords(chapter.content);
+
+                    renderChapters();
+                    updateStats();
+                    hideLoading();
+                } else {
+                    throw new Error(response.message || 'Error continuando capítulo');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Editar capítulo
+        function editChapter(order) {
+            const chapter = state.chapters.find(ch => ch.order === order);
+            if (!chapter) return;
+
+            chapter.editing = true;
+            renderChapters();
+        }
+
+        // Guardar capítulo editado
+        async function saveChapter(order) {
+            const textarea = document.getElementById(`chapter-${order}-editor`);
+            if (!textarea) return;
+
+            const newContent = textarea.value;
+            
+            showLoading('Guardando cambios...');
+
+            try {
+                const response = await api.updateChapter(state.projectId, order, newContent);
+
+                if (response.success) {
+                    const chapter = state.chapters.find(ch => ch.order === order);
+                    if (chapter) {
+                        chapter.content = newContent;
+                        chapter.status = 'edited';
+                        chapter.editing = false;
+                        chapter.wordCount = countWords(newContent);
+
+                        // Marcar posteriores para revisión
+                        state.chapters.forEach(ch => {
+                            if (ch.order > order && ch.content) {
+                                ch.status = 'needs-review';
+                            }
+                        });
+                    }
+
+                    renderChapters();
+                    updateStats();
+                    hideLoading();
+                } else {
+                    throw new Error(response.message || 'Error guardando capítulo');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Cancelar edición
+        function cancelEdit(order) {
+            const chapter = state.chapters.find(ch => ch.order === order);
+            if (chapter) {
+                chapter.editing = false;
+                renderChapters();
+            }
+        }
+
+        // Ver capítulo completo
+        function viewChapter(order) {
+            const chapter = state.chapters.find(ch => ch.order === order);
+            if (!chapter || !chapter.content) return;
+
+            document.getElementById('modal-title').textContent = chapter.title;
+            document.getElementById('modal-body').textContent = chapter.content;
+            document.getElementById('chapter-modal').classList.add('active');
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('chapter-modal').classList.remove('active');
+        }
+
+        // Exportar libro
+        async function exportBook() {
+            if (!state.projectId) {
+                alert('No hay proyecto para exportar');
+                return;
+            }
+
+            showLoading('Preparando exportación...');
+
+            try {
+                const response = await api.exportBook(state.projectId);
+
+                if (response.success && response.data.bookText) {
+                    downloadText(response.data.bookText, `${state.title}.txt`);
+                    hideLoading();
+                } else {
+                    throw new Error(response.message || 'Error exportando libro');
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // Renderizar capítulos
+        function renderChapters() {
+            const container = document.getElementById('chapters-list');
+
+            if (state.chapters.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3>No hay capítulos aún</h3>
+                        <p>Crea un proyecto y genera la estructura para comenzar</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.chapters.map(ch => {
+                const statusClass = ch.status || 'pending';
+                const statusText = {
+                    'pending': 'Pendiente',
+                    'generating': 'Generando...',
+                    'generated': 'Generado',
+                    'edited': 'Editado',
+                    'needs-review': '⚠️ Necesita Revisión'
+                }[statusClass] || 'Pendiente';
+
+                const preview = ch.content 
+                    ? ch.content.substring(0, 200) + (ch.content.length > 200 ? '...' : '')
+                    : 'Sin contenido aún';
+
+                return `
+                    <div class="chapter-card ${statusClass}">
+                        <div class="chapter-header">
+                            <div class="chapter-info">
+                                <div class="chapter-number">Capítulo ${ch.order}</div>
+                                <div class="chapter-title">${ch.title}</div>
+                                <span class="chapter-status ${statusClass}">${statusText}</span>
+                                ${ch.wordCount ? `<div class="word-count">${ch.wordCount} palabras</div>` : ''}
+                            </div>
+                            <div class="chapter-actions">
+                                ${!ch.content && !ch.editing ? `
+                                    <button class="btn-mini-generate" onclick="generateChapter(${ch.order})">✍️ Generar</button>
+                                ` : ''}
+                                ${ch.content && !ch.editing ? `
+                                    <button class="btn-mini-view" onclick="viewChapter(${ch.order})">👁️ Ver</button>
+                                    <button class="btn-mini-edit" onclick="editChapter(${ch.order})">✏️ Editar</button>
+                                    <button class="btn-mini-regenerate" onclick="regenerateChapter(${ch.order})">🔄 Regenerar</button>
+                                    <button class="btn-mini-continue" onclick="continueChapter(${ch.order})">➕ Continuar</button>
+                                    ${ch.order < state.chapters.length ? `
+                                        <button class="btn-mini-cascade" onclick="regenerateCascade(${ch.order})">🔄 Cascada</button>
+                                    ` : ''}
+                                ` : ''}
+                            </div>
+                        </div>
+                        ${ch.editing ? `
+                            <div class="chapter-editor">
+                                <textarea id="chapter-${ch.order}-editor">${ch.content || ''}</textarea>
+                                <div class="editor-actions">
+                                    <button onclick="saveChapter(${ch.order})" style="background: #4caf50; color: white;">💾 Guardar Cambios</button>
+                                    <button onclick="cancelEdit(${ch.order})" style="background: #f44336; color: white;">✕ Cancelar</button>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="chapter-content-preview">${preview}</div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            const generatedCount = state.chapters.filter(ch => ch.content).length;
+            const totalWords = state.chapters.reduce((sum, ch) => sum + (ch.wordCount || 0), 0);
+
+            document.getElementById('stat-chapters').textContent = `${generatedCount}/${state.chapters.length}`;
+            document.getElementById('stat-words').textContent = totalWords.toLocaleString();
+
+            // Actualizar progreso
+            if (state.chapters.length > 0) {
+                const progress = (generatedCount / state.chapters.length) * 100;
+                document.getElementById('book-progress').style.width = progress + '%';
+            }
+        }
+
+        // Cargar capítulos desde backend
+        async function loadChapters() {
+            // Implementar cuando tengamos endpoint de listado
+            // Por ahora asumimos que state.chapters está actualizado
+        }
+
+        // Cambiar vista
+        function switchView(mode) {
+            state.viewMode = mode;
+            document.querySelectorAll('.view-toggle button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            // Implementar vistas diferentes si es necesario
+        }
+
+        // Utilidades
+        function countWords(text) {
+            return text ? text.trim().split(/\s+/).length : 0;
+        }
+
+        function downloadText(text, filename) {
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function showLoading(text) {
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
