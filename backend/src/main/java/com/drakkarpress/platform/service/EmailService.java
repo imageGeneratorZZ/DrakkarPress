@@ -74,10 +74,11 @@ public class EmailService extends EmailServiceBase {
             System.out.println("[EMAIL] 📤 Enviando mensaje via mailSender...");
             mailSender.send(message);
             System.out.println("[EMAIL] ✅ Welcome email enviado exitosamente a: " + user.getEmail());
-        } catch (MessagingException e) {
-            // Log error pero no fallar el registro
-            System.err.println("[EMAIL] ❌ Error sending welcome email: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception e) {
+            // Capturar CUALQUIER excepción (MessagingException, MailException, timeout, etc)
+            // Log conciso sin stack trace para no saturar logs
+            System.err.println("[EMAIL] ⚠️  No se pudo enviar email: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            // NO propagar - el registro debe completarse exitosamente
         }
     }
 
@@ -112,8 +113,8 @@ public class EmailService extends EmailServiceBase {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-        } catch (MessagingException e) {
-            System.err.println("Error sending purchase confirmation: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[EMAIL] ⚠️  Error sending purchase confirmation: " + e.getMessage());
         }
     }
 
@@ -139,8 +140,8 @@ public class EmailService extends EmailServiceBase {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-        } catch (MessagingException e) {
-            System.err.println("Error sending renewal reminder: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[EMAIL] ⚠️  Error sending renewal reminder: " + e.getMessage());
         }
     }
 
@@ -167,8 +168,8 @@ public class EmailService extends EmailServiceBase {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-        } catch (MessagingException e) {
-            System.err.println("Error sending verification email: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[EMAIL] ⚠️  Error sending verification email: " + e.getMessage());
         }
     }
 
@@ -195,8 +196,8 @@ public class EmailService extends EmailServiceBase {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-        } catch (MessagingException e) {
-            System.err.println("Error sending password reset email: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[EMAIL] ⚠️  Error sending password reset email: " + e.getMessage());
         }
     }
 
@@ -304,9 +305,10 @@ public class EmailService extends EmailServiceBase {
             mailSender.send(message);
             System.out.println("✅ Email de ebook enviado a: " + user.getEmail());
 
-        } catch (MessagingException e) {
-            System.err.println("❌ Error enviando email de ebook: " + e.getMessage());
-            throw new RuntimeException("Error enviando email", e);
+        } catch (Exception e) {
+            // NO lanzar excepción - solo log
+            System.err.println("[EMAIL] ⚠️  Error enviando email de ebook: " + e.getMessage());
+            // La compra ya se procesó, el email es secundario
         }
     }
 

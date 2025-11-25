@@ -131,15 +131,15 @@ public class AuthService {
         // Guardar sesión
         createSession(user.getId(), accessToken, refreshToken);
 
-        // Enviar email de bienvenida (async)
+        // Enviar email de bienvenida (async, non-blocking)
         try {
             System.out.println("[AUTH] 📨 Intentando enviar welcome email para: " + user.getEmail());
             emailService.sendWelcomeEmail(user, pricing);
             System.out.println("[AUTH] ✅ Welcome email dispatch completado");
         } catch (Exception e) {
-            // Ignorar errores de email para permitir registro sin SMTP configurado
-            System.err.println("[AUTH] ⚠️  Email no enviado (SMTP no configurado o error): " + e.getMessage());
-            e.printStackTrace();
+            // Ignorar completamente errores de email - no debe afectar registro
+            System.err.println("[AUTH] ⚠️  Email no enviado (SMTP no configurado): " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            // No imprimir stack trace completo para no saturar logs
         }
 
         return new AuthResponse(
