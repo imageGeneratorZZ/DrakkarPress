@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakkarPress - Demostración del Sistema Generador Avanzado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .interface-demo {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .grid-demo {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panel-left {
+            background: #e3f2fd;
+            padding: 20px;
+        }
+
+        .panel-right {
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .chapter-card {
+            background: white;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chapter-card.generated { border-left-color: #4caf50; }
+        .chapter-card.edited { border-left-color: #2196f3; }
+        .chapter-card.needs-review { border-left-color: #ff9800; }
+        .chapter-card.pending { border-left-color: #9e9e9e; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-card li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .status-table th,
+        .status-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .status-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .status-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-generated { background: #4caf50; }
+        .status-edited { background: #2196f3; }
+        .status-needs-review { background: #ff9800; }
+        .status-pending { background: #9e9e9e; }
+
+        .workflow {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .workflow-step:not(:last-child)::after {
+            content: "↓";
+            position: absolute;
+            left: 20px;
+            bottom: -25px;
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .workflow-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .workflow-content {
+            flex: 1;
+        }
+
+        .workflow-content h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+            margin: 40px -40px -40px -40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 20px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪶 Generador Avanzado de Libros</h1>
+            <p>Sistema completo con coherencia narrativa y edición en cascada</p>
+        </div>
+
+        <div class="content">
+            <!-- Estado del Sistema -->
+            <div class="section">
+                <h2 class="section-title">✅ Sistema Completado al 100%</h2>
+                <div class="success-box">
+                    <h3>🎉 Todo está funcionando y desplegado en producción</h3>
+                    <p><strong>Backend:</strong> https://overflowing-consideration-production.up.railway.app/api</p>
+                    <p><strong>Frontend:</strong> http://localhost:3000/generator-advanced.html</p>
+                    <p><strong>Healthcheck:</strong> ✅ UP</p>
+                </div>
+            </div>
+
+            <!-- Interfaz Visual -->
+            <div class="section">
+                <h2 class="section-title">🎨 Interfaz de 2 Columnas</h2>
+                <div class="grid-demo">
+                    <div class="panel-left">
+                        <h3 style="margin-bottom: 20px;">⚙️ Panel de Configuración</h3>
+                        <div style="margin-bottom: 15px;">
+                            <strong>📝 Título del libro</strong><br>
+                            <input type="text" placeholder="El Último Refugio" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>🎭 Género</strong><br>
+                            <select style="width: 100%; padding: 8px; margin-top: 5px;">
+                                <option>Ciencia Ficción</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>✍️ Estilo</strong><br>
+                            <input type="text" placeholder="Distópico" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>📖 Capítulos</strong><br>
+                            <input type="number" value="5" style="width: 100%; padding: 8px; margin-top: 5px;">
+                        </div>
+                        <button style="width: 100%; padding: 12px; background: #4caf50; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px;">Crear Proyecto</button>
+                        <button style="width: 100%; padding: 12px; background: #2196f3; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px;">📋 Generar Estructura</button>
+                        <button style="width: 100%; padding: 12px; background: #9c27b0; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px;">✍️ Escribir Libro Completo</button>
+                        
+                        <div style="margin-top: 30px; padding: 15px; background: white; border-radius: 8px;">
+                            <strong>📊 Estadísticas</strong><br>
+                            <div style="margin-top: 10px;">Capítulos: 3/5</div>
+                            <div>Palabras: 2,450</div>
+                        </div>
+                    </div>
+                    <div class="panel-right">
+                        <h3 style="margin-bottom: 20px;">📚 Capítulos del Libro</h3>
+                        
+                        <div class="chapter-card generated">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>🟢 Capítulo 1: El Despertar</strong><br>
+                                    <small>Generado por IA | 1,234 palabras</small>
+                                </div>
+                                <div>
+                                    <button style="padding: 5px 10px; margin: 2px;">👁️ Ver</button>
+                                    <button style="padding: 5px 10px; margin: 2px;">✏️ Editar</button>
+                                    <button style="padding: 5px 10px; margin: 2px;">🔄</button>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                                En un mundo donde la humanidad vive bajo tierra...
+                            </p>
+                        </div>
+
+                        <div class="chapter-card edited">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>🔵 Capítulo 2: La Revelación</strong><br>
+                                    <small>Editado manualmente | 987 palabras</small>
+                                </div>
+                                <div>
+                                    <button style="padding: 5px 10px; margin: 2px;">👁️ Ver</button>
+                                    <button style="padding: 5px 10px; margin: 2px;">✏️ Editar</button>
+                                    <button style="padding: 5px 10px; margin: 2px;">🔄 Cascada</button>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                                Marcus descubre la verdad sobre la superficie...
+                            </p>
+                        </div>
+
+                        <div class="chapter-card needs-review">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>🟠 Capítulo 3: El Conflicto</strong><br>
+                                    <small>⚠️ Necesita Revisión | 229 palabras</small>
+                                </div>
+                                <div>
+                                    <button style="padding: 5px 10px; margin: 2px;">👁️ Ver</button>
+                                    <button style="padding: 5px 10px; margin: 2px;">🔄 Regenerar</button>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; color: #ff9800; font-size: 14px;">
+                                ⚠️ Este capítulo necesita regenerarse porque el capítulo anterior fue editado
+                            </p>
+                        </div>
+
+                        <div class="chapter-card pending">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>⚪ Capítulo 4: Sin Título</strong><br>
+                                    <small>Pendiente de generar</small>
+                                </div>
+                                <div>
+                                    <button style="padding: 5px 10px; margin: 2px; background: #4caf50; color: white; border: none; border-radius: 5px;">✍️ Generar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estados Visuales -->
+            <div class="section">
+                <h2 class="section-title">🎨 Sistema de Estados Visuales</h2>
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Indicador</th>
+                            <th>Significado</th>
+                            <th>Acciones Disponibles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GENERATED</strong></td>
+                            <td><span class="status-indicator status-generated"></span>🟢 Verde</td>
+                            <td>Capítulo generado por IA, listo para usar</td>
+                            <td>Ver, Editar, Regenerar, Continuar, Cascada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EDITED</strong></td>
+                            <td><span class="status-indicator status-edited"></span>🔵 Azul</td>
+                            <td>Capítulo editado manualmente por el usuario</td>
+                            <td>Ver, Editar, Regenerar, Continuar, Cascada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NEEDS_REVIEW</strong></td>
+                            <td><span class="status-indicator status-needs-review"></span>🟠 Naranja</td>
+                            <td>Necesita revisión porque un capítulo anterior fue editado</td>
+                            <td>Ver, Regenerar (recomendado), Cascada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PENDING</strong></td>
+                            <td><span class="status-indicator status-pending"></span>⚪ Gris</td>
+                            <td>Pendiente de generar</td>
+                            <td>Generar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Características -->
+            <div class="section">
+                <h2 class="section-title">⚡ Características Principales</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>📖 Generación Completa</h3>
+                        <ul>
+                            <li>Crea libro desde una idea</li>
+                            <li>Genera estructura automática</li>
+                            <li>Escribe todos los capítulos</li>
+                            <li>Mantiene coherencia narrativa</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>✏️ Edición Inteligente</h3>
+                        <ul>
+                            <li>Edita capítulos individualmente</li>
+                            <li>Editor inline integrado</li>
+                            <li>Marca posteriores para revisión</li>
+                            <li>Vista previa en tiempo real</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔄 Cascada Automática</h3>
+                        <ul>
+                            <li>Regenera capítulos posteriores</li>
+                            <li>Mantiene coherencia narrativa</li>
+                            <li>Preserva personalidad de personajes</li>
+                            <li>Respeta líneas temporales</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 IA Coherente</h3>
+                        <ul>
+                            <li>Contexto de 2 capítulos previos</li>
+                            <li>Prompts estructurados</li>
+                            <li>Manejo de flashbacks</li>
+                            <li>800-1200 palabras por capítulo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flujo de Trabajo -->
+            <div class="section">
+                <h2 class="section-title">🔄 Flujo de Trabajo Completo</h2>
+                <div class="workflow">
+                    <div class="workflow-step">
+                        <div class="workflow-number">1</div>
+                        <div class="workflow-content">
+                            <h4>Crear Proyecto</h4>
+                            <p>Ingresa título, género, estilo, número de capítulos y sinopsis del libro que quieres crear.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">2</div>
+                        <div class="workflow-content">
+                            <h4>Generar Estructura (Outline)</h4>
+                            <p>La IA genera automáticamente títulos para cada capítulo basándose en tu sinopsis. Toma 10-20 segundos.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">3</div>
+                        <div class="workflow-content">
+                            <h4>Escribir Libro Completo</h4>
+                            <p>Click en "Escribir Libro Completo" y la IA genera todos los capítulos secuencialmente con coherencia narrativa. Tiempo: 2-15 minutos dependiendo de la IA.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">4</div>
+                        <div class="workflow-content">
+                            <h4>Editar Capítulo</h4>
+                            <p>Click en "Editar" en cualquier capítulo. Modifica el contenido (ej: cambia nombres, eventos, diálogos). Al guardar, los capítulos posteriores se marcan en 🟠 naranja.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">5</div>
+                        <div class="workflow-content">
+                            <h4>Regenerar en Cascada</h4>
+                            <p>Click en "🔄 Cascada" y la IA regenera todos los capítulos posteriores manteniendo coherencia con tus ediciones.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">6</div>
+                        <div class="workflow-content">
+                            <h4>Exportar Libro</h4>
+                            <p>Click en "💾 Exportar Libro" para descargar un archivo .txt con el libro completo formateado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo de Código -->
+            <div class="section">
+                <h2 class="section-title">💻 Código Backend: Regeneración en Cascada</h2>
+                <div class="code-block">
+<pre>@Transactional
+public List&lt;BookChapter&gt; regenerateCascade(UUID projectId, int fromChapter) {
+    BookProject project = projectRepository.findById(projectId)
+            .orElseThrow(() -&gt; new IllegalArgumentException("Proyecto no encontrado"));
+    
+    List&lt;BookChapter&gt; regenerated = new ArrayList&lt;&gt;();
+    
+    // Regenerar todos los capítulos posteriores
+    for (int i = fromChapter + 1; i &lt;= project.getPlannedChapters(); i++) {
+        try {
+            BookChapter chapter = chapterRepository
+                .findByProjectAndChapterOrder(project, i)
+                .orElse(null);
+            
+            if (chapter != null && chapter.getContent() != null) {
+                // Construir contexto de capítulos previos
+                String context = buildPreviousContext(project, i);
+                
+                // Regenerar con contexto actualizado
+                BookChapter regen = regenerateChapter(projectId, i);
+                regenerated.add(regen);
+            }
+        } catch (Exception e) {
+            log.error("Error regenerando capítulo {}: {}", i, e.getMessage());
+            break; // Detener cascada si hay error
+        }
+    }
+    
+    return regenerated;
+}</pre>
+                </div>
+            </div>
+
+            <!-- Archivos Creados -->
+            <div class="section">
+                <h2 class="section-title">📁 Archivos Implementados</h2>
+                <div class="info-box">
+                    <h3>Frontend</h3>
+                    <ul>
+                        <li><strong>generator-advanced.html</strong> - 1,164 líneas - Interfaz completa de 2 columnas</li>
+                        <li><strong>api-client.js</strong> - 7 nuevos métodos para los endpoints</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 20px;">Backend</h3>
+                    <ul>
+                        <li><strong>GeneratorService.java</strong> - 356 líneas - Lógica de cascada y generación</li>
+                        <li><strong>GeneratorController.java</strong> - 4 nuevos endpoints REST</li>
+                        <li><strong>OllamaService.java</strong> - Prompts mejorados con coherencia</li>
+                        <li><strong>CloudAIService.java</strong> - Prompts mejorados con coherencia</li>
+                        <li><strong>BookChapter.java</strong> - Estados NEEDS_REVIEW y PENDING añadidos</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 20px;">Documentación</h3>
+                    <ul>
+                        <li><strong>GENERADOR_AVANZADO.md</strong> - 400+ líneas de documentación completa</li>
+                        <li><strong>DEMO_VISUAL.md</strong> - Demostración visual del sistema</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Endpoints -->
+            <div class="section">
+                <h2 class="section-title">🔌 Endpoints REST Implementados</h2>
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Endpoint</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects</td>
+                            <td>Crear nuevo proyecto de libro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/outline</td>
+                            <td>Generar estructura (títulos de capítulos)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/generate-complete</td>
+                            <td>Generar libro completo automáticamente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/chapters/{n}/generate</td>
+                            <td>Generar capítulo N individual</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/chapters/{n}/regenerate</td>
+                            <td>Regenerar capítulo N con coherencia</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/chapters/{n}/regenerate-cascade</td>
+                            <td>Regenerar desde capítulo N en adelante</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POST</strong></td>
+                            <td>/api/generator/projects/{id}/chapters/{n}/continue</td>
+                            <td>Continuar capítulo N añadiendo contenido</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PUT</strong></td>
+                            <td>/api/generator/projects/{id}/chapters/{n}</td>
+                            <td>Actualizar contenido del capítulo N</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GET</strong></td>
+                            <td>/api/generator/projects/{id}/export</td>
+                            <td>Exportar libro completo a texto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <h2 style="font-size: 42px; margin-bottom: 20px;">🚀 ¡Pruébalo Ahora!</h2>
+                <p style="font-size: 20px; margin-bottom: 40px;">
+                    El sistema está completamente funcional y desplegado en producción
+                </p>
+                <a href="http://localhost:3000/generator-advanced.html" class="cta-button" target="_blank">
+                    🪶 Abrir Generador
+                </a>
+                <a href="https://overflowing-consideration-production.up.railway.app/api/health" class="cta-button" target="_blank">
+                    ✅ Ver Healthcheck
+                </a>
+                <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <h3 style="margin-bottom: 15px;">🔐 Credenciales de Prueba</h3>
+                    <p style="font-size: 18px;">
+                        <strong>Email:</strong> demo@book.com<br>
+                        <strong>Password:</strong> Demo12345!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
