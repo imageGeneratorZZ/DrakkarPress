@@ -69,6 +69,15 @@ body {font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
       </div>
     </div>
     <div class="meta" id="meta"></div>
+    <div class="badges" id="stats" style="margin-top:12px">
+      <div class="badge">📚 Libros: <span id="stat-books">0</span></div>
+      <div class="badge">👥 Seguidores: <span id="stat-followers">0</span></div>
+      <div class="badge">🤝 Siguiendo: <span id="stat-following">0</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2 style="margin-top:0;margin-bottom:12px;font-size:18px">Publicaciones</h2>
+    <div id="books-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
   </div>
 </div>
 <script src="js/api-client.js"></script>
@@ -81,6 +90,8 @@ document.getElementById('btn-save').addEventListener('click',async()=>{const upd
 document.getElementById('btn-logout').addEventListener('click',()=>{api.logout();location.replace('/login.html');});
 
 document.addEventListener('DOMContentLoaded',loadProfile);
+function renderStats(d){document.getElementById('stat-books').textContent=d.booksCount??0;document.getElementById('stat-followers').textContent=d.followers??0;document.getElementById('stat-following').textContent=d.following??0;}
+async function loadMyBooks(){try{const res=await api.getMyBooks?.();const grid=document.getElementById('books-grid');grid.innerHTML='';const list=(res&&res.data)||[];if(!list.length){grid.innerHTML='<div style="color:#666">Aún no tienes publicaciones. Genera tu primer libro en el <a href="/generators.html">Generador</a>.</div>';return;}list.forEach(b=>{const card=document.createElement('div');card.style.background='#fff';card.style.border='1px solid #eee';card.style.borderRadius='10px';card.style.padding='10px';card.innerHTML = `<div style="aspect-ratio:3/4;background:#f3f3f3;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#888;font-weight:600">${(b.title||'Libro').substring(0,1)}</div><div style="margin-top:8px;font-size:13px;font-weight:600">${b.title||'Libro'}</div>`;card.onclick=()=>{window.location.href='/generator-advanced.html?projectId='+ (b.projectId||'');};grid.appendChild(card);});}catch(e){console.warn('No se pudo cargar libros',e);}}
 </script>
 </body>
 </html>
