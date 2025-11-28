@@ -83,7 +83,7 @@ CREATE TABLE users (
     -- Preferencias
     language VARCHAR(10) DEFAULT 'es',
     currency VARCHAR(10) DEFAULT 'USD',
-    timezone VARCHAR(50) DEFAULT 'America/Mexico_City',
+    timezone VARCHAR(50) DEFAULT 'America/Santiago',
     
     INDEX idx_email (email),
     INDEX idx_role (role),
