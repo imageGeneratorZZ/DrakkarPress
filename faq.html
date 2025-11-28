@@ -74,6 +74,7 @@
             <button class="category-btn active" onclick="showCategory('all')">Todas</button>
             <button class="category-btn" onclick="showCategory('autores')">Para Autores</button>
             <button class="category-btn" onclick="showCategory('lectores')">Para Lectores</button>
+            <button class="category-btn" onclick="showCategory('plataforma')">Plataforma Global</button>
             <button class="category-btn" onclick="showCategory('afiliados')">Programa Afiliados</button>
             <button class="category-btn" onclick="showCategory('pagos')">Pagos y Comisiones</button>
         </div>
@@ -176,7 +177,7 @@
                 </div>
                 <div class="faq-answer">
                     <div class="faq-answer-content">
-                        Los libros físicos se imprimen bajo demanda y se envían en 3-5 días hábiles dentro de Chile. Envíos internacionales pueden tardar 7-14 días. Recibirás tracking de tu pedido.
+                        Los libros físicos se imprimen bajo demanda y se envían a todo el mundo. Envíos nacionales (Chile) en 3-5 días hábiles; internacionales en 7-14 días. Recibirás tracking de tu pedido.
                     </div>
                 </div>
             </div>
@@ -189,6 +190,58 @@
                 <div class="faq-answer">
                     <div class="faq-answer-content">
                         ¡Sí! Puedes comprar códigos de regalo para eBooks o enviar libros físicos a otra dirección. Incluye una nota personalizada con tu regalo.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" data-category="plataforma">
+            <h2 class="faq-section-title">🌍 Plataforma Global e Idiomas</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿En qué países opera DrakkarPress?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <strong>DrakkarPress tiene sede en Chile</strong> pero opera a nivel global. Enviamos libros físicos a todo el mundo y los eBooks están disponibles instantáneamente en cualquier país. Aceptamos pagos internacionales en múltiples monedas.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿En qué idiomas está disponible la plataforma?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        La plataforma está disponible en <strong>8 idiomas nativos</strong>: Español, Inglés, Portugués, Francés, Alemán, Italiano, Japonés y Chino. Además, puedes usar el <strong>traductor automático de tu navegador</strong> (Google Translate) para traducir cualquier página a tu idioma preferido.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Cómo funciona la tributación internacional?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Al tener sede en Chile, aplicamos <strong>IVA 19%</strong> en transacciones locales. Para clientes internacionales, ajustamos la tributación según las regulaciones de cada país. Los autores reciben comprobantes fiscales válidos para sus declaraciones de impuestos.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    ¿Puedo publicar libros en cualquier idioma?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        ¡Absolutamente! Puedes publicar libros en cualquier idioma. Nuestros generadores de IA soportan múltiples idiomas y puedes etiquetar tu obra para que los lectores la encuentren fácilmente. La plataforma es completamente multilingüe.
                     </div>
                 </div>
             </div>
@@ -256,7 +309,7 @@
                 </div>
                 <div class="faq-answer">
                     <div class="faq-answer-content">
-                        Aceptamos <strong>tarjetas de crédito/débito</strong> (Visa, Mastercard, Amex), <strong>PayPal</strong>, <strong>transferencia bancaria</strong> y <strong>Webpay</strong> (Chile). Todos los pagos son procesados de forma segura.
+                        Aceptamos <strong>tarjetas de crédito/débito internacionales</strong> (Visa, Mastercard, Amex), <strong>PayPal</strong>, <strong>transferencia bancaria</strong>, y <strong>Webpay</strong> para clientes en Chile. Todos los pagos son procesados de forma segura con encriptación SSL.
                     </div>
                 </div>
             </div>
@@ -280,7 +333,7 @@
                 </div>
                 <div class="faq-answer">
                     <div class="faq-answer-content">
-                        Sí, aplicamos las retenciones fiscales requeridas por ley según tu país de residencia. En Chile aplicamos IVA 19%. Te proporcionamos los comprobantes fiscales necesarios para tu declaración.
+                        Sí, aplicamos las retenciones fiscales requeridas por ley. <strong>DrakkarPress tiene sede en Chile</strong> y aplica <strong>IVA 19%</strong> en transacciones locales. Para clientes internacionales, se ajusta según regulaciones del país. Te proporcionamos los comprobantes fiscales necesarios.
                     </div>
                 </div>
             </div>
@@ -307,6 +360,7 @@
 
     <footer>
         <p>&copy; 2025 DrakkarPress. Todos los derechos reservados.</p>
+        <p style="margin-top:10px;font-size:14px;opacity:0.8;">🇨🇱 Sede en Chile · 🌍 Operación Global · 🌐 Plataforma Multilingüe</p>
     </footer>
 
     <script>
