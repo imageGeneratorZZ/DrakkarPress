@@ -75,27 +75,29 @@
 **🔧 Infraestructura:**
 - POD: **Lulu.com** (autor fija precio = costo Lulu + margen autor)
 - TTS Audiolibro: **Solo en DrakkarPlus Premium** ($35/mes o $99/año)
-- Comisión DrakkarPress: **$10 fijo por bundle vendido**
+- Comisiones:
+   - **Basic:** 30% en ventas internas (eBook, audiolibro y bundles)
+   - **Premium:** 5% en ventas internas; **5% cross‑channel** en ventas externas atribuidas a DrakkarPress
 
 ```
 📦 Opciones de Venta en DrakkarPress
 
 1️⃣ Solo eBook
    ├─ Precio autor: $12.99-19.99 (precio libre)
-   ├─ Comisión DrakkarPress: 10% ($1.30-2.00)
-   └─ Autor recibe: 90% ($11.69-17.99)
+   ├─ Comisión plataforma: **30% Basic** / **5% Premium**
+   └─ Autor recibe: **70% Basic** / **95% Premium**
 
 2️⃣ Bundle Digital (eBook + Audiolibro)
    ├─ Precio sugerido: $24.99
-   ├─ Comisión DrakkarPress: $10 fijo
-   ├─ Autor recibe: $14.99 (60% efectivo)
+   ├─ Comisión plataforma: **30% Basic** / **5% Premium**
+   ├─ Autor recibe (estimado): **$17.49 Basic** / **$23.74 Premium**
    └─ Requiere: Suscripción DrakkarPlus Premium del autor
 
 3️⃣ Bundle Completo (Físico + eBook + Audiolibro)
    ├─ Precio ejemplo: $34.99
    │  ├─ Costo Lulu físico: ~$8-12 (según páginas)
-   │  ├─ Comisión DrakkarPress: $10
-   │  └─ Autor recibe: $12.99-16.99
+   │  ├─ Comisión plataforma: **30% Basic** / **5% Premium**
+   │  └─ Autor recibe (tras costos): rango según Lulu y plan
    ├─ Autor fija precio físico libremente
    └─ Cliente recibe TODO: físico impreso + eBook + MP3
 ```
@@ -116,7 +118,7 @@
 ├─ Publicación ilimitada de eBooks
 ├─ Dashboard de ventas en tiempo real
 ├─ Herramientas de marketing (emails, promos)
-├─ Comisión plataforma: 30% en ventas internas (eBooks/audio; bundles usan $10 fijo)
+├─ Comisión plataforma: **30%** en ventas internas (eBooks/audio **y bundles**)
 ├─ Uso de IA: limitado (cupos mensuales)
 └─ Generación de libros con IA incluida (básica)
 
@@ -124,9 +126,8 @@
 ├─ Todo lo de Basic +
 ├─ 🎙️ Generador TTS de Audiolibros (ILIMITADO)
 ├─ Crear bundles (eBook + Audio)
-├─ Comisión plataforma: 5% en ventas internas (eBooks/audio; bundles usan $10 fijo)
-├─ Comisión cross‑channel: 5% también en ventas externas originadas por DrakkarPress (tracking/UTM)
-├─ Comisión bundles: $10 fijo (autor recibe resto)
+├─ Comisión plataforma: **5%** en ventas internas (eBooks/audio **y bundles**)
+├─ Comisión cross‑channel: **5%** también en ventas externas originadas por DrakkarPress (tracking/UTM)
 ├─ POD con Lulu.com integrado
 ├─ Analytics avanzado (conversión, ROI)
 ├─ Descuento 20% en físicos
@@ -176,20 +177,20 @@
 
 ```
 1️⃣ Solo eBook - $14.99
-   ├─ Comisión DrakkarPress: 30% = $4.50
-   ├─ Autor recibe: $10.49 (70%)
+   ├─ Comisión plataforma: 30% Basic = $4.50 | 5% Premium = $0.75
+   ├─ Autor recibe: **$10.49 (Basic 70%)** | **$14.24 (Premium 95%)**
    └─ vs Amazon: $6.99 (70% de $9.99)
 
 2️⃣ Bundle Digital (eBook + Audiolibro) - $24.99
-   ├─ Comisión DrakkarPress: $10 fijo
-   ├─ Autor recibe: $14.99 (60%)
+   ├─ Comisión plataforma: **$7.50 (Basic 30%)** | **$1.25 (Premium 5%)**
+   ├─ Autor recibe: **$17.49 (Basic 70%)** | **$23.74 (Premium 95%)**
    ├─ Requiere: DrakkarPlus Premium ($35/mes)
    └─ vs Amazon: Solo eBook $6.99 (audio no existe)
 
 3️⃣ Bundle Completo (Físico + eBook + Audio) - $34.99
    ├─ Costo Lulu (120 pág): ~$8-10
-   ├─ Comisión DrakkarPress: $10
-   ├─ Autor recibe: $14.99-16.99 (43-49%)
+   ├─ Comisión plataforma: **$10.50 (Basic 30%)** | **$1.75 (Premium 5%)**
+   ├─ Autor recibe (aprox): **$8–12 Basic** | **$18–22 Premium** (según Lulu y si hay reseller)
    ├─ Cliente recibe: Físico impreso + EPUB + MP3
    └─ vs Amazon: Físico $19.99 (autor ~$4) + eBook $9.99 ($6.99) = $11 total
 ```
@@ -199,8 +200,8 @@
 ## 💼 Comisiones, Afiliados y Tributación
 
 **Modelo de comisiones:**
-- **Autores sin Premium (Basic):** 30% comisión en ventas internas de eBooks/audio; para bundles se aplica **$10 fijo por paquete**.
-- **Autores con Premium:** 5% comisión en ventas internas de eBooks/audio; para bundles se mantiene **$10 fijo**. Además, **5% cross‑channel** en ventas externas cuando la atribución proviene de DrakkarPress (links/UTM/afiliados).
+- **Autores sin Premium (Basic):** **30%** comisión en ventas internas (eBooks, audiolibros y bundles).
+- **Autores con Premium:** **5%** comisión en ventas internas (eBooks, audiolibros y bundles). Además, **5% cross‑channel** en ventas externas cuando la atribución proviene de DrakkarPress (links/UTM/afiliados).
 
 **Revendedores (peluquerías, hoteles, librerías):**
 - Comisión estándar: **30% de la venta** cuando usan su enlace o POS afiliado.
@@ -213,7 +214,7 @@
 
 **Guardrails de precio (no vender por debajo de Amazon):**
 - Evitar precios inferiores al eBook Amazon $9.99 cuando el valor percibido sea similar.
-- Bundles deben cubrir: **costo Lulu (si físico) + IVA + comisión plataforma + comisión reseller/influencer + fee de pago + $10 bundle (si aplica)** y aún dejar margen autor.
+- Bundles deben cubrir: **costo Lulu (si físico) + IVA + comisión plataforma + comisión reseller/influencer + fee de pago** y aún dejar margen autor.
 
 **Tributación (Chile):**
 - **IVA 19%** aplicable a ventas en Chile; se muestra desglosado en checkout.
@@ -225,19 +226,19 @@ PagoNetoAutor = Precio
    − IVA
    − CostoLulu (si físico)
    − FeePago (≈2.9% + $0.30)
-   − ComisiónPlataforma (30% Basic | 5% Premium | $10 bundle)
+   − ComisiónPlataforma (% del plan)
    − ComisiónReseller (si aplica, p.ej. 30%)
    − ComisiónInfluencer (si aplica, 1–5% sobre suscripciones/venta)
 ```
 
-**Ejemplo Bundle Completo $34.99 (120 páginas, Basic, con reseller):**
+**Ejemplo Bundle Completo $34.99 (120 páginas, Basic 30%, con reseller 30%):**
 ```
 IVA (Chile): $5.94
 Costo Lulu: $9.00
 FeePago (3%): $1.05
-Bundle fee: $10.00
+Comisión plataforma 30%: $10.50
 Reseller 30%: $10.50
-Autor recibe (aprox): $34.99 − 5.94 − 9.00 − 1.05 − 10.00 − 10.50 = **$-1.50** (no viable)
+Autor recibe (aprox): $34.99 − 5.94 − 9.00 − 1.05 − 10.50 − 10.50 = **$-2.00** (no viable)
 → Ajustar precio a **$44.99** para margen autor ≈ $8–10.
 ```
 
@@ -359,7 +360,7 @@ Autor gana $13.49 en lugar de $6.99
 | **Audiolibro Royalty** | 25-40% ACX | 60% bundle ($14.99 de $24.99) |
 | **Físico Royalty** | ~$4 de $19.99 (20%) | $14.99-16.99 de $34.99 (43-49%) |
 | **Costo TTS Audiolibro** | $10k-50k ACX o $15/mes Audible | ✅ Incluido en Premium $35/mes |
-| **Bundles** | ❌ No disponibles | ✅ $10 comisión fija |
+| **Bundles** | ❌ No disponibles | ✅ Comisión porcentual (30% Basic / 5% Premium) |
 | **POD Provider** | Amazon KDP Print | ✅ Lulu.com (más barato) |
 | **Comisión mensual autor** | $0 (pero royalties bajos) | $35/mes (Premium con TTS ilimitado) |
 | **Social Features** | ❌ Limitadas | ✅ Feed estilo Instagram |
