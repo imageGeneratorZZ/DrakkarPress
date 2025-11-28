@@ -232,6 +232,40 @@ class DrakkarAPI {
         }
     }
 
+    // Forgot password
+    async forgotPassword(email) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+                method: 'POST',
+                headers: this.getHeaders(false),
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+            console.log('[DrakkarAPI] Respuesta forgot-password:', data);
+            return data;
+        } catch (e) {
+            console.error('Error forgot-password:', e);
+            return { success: false, message: 'Error de conexión' };
+        }
+    }
+
+    // Reset password
+    async resetPassword(token, newPassword) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+                method: 'POST',
+                headers: this.getHeaders(false),
+                body: JSON.stringify({ token, newPassword })
+            });
+            const data = await response.json();
+            console.log('[DrakkarAPI] Respuesta reset-password:', data);
+            return data;
+        } catch (e) {
+            console.error('Error reset-password:', e);
+            return { success: false, message: 'Error de conexión' };
+        }
+    }
+
     // Obtener perfil propio
     async getMyProfile() {
         if (!this.isAuthenticated()) return { success: false, message: 'No autenticado' };

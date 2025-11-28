@@ -42,42 +42,47 @@ body {font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
 </div>
 <div class="container">
   <div id="toast" class="toast"><i class="fas fa-info-circle"></i><span id="toast-msg"></span></div>
-  <div class="card">
-    <div class="flex">
-      <div class="avatar" id="avatar"><span id="avatar-initial">U</span></div>
+  <div class="card" style="padding-bottom:0">
+    <div class="flex" style="align-items:flex-start">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;min-width:120px;">
+        <div class="avatar" id="avatar"><span id="avatar-initial">U</span></div>
+        <div class="badges" id="stats" style="flex-direction:column;gap:4px;margin-top:0">
+          <div class="badge">📚 <span id="stat-books">0</span> Libros</div>
+          <div class="badge">👥 <span id="stat-followers">0</span> Seguidores</div>
+          <div class="badge">🤝 <span id="stat-following">0</span> Siguiendo</div>
+        </div>
+      </div>
       <div style="flex:1;min-width:240px;">
-        <div class="field">
-          <label>Usuario</label>
-          <input id="username" class="readonly" readonly />
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <input id="username" class="readonly" readonly style="width:auto;min-width:120px;font-weight:700;font-size:18px;background:transparent;border:none;padding:0;margin:0 8px 0 0;" />
+          <a id="external-link" href="#" target="_blank" style="color:#1A4D7A;font-size:15px;display:none"><i class="fas fa-link"></i> Enlace externo</a>
         </div>
-        <div class="field">
-          <label>Nombre completo</label>
-          <input id="fullName" placeholder="Tu nombre completo" />
-        </div>
-        <div class="field">
-          <label>Biografía</label>
-          <textarea id="bio" placeholder="Cuéntale al mundo quién eres"></textarea>
-        </div>
-        <div class="field">
-          <label>URL Foto Perfil</label>
-          <input id="profilePictureUrl" placeholder="https://..." />
-        </div>
-        <div class="actions">
-          <button class="btn btn-primary" id="btn-save"><i class="fas fa-save"></i> Guardar cambios</button>
-          <button class="btn btn-secondary" id="btn-logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+        <div id="bio-compact" style="font-size:14px;color:#444;margin:8px 0 10px 0;white-space:pre-line"></div>
+        <div class="actions" style="margin:8px 0 0 0;">
+          <button class="btn btn-primary" id="btn-save"><i class="fas fa-save"></i> Guardar</button>
+          <button class="btn btn-secondary" id="btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</button>
         </div>
       </div>
     </div>
-    <div class="meta" id="meta"></div>
-    <div class="badges" id="stats" style="margin-top:12px">
-      <div class="badge">📚 Libros: <span id="stat-books">0</span></div>
-      <div class="badge">👥 Seguidores: <span id="stat-followers">0</span></div>
-      <div class="badge">🤝 Siguiendo: <span id="stat-following">0</span></div>
+    <div style="display:flex;gap:16px;margin:18px 0 0 0;align-items:center;">
+      <div id="highlights" style="display:flex;gap:10px;align-items:center;"></div>
+      <button class="btn btn-secondary" style="font-size:12px;padding:4px 10px;" id="btn-add-highlight"><i class="fas fa-plus"></i> Highlight</button>
     </div>
+    <div style="margin:18px 0 0 0;">
+      <div class="tabs" style="display:flex;gap:24px;border-bottom:1px solid #eee;">
+        <button class="btn btn-secondary" style="background:none;border:none;font-size:15px;padding:8px 0;" id="tab-publicaciones">Publicaciones</button>
+        <button class="btn btn-secondary" style="background:none;border:none;font-size:15px;padding:8px 0;" id="tab-series">Series</button>
+        <button class="btn btn-secondary" style="background:none;border:none;font-size:15px;padding:8px 0;" id="tab-guardados">Guardados</button>
+      </div>
+    </div>
+    <div class="meta" id="meta" style="margin-top:18px"></div>
   </div>
-  <div class="card">
-    <h2 style="margin-top:0;margin-bottom:12px;font-size:18px">Publicaciones</h2>
-    <div id="books-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
+  <div class="card" style="padding-top:18px">
+    <div id="tab-content-publicaciones">
+      <div id="books-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px"></div>
+    </div>
+    <div id="tab-content-series" style="display:none;text-align:center;color:#888;padding:32px 0;">(Próximamente: series de libros)</div>
+    <div id="tab-content-guardados" style="display:none;text-align:center;color:#888;padding:32px 0;">(Próximamente: guardados)</div>
   </div>
 </div>
 <script src="js/api-client.js"></script>
@@ -90,8 +95,72 @@ document.getElementById('btn-save').addEventListener('click',async()=>{const upd
 document.getElementById('btn-logout').addEventListener('click',()=>{api.logout();location.replace('/login.html');});
 
 document.addEventListener('DOMContentLoaded',loadProfile);
-function renderStats(d){document.getElementById('stat-books').textContent=d.booksCount??0;document.getElementById('stat-followers').textContent=d.followers??0;document.getElementById('stat-following').textContent=d.following??0;}
-async function loadMyBooks(){try{const res=await api.getMyBooks?.();const grid=document.getElementById('books-grid');grid.innerHTML='';const list=(res&&res.data)||[];if(!list.length){grid.innerHTML='<div style="color:#666">Aún no tienes publicaciones. Genera tu primer libro en el <a href="/generators.html">Generador</a>.</div>';return;}list.forEach(b=>{const card=document.createElement('div');card.style.background='#fff';card.style.border='1px solid #eee';card.style.borderRadius='10px';card.style.padding='10px';card.innerHTML = `<div style="aspect-ratio:3/4;background:#f3f3f3;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#888;font-weight:600">${(b.title||'Libro').substring(0,1)}</div><div style="margin-top:8px;font-size:13px;font-weight:600">${b.title||'Libro'}</div>`;card.onclick=()=>{window.location.href='/generator-advanced.html?projectId='+ (b.projectId||'');};grid.appendChild(card);});}catch(e){console.warn('No se pudo cargar libros',e);}}
+function renderStats(d){
+  document.getElementById('stat-books').textContent=d.booksCount??0;
+  document.getElementById('stat-followers').textContent=d.followers??0;
+  document.getElementById('stat-following').textContent=d.following??0;
+  document.getElementById('bio-compact').textContent = d.bio || '';
+  if(d.externalUrl){
+    const ext = document.getElementById('external-link');
+    ext.href = d.externalUrl;
+    ext.style.display = '';
+  }
+}
+async function loadMyBooks(){
+  try{
+    const res=await api.getMyBooks?.();
+    const grid=document.getElementById('books-grid');
+    grid.innerHTML='';
+    const list=(res&&res.data)||[];
+    if(!list.length){
+      grid.innerHTML='<div style="color:#666">Aún no tienes publicaciones. Genera tu primer libro en el <a href="/generators.html">Generador</a>.</div>';
+      return;
+    }
+    list.forEach(b=>{
+      const card=document.createElement('div');
+      card.style.background='#fff';
+      card.style.border='1px solid #eee';
+      card.style.borderRadius='12px';
+      card.style.padding='0';
+      card.style.overflow='hidden';
+      card.style.cursor='pointer';
+      card.innerHTML = `
+        <div style="aspect-ratio:3/4;background:#eaeaea;display:flex;align-items:center;justify-content:center;">
+          <img src="${b.coverUrl||''}" alt="cover" style="width:100%;height:100%;object-fit:cover;display:${b.coverUrl?'block':'none'}">
+          <span style="color:#888;font-size:32px;font-weight:700;display:${b.coverUrl?'none':'block'}">${(b.title||'L')[0]}</span>
+        </div>
+        <div style="padding:8px 10px 10px 10px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.title||'Libro'}</div>
+      `;
+      card.onclick=()=>{window.location.href='/generator-advanced.html?projectId='+(b.projectId||'');};
+      grid.appendChild(card);
+    });
+  }catch(e){console.warn('No se pudo cargar libros',e);}
+}
+// Tabs logic
+document.getElementById('tab-publicaciones').onclick = function(){
+  document.getElementById('tab-content-publicaciones').style.display='block';
+  document.getElementById('tab-content-series').style.display='none';
+  document.getElementById('tab-content-guardados').style.display='none';
+};
+document.getElementById('tab-series').onclick = function(){
+  document.getElementById('tab-content-publicaciones').style.display='none';
+  document.getElementById('tab-content-series').style.display='block';
+  document.getElementById('tab-content-guardados').style.display='none';
+};
+document.getElementById('tab-guardados').onclick = function(){
+  document.getElementById('tab-content-publicaciones').style.display='none';
+  document.getElementById('tab-content-series').style.display='none';
+  document.getElementById('tab-content-guardados').style.display='block';
+};
+// Highlights placeholder
+document.getElementById('btn-add-highlight').onclick = function(){
+  const h = document.createElement('div');
+  h.className = 'badge';
+  h.textContent = 'Nuevo highlight';
+  document.getElementById('highlights').appendChild(h);
+};
+// Render books on load
+document.addEventListener('DOMContentLoaded',loadMyBooks);
 </script>
 </body>
 </html>

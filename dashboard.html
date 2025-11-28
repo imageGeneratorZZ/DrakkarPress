@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - DrakkarPress</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+:root {
+  --primary: #1A4D7A;
+  --secondary: #D4AF37;
+  --bg: #FAFAFA;
+  --white: #FFF;
+  --border: #DBDBDB;
+  --text: #262626;
+  --text-secondary: #8E8E8E;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); }
+.header { background:var(--white); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.header h1 { font-size:20px; display:flex; align-items:center; gap:10px; }
+.header .logo { width:28px; height:28px; }
+.nav { display:flex; gap:20px; align-items:center; }
+.nav a { color:var(--text); text-decoration:none; font-weight:600; font-size:15px; transition:color .2s; }
+.nav a:hover { color:var(--primary); }
+.user-menu { position:relative; display:inline-block; }
+.user-menu button { background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--text); }
+.user-menu .avatar { width:32px; height:32px; border-radius:50%; background:var(--primary); color:var(--white); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+.dropdown { position:absolute; top:42px; right:0; background:var(--white); border:1px solid var(--border); border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.1); min-width:220px; display:none; z-index:100; }
+.dropdown.show { display:block; }
+.dropdown a { display:block; padding:12px 18px; color:var(--text); text-decoration:none; font-size:14px; transition:background .2s; }
+.dropdown a:hover { background:var(--bg); }
+.dropdown a i { margin-right:10px; width:16px; }
+.container { max-width:1140px; margin:32px auto; padding:0 24px; }
+.welcome { background:linear-gradient(135deg,var(--primary),#155a8a); color:var(--white); border-radius:16px; padding:32px; margin-bottom:32px; text-align:center; }
+.welcome h2 { font-size:28px; margin-bottom:8px; }
+.welcome p { font-size:16px; opacity:.9; }
+.card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-bottom:32px; }
+.card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:24px; transition:transform .3s,box-shadow .3s; cursor:pointer; }
+.card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+.card-icon { width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:16px; }
+.card-icon.generator { background:linear-gradient(135deg,#667eea,#764ba2); }
+.card-icon.books { background:linear-gradient(135deg,#f093fb,#f5576c); }
+.card-icon.profile { background:linear-gradient(135deg,#4facfe,#00f2fe); }
+.card-icon.settings { background:linear-gradient(135deg,#43e97b,#38f9d7); }
+.card h3 { font-size:20px; margin-bottom:8px; }
+.card p { color:var(--text-secondary); font-size:14px; line-height:1.5; }
+.section-title { font-size:22px; font-weight:700; margin-bottom:16px; color:var(--text); }
+.quick-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+.stat-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; }
+.stat-card .number { font-size:32px; font-weight:700; color:var(--primary); margin-bottom:4px; }
+.stat-card .label { font-size:14px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.5px; }
+.activity { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:24px; }
+.activity-item { display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--border); }
+.activity-item:last-child { border:none; }
+.activity-icon { width:40px; height:40px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; color:var(--primary); }
+.activity-content { flex:1; }
+.activity-content h4 { font-size:15px; margin-bottom:4px; }
+.activity-content p { font-size:13px; color:var(--text-secondary); }
+.activity-time { font-size:12px; color:var(--text-secondary); }
+@media (max-width:768px) {
+  .nav { display:none; }
+  .card-grid { grid-template-columns:1fr; }
+  .quick-stats { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>
+    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="none" stroke="#D4AF37" stroke-width="2"/>
+      <path d="M30,35 L30,65 Q30,70 35,70 L45,70 Q50,70 50,65 L50,35 Z" fill="#1A4D7A"/>
+      <path d="M55,35 L55,65 Q55,70 60,70 L70,70 Q75,70 75,65 L75,35 Z" fill="#1A4D7A"/>
+    </svg>
+    DrakkarPress
+  </h1>
+  <div class="nav">
+    <a href="/generators.html">Generadores</a>
+    <a href="/my-books.html">Mis Libros</a>
+    <a href="/biblioteca.html">Biblioteca</a>
+  </div>
+  <div class="user-menu">
+    <button id="user-menu-btn">
+      <div class="avatar" id="user-avatar">U</div>
+      <span id="user-name">Usuario</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="dropdown" id="user-dropdown">
+      <a href="/profile.html"><i class="fas fa-user"></i>Mi Perfil</a>
+      <a href="/settings.html"><i class="fas fa-cog"></i>Configuración</a>
+      <a href="/help.html"><i class="fas fa-question-circle"></i>Ayuda</a>
+      <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Cerrar Sesión</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="welcome">
+    <h2>Bienvenido, <span id="welcome-name">Usuario</span>! 👋</h2>
+    <p>Aquí puedes gestionar tus libros, generar nuevas obras y explorar todo el ecosistema DrakkarPress.</p>
+  </div>
+
+  <div class="section-title">Accesos Rápidos</div>
+  <div class="card-grid">
+    <div class="card" onclick="location.href='/generators.html'">
+      <div class="card-icon generator">⚡</div>
+      <h3>Generadores IA</h3>
+      <p>Crea libros completos con DrakkarPress (adulto) o Scryptorium (infantil). Genera, edita en cascada, exporta.</p>
+    </div>
+    <div class="card" onclick="location.href='/my-books.html'">
+      <div class="card-icon books">📚</div>
+      <h3>Mis Libros</h3>
+      <p>Explora tus proyectos, edita capítulos, administra versiones y publica tus obras terminadas.</p>
+    </div>
+    <div class="card" onclick="location.href='/profile.html'">
+      <div class="card-icon profile">👤</div>
+      <h3>Mi Perfil</h3>
+      <p>Personaliza tu perfil, gestiona estadísticas, seguidores y publica tus libros en tu galería.</p>
+    </div>
+    <div class="card" onclick="location.href='/settings.html'">
+      <div class="card-icon settings">⚙️</div>
+      <h3>Configuración</h3>
+      <p>Ajusta preferencias de cuenta, notificaciones, idioma, integraciones y privacidad.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Estadísticas</div>
+  <div class="quick-stats">
+    <div class="stat-card">
+      <div class="number" id="stat-books">0</div>
+      <div class="label">Libros</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="stat-chapters">0</div>
+      <div class="label">Capítulos</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="stat-words">0</div>
+      <div class="label">Palabras</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="stat-followers">0</div>
+      <div class="label">Seguidores</div>
+    </div>
+  </div>
+
+  <div class="section-title">Actividad Reciente</div>
+  <div class="activity">
+    <div class="activity-item">
+      <div class="activity-icon"><i class="fas fa-book"></i></div>
+      <div class="activity-content">
+        <h4>Nuevo libro creado</h4>
+        <p>Has iniciado un proyecto con 40 capítulos</p>
+      </div>
+      <div class="activity-time">Hace 2 horas</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-icon"><i class="fas fa-edit"></i></div>
+      <div class="activity-content">
+        <h4>Capítulo editado</h4>
+        <p>Capítulo 5 actualizado con 850 palabras</p>
+      </div>
+      <div class="activity-time">Ayer</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-icon"><i class="fas fa-download"></i></div>
+      <div class="activity-content">
+        <h4>Libro exportado</h4>
+        <p>"Mi Primera Novela" exportado como PDF</p>
+      </div>
+      <div class="activity-time">Hace 3 días</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api-client.js"></script>
+<script>
+// Auth check
+if (!api.isAuthenticated()) { location.href = '/login.html'; }
+
+// Load user data
+(async () => {
+  const profile = await api.getMyProfile();
+  if (profile.success && profile.data) {
+    const u = profile.data;
+    document.getElementById('user-name').textContent = u.username || 'Usuario';
+    document.getElementById('welcome-name').textContent = u.fullName || u.username || 'Usuario';
+    document.getElementById('user-avatar').textContent = (u.username || 'U')[0].toUpperCase();
+    document.getElementById('stat-books').textContent = u.booksCount ?? 0;
+    document.getElementById('stat-followers').textContent = u.followers ?? 0;
+    // TODO: fetch chapters/words stats from backend
+  }
+})();
+
+// User menu dropdown
+const userMenuBtn = document.getElementById('user-menu-btn');
+const userDropdown = document.getElementById('user-dropdown');
+userMenuBtn.addEventListener('click', () => {
+  userDropdown.classList.toggle('show');
+});
+document.addEventListener('click', (e) => {
+  if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+    userDropdown.classList.remove('show');
+  }
+});
+
+// Logout
+document.getElementById('logout-btn').addEventListener('click', (e) => {
+  e.preventDefault();
+  api.logout();
+  location.replace('/login.html');
+});
+</script>
+</body>
+</html>

@@ -650,6 +650,9 @@
                 <input type="text" placeholder="Buscar libros, autores...">
             </div>
             <div class="top-actions">
+                <div id="backend-status" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-secondary);display:flex;align-items:center;gap:4px;">
+                    <span>API: comprobando...</span>
+                </div>
                 <button class="icon-btn">
                     <i class="fas fa-heart"></i>
                     <span class="badge">3</span>
@@ -864,6 +867,13 @@
         if (location.hostname === 'drakkarpress.com') {
             location.replace(location.href.replace('drakkarpress.com', 'www.drakkarpress.com'));
         }
+        // Redirigir a dashboard si ya está autenticado
+        if (api.isAuthenticated()) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.has('force-landing')) {
+                location.replace('/dashboard.html');
+            }
+        }
         // Verificar autenticación al cargar
         document.addEventListener('DOMContentLoaded', () => {
             updateUIBasedOnAuth();
@@ -1037,6 +1047,31 @@
                 }
             });
         });
+
+        // Mostrar estado de backend (diagnóstico proxy / subdominio)
+        (async function showBackendStatus(){
+            const box = document.getElementById('backend-status');
+            if(!box) return;
+            const base = api.getApiBaseUrl();
+            box.querySelector('span').textContent = 'API: comprobando...';
+            const result = await api.getHealth();
+            if(result.ok){
+                box.style.borderColor = '#2e7d32';
+                box.style.color = '#2e7d32';
+                box.querySelector('span').textContent = 'API OK ('+base+')';
+            } else {
+                box.style.borderColor = '#c62828';
+                box.style.color = '#c62828';
+                if(result.htmlSnapshot){
+                    box.querySelector('span').textContent = 'API FALLA (HTML interceptado)';
+                    console.warn('[DrakkarPress] API devolvió HTML. Proxy no activo. Base:', base, 'Snapshot:', result.htmlSnapshot);
+                } else if(result.error){
+                    box.querySelector('span').textContent = 'API ERROR ('+result.error+')';
+                } else {
+                    box.querySelector('span').textContent = 'API FALLA (status '+result.status+')';
+                }
+            }
+        })();
     </script>
 </body>
 </html>
