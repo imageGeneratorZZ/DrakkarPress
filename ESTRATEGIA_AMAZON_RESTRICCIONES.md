@@ -147,11 +147,25 @@
 ├─ Audiolibro (generado con TU TTS propio)
 ├─ Extras opcionales (mapas, guías, bonus)
 └─ Precio: $14.99 (25% descuento vs comprar separado)
+
+📘 Libro Físico (Incluye TODO)
+├─ Libro físico impreso (POD)
+├─ + eBook digital GRATIS
+├─ + Audiolibro GRATIS
+├─ + Extras digitales
+└─ Precio: $24.99
 ```
 
+**🎁 Estrategia de Valor:**
+- **Comprar físico = Recibir eBook + Audiolibro incluidos**
+- Incentiva venta de físico (mayor margen)
+- Amazon solo ofrece "Físico + eBook" pero sin audio
+- Valor agregado imposible de igualar
+
 **Royalties Autor:**
-- Amazon: 70% de $9.99 = **$6.99 por venta**
-- DrakkarPress: 90% de $14.99 = **$13.49 por venta** (bundle)
+- Amazon: 70% de $9.99 = **$6.99 por venta** (solo eBook)
+- DrakkarPress: 90% de $14.99 = **$13.49 por venta** (bundle digital)
+- DrakkarPress: 90% de $24.99 = **$22.49 por venta** (físico con todo incluido)
 
 ---
 
