@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface GeneratorsProps {
   isBackendConnected: boolean;
 }
 
-const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
+const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected: initialBackendStatus }) => {
   const [activeGenerator, setActiveGenerator] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string>('');
+  const [prompt, setPrompt] = useState<string>('');
+  const [isBackendConnected, setIsBackendConnected] = useState(initialBackendStatus);
+
+  // Verificar estado del backend al montar
+  useEffect(() => {
+    checkBackendStatus();
+  }, []);
+
+  const checkBackendStatus = async () => {
+    try {
+      // @ts-ignore
+      const status = await window.electronAPI.ai.getStatus();
+      setIsBackendConnected(status.isRunning);
+    } catch (error) {
+      console.error('Error checking backend status:', error);
+      setIsBackendConnected(false);
+    }
+  };
 
   const generators = [
     { id: 'idea', icon: '💡', title: 'Generar Idea de Libro', category: 'Creación' },
@@ -25,30 +43,60 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
     setResult('');
 
     try {
-      if (isBackendConnected) {
-        // Llamar al backend real
-        const response = await fetch(`http://localhost:8080/api/ai/${generatorId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ /* datos del formulario */ }),
-        });
-        const data = await response.text();
-        setResult(data);
+      let generatedContent = '';
+      
+      // @ts-ignore
+      const api = window.electronAPI.ai;
 
-        // Guardar en base de datos local
-        // @ts-ignore
-        await window.electronAPI.creations.create({
-          title: `Generación ${generatorId}`,
-          type: generatorId,
-          content: data,
-          metadata: {},
-        });
-      } else {
-        // Modo demo offline
-        setResult(`🎭 MODO DEMO (Offline)\n\nEste es un resultado de ejemplo para el generador "${generatorId}".\n\nEl backend no está disponible. Cuando se conecte, obtendrás resultados reales generados por IA.\n\n✨ Características de la versión completa:\n- Generación con IA avanzada\n- 25+ géneros combinables\n- Personalización completa\n- Guardado automático en biblioteca`);
+      switch (generatorId) {
+        case 'idea':
+          generatedContent = await api.generateIdea(prompt, 'General');
+          break;
+        case 'titles':
+          generatedContent = await api.generateTitles(prompt, 10);
+          break;
+        case 'character':
+          generatedContent = await api.generateCharacter(prompt);
+          break;
+        case 'recipe':
+          generatedContent = await api.generateRecipe(prompt);
+          break;
+        case 'report':
+          generatedContent = await api.generateReport(prompt);
+          break;
+        case 'chapter':
+          // Para expandir capítulo, usar config más complejo
+          generatedContent = await api.expandChapter({
+            chapter_num: 1,
+            tomo_num: 1,
+            outline: prompt,
+            target_words: 2000
+          });
+          break;
+        case 'synopsis':
+          generatedContent = await api.generateSynopsis(prompt, 'medium');
+          break;
+        case 'dialogue':
+          generatedContent = await api.generateDialogue(prompt, [], 'natural');
+          break;
+        default:
+          generatedContent = '❌ Generador no implementado';
       }
-    } catch (error) {
-      setResult(`❌ Error: ${error}`);
+
+      setResult(generatedContent);
+
+      // Guardar en base de datos local
+      // @ts-ignore
+      await window.electronAPI.creations.create({
+        title: `${generators.find(g => g.id === generatorId)?.title}`,
+        type: generatorId,
+        content: generatedContent,
+        metadata: { prompt, timestamp: new Date().toISOString() },
+      });
+
+    } catch (error: any) {
+      console.error('Error generando:', error);
+      setResult(`❌ Error: ${error.message || error}\n\n⚠️  Verifica que el backend Python esté iniciado:\n\npython backend_python/server.py`);
     } finally {
       setLoading(false);
     }
@@ -58,7 +106,11 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
     return (
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
         <button
-          onClick={() => setActiveGenerator(null)}
+          onClick={() => {
+            setActiveGenerator(null);
+            setPrompt('');
+            setResult('');
+          }}
           style={{
             marginBottom: '20px',
             padding: '10px 20px',
@@ -78,15 +130,30 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
           padding: '30px',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
         }}>
-          <h2 style={{ marginBottom: '20px', color: '#667eea' }}>
-            {generators.find(g => g.id === activeGenerator)?.title}
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h2 style={{ color: '#667eea', margin: 0 }}>
+              {generators.find(g => g.id === activeGenerator)?.title}
+            </h2>
+            <div style={{ 
+              display: 'inline-block',
+              padding: '4px 12px',
+              background: isBackendConnected ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              color: isBackendConnected ? '#22c55e' : '#ef4444',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>
+              {isBackendConnected ? '🟢 Backend Conectado' : '🔴 Backend Desconectado'}
+            </div>
+          </div>
 
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
               Prompt:
             </label>
             <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
               style={{
                 width: '100%',
                 padding: '15px',
@@ -102,11 +169,11 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
 
           <button
             onClick={() => handleGenerate(activeGenerator)}
-            disabled={loading}
+            disabled={loading || !prompt.trim()}
             style={{
               width: '100%',
               padding: '15px',
-              background: loading 
+              background: (loading || !prompt.trim())
                 ? '#ccc' 
                 : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               color: 'white',
@@ -114,7 +181,7 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
               borderRadius: '8px',
               fontSize: '16px',
               fontWeight: 'bold',
-              cursor: loading ? 'not-allowed' : 'pointer',
+              cursor: (loading || !prompt.trim()) ? 'not-allowed' : 'pointer',
             }}
           >
             {loading ? '⏳ Generando...' : '✨ Generar'}
@@ -128,6 +195,8 @@ const Generators: React.FC<GeneratorsProps> = ({ isBackendConnected }) => {
               borderLeft: '4px solid #667eea',
               borderRadius: '8px',
               whiteSpace: 'pre-wrap',
+              maxHeight: '500px',
+              overflowY: 'auto'
             }}>
               {result}
             </div>

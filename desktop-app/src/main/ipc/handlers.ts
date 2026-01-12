@@ -2,6 +2,7 @@ import { ipcMain } from 'electron';
 import creationsService from '../services/creations.service';
 import shopService from '../services/shop.service';
 import settingsService from '../services/settings.service';
+import * as aiService from '../services/ai.service';
 
 export function registerIpcHandlers() {
   // ==========================================
@@ -122,6 +123,57 @@ export function registerIpcHandlers() {
       properties: ['openDirectory']
     });
     return result.filePaths[0];
+  });
+
+  // ==========================================
+  // AI GENERATION HANDLERS
+  // ==========================================
+  
+  // Backend status
+  ipcMain.handle('ai:checkHealth', async () => {
+    return await aiService.checkBackendHealth();
+  });
+
+  ipcMain.handle('ai:getStatus', () => {
+    return aiService.getBackendStatus();
+  });
+
+  // Basic generators
+  ipcMain.handle('ai:generateIdea', async (_, prompt: string, genre?: string) => {
+    return await aiService.generateIdea(prompt, genre);
+  });
+
+  ipcMain.handle('ai:generateCharacter', async (_, prompt: string) => {
+    return await aiService.generateCharacter(prompt);
+  });
+
+  ipcMain.handle('ai:generateSynopsis', async (_, prompt: string, length?: 'short' | 'medium' | 'long') => {
+    return await aiService.generateSynopsis(prompt, length);
+  });
+
+  ipcMain.handle('ai:generateDialogue', async (_, prompt: string, characters?: string[], tone?: string) => {
+    return await aiService.generateDialogue(prompt, characters, tone);
+  });
+
+  ipcMain.handle('ai:generateTitles', async (_, prompt: string, count?: number) => {
+    return await aiService.generateTitles(prompt, count);
+  });
+
+  ipcMain.handle('ai:generateRecipe', async (_, prompt: string) => {
+    return await aiService.generateRecipe(prompt);
+  });
+
+  ipcMain.handle('ai:generateReport', async (_, prompt: string) => {
+    return await aiService.generateReport(prompt);
+  });
+
+  // Advanced generators
+  ipcMain.handle('ai:expandChapter', async (_, config: any) => {
+    return await aiService.expandChapter(config);
+  });
+
+  ipcMain.handle('ai:generateMaestro', async (_, chapterNum: number, prevContext?: string) => {
+    return await aiService.generateMaestroChapter(chapterNum, prevContext);
   });
 
   console.log('✅ IPC handlers registered successfully');

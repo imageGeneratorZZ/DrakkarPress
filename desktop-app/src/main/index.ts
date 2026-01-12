@@ -3,6 +3,7 @@ import path from 'path';
 import { initDatabase } from './database/connection';
 import { registerIpcHandlers } from './ipc/handlers';
 import { autoUpdater } from 'electron-updater';
+import * as aiService from './services/ai.service';
 
 let mainWindow: BrowserWindow | null = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -53,6 +54,15 @@ app.whenReady().then(async () => {
   // Inicializar base de datos
   await initDatabase();
   
+  // Iniciar backend Python
+  console.log('🐍 Iniciando backend Python de generación IA...');
+  const backendStarted = await aiService.startPythonBackend();
+  if (backendStarted) {
+    console.log('✅ Backend Python iniciado correctamente');
+  } else {
+    console.warn('⚠️  Backend Python no se pudo iniciar. Las funciones de IA no estarán disponibles.');
+  }
+  
   // Registrar handlers de IPC
   registerIpcHandlers();
   
@@ -68,9 +78,18 @@ app.whenReady().then(async () => {
 
 // Salir cuando todas las ventanas estén cerradas (excepto en macOS)
 app.on('window-all-closed', () => {
+  // Detener backend Python
+  console.log('🛑 Cerrando aplicación, deteniendo backend Python...');
+  aiService.stopPythonBackend();
+  
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+// Limpiar recursos al salir
+app.on('quit', () => {
+  aiService.stopPythonBackend();
 });
 
 // Auto-updater events

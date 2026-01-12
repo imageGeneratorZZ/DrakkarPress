@@ -55,6 +55,31 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   // ==========================================
+  // AI GENERATION API
+  // ==========================================
+  ai: {
+    // Status
+    checkHealth: () => ipcRenderer.invoke('ai:checkHealth'),
+    getStatus: () => ipcRenderer.invoke('ai:getStatus'),
+    
+    // Basic generators
+    generateIdea: (prompt: string, genre?: string) => ipcRenderer.invoke('ai:generateIdea', prompt, genre),
+    generateCharacter: (prompt: string) => ipcRenderer.invoke('ai:generateCharacter', prompt),
+    generateSynopsis: (prompt: string, length?: 'short' | 'medium' | 'long') => 
+      ipcRenderer.invoke('ai:generateSynopsis', prompt, length),
+    generateDialogue: (prompt: string, characters?: string[], tone?: string) => 
+      ipcRenderer.invoke('ai:generateDialogue', prompt, characters, tone),
+    generateTitles: (prompt: string, count?: number) => ipcRenderer.invoke('ai:generateTitles', prompt, count),
+    generateRecipe: (prompt: string) => ipcRenderer.invoke('ai:generateRecipe', prompt),
+    generateReport: (prompt: string) => ipcRenderer.invoke('ai:generateReport', prompt),
+    
+    // Advanced generators
+    expandChapter: (config: any) => ipcRenderer.invoke('ai:expandChapter', config),
+    generateMaestro: (chapterNum: number, prevContext?: string) => 
+      ipcRenderer.invoke('ai:generateMaestro', chapterNum, prevContext),
+  },
+
+  // ==========================================
   // UPDATER API
   // ==========================================
   updater: {
